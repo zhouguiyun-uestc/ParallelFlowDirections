@@ -1,0 +1,5 @@
+./test_data/grant_3m_partfilling/0_0.tif,./test_data/grant_3m_partfilling/0_1.tif,./test_data/grant_3m_partfilling/0_2.tif,./test_data/grant_3m_partfilling/0_3.tif,./test_data/grant_3m_partfilling/0_4.tif,
+./test_data/grant_3m_partfilling/1_0.tif,./test_data/grant_3m_partfilling/1_1.tif,./test_data/grant_3m_partfilling/1_2.tif,./test_data/grant_3m_partfilling/1_3.tif,./test_data/grant_3m_partfilling/1_4.tif,
+./test_data/grant_3m_partfilling/2_0.tif,./test_data/grant_3m_partfilling/2_1.tif,./test_data/grant_3m_partfilling/2_2.tif,./test_data/grant_3m_partfilling/2_3.tif,./test_data/grant_3m_partfilling/2_4.tif,
+./test_data/grant_3m_partfilling/3_0.tif,./test_data/grant_3m_partfilling/3_1.tif,./test_data/grant_3m_partfilling/3_2.tif,./test_data/grant_3m_partfilling/3_3.tif,./test_data/grant_3m_partfilling/3_4.tif,
+./test_data/grant_3m_partfilling/4_0.tif,./test_data/grant_3m_partfilling/4_1.tif,./test_data/grant_3m_partfilling/4_2.tif,./test_data/grant_3m_partfilling/4_3.tif,./test_data/grant_3m_partfilling/4_4.tif,
