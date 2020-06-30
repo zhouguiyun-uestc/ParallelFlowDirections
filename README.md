@@ -9,5 +9,8 @@ The codes support floating-point GeoTIFF file format through the GDAL library. P
 
 Example usages:
 
-mpirun -np 2 flowdirPara carlton.txt carlton_3m    // use two processors to caculate flow directions; Input is a text file, which includes the paths of the DEM; Output is carlton_3m
+mpirun -np 2 flowdirPara carlton.txt carlton_3m    
+
+// use two processors to caculate flow directions; Input is a text file, which includes the paths of the DEM; Output is carlton_3m
+//for the command arguments, please refer to the source code
 
