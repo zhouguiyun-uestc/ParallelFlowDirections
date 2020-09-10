@@ -462,7 +462,7 @@ void Consumer::BuildPartGraph(const int groupNumber, bool firstTime,std::vector<
 		IdBounderyCells[pos] = ID++;
 	}
 
-	//the last column���һ��
+	//the last column×îºóÒ»ÁÐ
 	col = flowdirs.getWidth() - 1;
 	for (row = 0; row < flowdirs.getHeight() - 2; row++)
 	{
@@ -623,112 +623,132 @@ void Consumer::block2block(std::vector<GridCell>& boundarySet, std::vector<int>&
 		}
 	}
 
-	if (FlatTile && number_bulk==4) 
+	if (FlatTile && number_bulk == 4) //如果是平地，之前就已经建造了内部的距离。现在只需要构建块与块之间的距离。共有4块
+{
+	////相邻块之间构建关系，关注x1-x2=y1-y2.以及关系为1的部分
+	for (int i = 0; i < number_bulk - 1; i++)//只对0,1,2块处理
 	{
-		for (int i = 0; i < number_bulk - 1; i++)
+		//首先判断是否越界，按照道理不可能越界
+		GridCell source = boundarySet[bulk[i + 1] - 1];//刚开始是源块的最后一个栅格
+		int pos = xy2positionNum(source.row, source.col, width, height);
+		int my_iden = IdBounderyCells[pos];
+		//对挨着的距离为1的进行处理。
+		//lowEdgeGraph.at(my_iden)[my_iden + 1] = 2;
+		auto isInsertSuccess = lowEdgeGraph.at(my_iden).emplace(my_iden + 1, 2); 
+		//highEdgeGraph.at(my_iden)[my_iden + 1] = 1;
+		isInsertSuccess = highEdgeGraph.at(my_iden).emplace(my_iden + 1, 1); 
+		if (bulk[i + 2] - bulk[i + 1] >= 2)//i+1块的长度
 		{
-			GridCell source = boundarySet[bulk[i + 1] - 1];
-			int pos = xy2positionNum(source.row, source.col, width, height);
-			int my_iden = IdBounderyCells[pos];
-			lowEdgeGraph.at(my_iden)[my_iden + 1] = 2;
-			highEdgeGraph.at(my_iden)[my_iden + 1] = 1;
-			if (bulk[i + 2] - bulk[i + 1] >= 2)
-			{
-				lowEdgeGraph.at(my_iden)[my_iden + 2] = 2;
-				highEdgeGraph.at(my_iden)[my_iden + 2] = 1;
-			}
-
-			int j = 1;
-			GridCell object = boundarySet[bulk[i + 2] - 1];
-			pos = xy2positionNum(object.row, object.col, width, height);
-			int ob_iden = IdBounderyCells[pos];
-
-			while (my_iden > 1 && my_iden + 2 * j <= ob_iden) 
-			{
-				j++;
-				source = boundarySet[bulk[i + 1] - j];
-				pos = xy2positionNum(source.row, source.col, width, height);
-				my_iden = IdBounderyCells[pos];
-				lowEdgeGraph.at(my_iden)[my_iden + 2 * j] = 2 * j;
-				highEdgeGraph.at(my_iden)[my_iden + 2 * j] = j;
-
-			}
+			isInsertSuccess = highEdgeGraph.at(my_iden).emplace(my_iden + 2, 1);
+			isInsertSuccess = lowEdgeGraph.at(my_iden).emplace(my_iden + 2, 2);
+			/*lowEdgeGraph.at(my_iden)[my_iden + 2] = 2;
+			highEdgeGraph.at(my_iden)[my_iden + 2] = 1;*/
 		}
-		GridCell source = boundarySet[bulk[0]];
-		GridCell object = boundarySet[bulk[4] - 1];
-		int source_pos = xy2positionNum(source.row, source.col, width, height);
-		int object_pos = xy2positionNum(object.row, object.col, width, height);
-		int my_iden = IdBounderyCells[source_pos];
-		int nEnd_iden = IdBounderyCells[object_pos];
-		highEdgeGraph.at(my_iden)[nEnd_iden] = 1;
-		lowEdgeGraph.at(my_iden)[nEnd_iden] = 2;
-		if (bulk[1] - bulk[0] >= 2)
+		int j = 1;
+		GridCell object = boundarySet[bulk[i + 2] - 1];
+		pos = xy2positionNum(object.row, object.col, width, height);
+		int ob_iden = IdBounderyCells[pos];//目标块的最后一个编号
+		my_iden--;
+		j++;
+		while (my_iden > 1 && my_iden + 2 * j <= ob_iden)  //挨着的两块进行
 		{
-			highEdgeGraph.at(my_iden + 1)[nEnd_iden] = 1;
-			lowEdgeGraph.at(my_iden + 1)[nEnd_iden] = 2;
-		}
-
-		int j = 2;
-		object = boundarySet[bulk[3]];
-		source = boundarySet[bulk[1] - 1];
-		int pos = xy2positionNum(object.row, object.col, width, height);
-		int ob_iden = IdBounderyCells[pos];
-		pos = xy2positionNum(source.row, source.col, width, height);
-		int sour_iden = IdBounderyCells[pos];
-		int n_iden = nEnd_iden;
-		while (my_iden <= sour_iden && n_iden >= ob_iden)
-		{
-			source = boundarySet[bulk[0] + j];
+			isInsertSuccess = highEdgeGraph.at(my_iden).emplace(my_iden + 2 * j, j); 
+			isInsertSuccess = lowEdgeGraph.at(my_iden).emplace(my_iden + 2 * j, 2 * j); 
+			j++;
+			source = boundarySet[bulk[i + 1] - j];
 			pos = xy2positionNum(source.row, source.col, width, height);
 			my_iden = IdBounderyCells[pos];
-			n_iden = nEnd_iden - j + 1;
-			lowEdgeGraph.at(my_iden)[n_iden] = 2 * j;
-			highEdgeGraph.at(my_iden)[n_iden] = j;
-			j++;
+			/*lowEdgeGraph.at(my_iden)[my_iden + 2 * j] = 2 * j;
+			highEdgeGraph.at(my_iden)[my_iden + 2 * j] = j;*/
 		}
-		int i = 0;//0-2 ,1-3;
-		int row = 0, col = 0;
-		int nRow = height - 1;
-		while (col < width - 1)
-		{
-			int minCol = std::max(1, col - (height - 1));
-			int maxCol = std::min(col + height - 1, width - 2);
-			int source_pos = xy2positionNum(row, col, width, height);
-			int object_pos;
-			int my_iden = IdBounderyCells[source_pos];
-			int n_iden;
-			for (int nCol = minCol; nCol <= maxCol; nCol++)
-			{
-				object_pos = xy2positionNum(nRow, nCol, width, height);
-				n_iden = IdBounderyCells[object_pos];
-				highEdgeGraph.at(my_iden)[n_iden] = height - 1;
-				lowEdgeGraph.at(my_iden)[n_iden] = 2 * (height - 1);
-			}
-			col++;
-		}
-		i = 1;
-		col = width - 1;
-		int nCol = 0;
-		row = 0;
-		while (row < height - 1)
-		{
-			int minRow = std::max(1, row - (width - 1));
-			int maxRow = std::min(height - 2, row + width - 1);
-			int source_pos = xy2positionNum(row, col, width, height);
-			int object_pos;
-			int my_iden = IdBounderyCells[source_pos];
-			int n_iden;
-			for (int nRow = minRow; nRow <= maxRow; nRow++)
-			{
-				object_pos = xy2positionNum(nRow, nCol, width, height);
-				n_iden = IdBounderyCells[object_pos];
-				highEdgeGraph.at(my_iden)[n_iden] = width - 1;
-				lowEdgeGraph.at(my_iden)[n_iden] = 2 * (width - 1);
-			}
-			row++;
-		}
-		return;
 	}
+	//最后一块和第一块之间的关系构建
+	GridCell source = boundarySet[bulk[0]];//第一块中的第一个 1-4
+	GridCell object = boundarySet[bulk[4] - 1];//第四块中的最后一个
+	int source_pos = xy2positionNum(source.row, source.col,width,height);
+	int object_pos = xy2positionNum(object.row, object.col, width, height);
+	int my_iden = IdBounderyCells[source_pos];
+	int nEnd_iden = IdBounderyCells[object_pos];
+	auto isInsertSuccess = highEdgeGraph.at(my_iden).emplace(nEnd_iden, 1);
+
+	isInsertSuccess = lowEdgeGraph.at(my_iden).emplace(nEnd_iden, 2); 
+	/*highEdgeGraph.at(my_iden)[nEnd_iden] = 1;
+	lowEdgeGraph.at(my_iden)[nEnd_iden] = 2;*/
+	if (bulk[1] - bulk[0] >= 2)
+	{
+		isInsertSuccess = highEdgeGraph.at(my_iden + 1).emplace(nEnd_iden, 1);
+		isInsertSuccess = lowEdgeGraph.at(my_iden + 1).emplace(nEnd_iden, 2);
+		/*highEdgeGraph.at(my_iden + 1)[nEnd_iden] = 1;
+		lowEdgeGraph.at(my_iden + 1)[nEnd_iden] = 2;*/
+	}
+	int j = 2;
+	object = boundarySet[bulk[3]];//目标块中的第一个
+	source = boundarySet[bulk[1] - 1];//源块中的最后一个
+	int pos = xy2positionNum(object.row, object.col, width, height);
+	int ob_iden = IdBounderyCells[pos];//目标块的第一个编号
+	pos = xy2positionNum(source.row, source.col, width, height);
+	int sour_iden = IdBounderyCells[pos];//源块中的最后一个编号
+	int n_iden = nEnd_iden;
+	source = boundarySet[bulk[0] + j];
+	pos = xy2positionNum(source.row, source.col, width, height);
+	my_iden = IdBounderyCells[pos];
+	n_iden = nEnd_iden - j + 1;
+	while (my_iden <= sour_iden && n_iden >= ob_iden)  //挨着的两块进行 第一块和最后一块的栅格进行构图（1-4）
+	{
+
+		isInsertSuccess = highEdgeGraph.at(my_iden).emplace(n_iden, j);
+		isInsertSuccess = lowEdgeGraph.at(my_iden).emplace(n_iden, 2 * j);
+		/*lowEdgeGraph.at(my_iden)[n_iden] = 2 * j;
+		highEdgeGraph.at(my_iden)[n_iden] = j;*/
+		j++;
+		source = boundarySet[bulk[0] + j];
+		pos = xy2positionNum(source.row, source.col, width, height);
+		my_iden = IdBounderyCells[pos];
+		n_iden = nEnd_iden - j + 1;
+	}
+	//对块之间考虑height和width
+	int i = 0;//1-3 2-4
+	int row = 0, col = 0;
+	int nRow = height - 1;
+	while (col < width - 1)//找到最大值为height-1
+	{
+		int minCol = std::max(1, col - (height - 1));
+		int maxCol = std::min(col + height - 1, width - 1);
+		int source_pos = xy2positionNum(row, col, width, height);
+		int object_pos;
+		int my_iden = IdBounderyCells[source_pos];
+		int n_iden;
+		for (int nCol = minCol; nCol <= maxCol; nCol++)
+		{
+			object_pos = xy2positionNum(nRow, nCol, width, height);
+			n_iden = IdBounderyCells[object_pos];
+			isInsertSuccess = highEdgeGraph.at(my_iden).emplace(n_iden, height - 1);
+			isInsertSuccess = lowEdgeGraph.at(my_iden).emplace(n_iden, 2 * (height - 1)); 
+		}
+		col++;
+	}
+	i = 1;//2-4 ,只有行在变
+	col = width - 1;
+	int nCol = 0;
+	row = 0;
+	while (row < height - 1) //最大为width-1
+	{
+		int minRow = std::max(1, row - (width - 1));
+		int maxRow = std::min(height - 1, row + width - 1);
+		int source_pos = xy2positionNum(row, col, width, height);
+		int object_pos;
+		int my_iden = IdBounderyCells[source_pos];
+		int n_iden;
+		for (int nRow = minRow; nRow <= maxRow; nRow++)
+		{
+			object_pos = xy2positionNum(nRow, nCol, width, height);
+			n_iden = IdBounderyCells[object_pos];
+			isInsertSuccess = lowEdgeGraph.at(my_iden).emplace(n_iden, 2 * (width - 1)); 
+		}
+		row++;
+	}
+	return;
+}
 	if (number_bulk == 1)
 	{
 		return;
@@ -2827,7 +2847,7 @@ void Consumer::ModifyBoundaryFlowDir(const TileInfo & tileInfo,IProducer2Consume
 				minimum_elevation = dem.at(nRow, nCol);
 				n = t;
 			}
-			if (p2c->bottom.dem.size() == 0)//�·���ΪnullTile
+			if (p2c->bottom.dem.size() == 0)//ÏÂ·½µÄÎªnullTile
 			{
 				if (minimum_elevation > dem.NoDataValue)
 				{
