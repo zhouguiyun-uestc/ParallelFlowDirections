@@ -12,16 +12,23 @@ To compile the programs run:
 ```
 make
 ```
+The result is a program called  `flowdirPara`.
+
+The program is run by typing:
+```
+mpirun -np <processes_number> flowdirPara <INPUT> <OUTPUT>
+mpirun -np 3 flowdirPara carlton.txt carlton_3m   
+```
+In the foregoing example `-np 3` indicates that the program should be run in parallel over 3 processes, which includes one producer process and 2 consumer processes.
+# Layout Files
+A layout file is a text file with the format:
+```
+f1.tif, f2.tif, f3.tif, f4.tif,
+      , f5.tif, f6.tif, f7.tif,
+      , f8.tif, f9.tif,
+```
+fx.tifs with same row have the same height. fx.tifs with same column have the same width. Blanks between commas indicate that there is no tile there.
+Note that the files need not have TIF format: they can be of any type which GDAL can read. 
 
 
-This repository contains the source codes of the MPI-based implementation of the parallel algorithm presented in the manuscript above. These codes were used in performing the tests described in the manuscript.
-
-The codes support floating-point GeoTIFF file format through the GDAL library. Please include GDAL library into your compilation.
-
-Example usages:
-
-mpirun -np 2 flowdirPara carlton.txt carlton_3m    
-
-// use two processors to caculate flow directions; Input is a text file, which includes the paths of the DEM; Output is carlton_3m
-//for the command arguments, please refer to the source code
 
