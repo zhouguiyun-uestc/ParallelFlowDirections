@@ -1,0 +1,6 @@
+./ansai_partfilling/0_0.tif,./ansai_partfilling/0_1.tif,./ansai_partfilling/0_2.tif,./ansai_partfilling/0_3.tif,./ansai_partfilling/0_4.tif,
+./ansai_partfilling/1_0.tif,./ansai_partfilling/1_1.tif,./ansai_partfilling/1_2.tif,./ansai_partfilling/1_3.tif,./ansai_partfilling/1_4.tif,
+./ansai_partfilling/2_0.tif,./ansai_partfilling/2_1.tif,./ansai_partfilling/2_2.tif,./ansai_partfilling/2_3.tif,./ansai_partfilling/2_4.tif,
+./ansai_partfilling/3_0.tif,./ansai_partfilling/3_1.tif,./ansai_partfilling/3_2.tif,./ansai_partfilling/3_3.tif,./ansai_partfilling/3_4.tif,
+./ansai_partfilling/4_0.tif,./ansai_partfilling/4_1.tif,./ansai_partfilling/4_2.tif,./ansai_partfilling/4_3.tif,./ansai_partfilling/4_4.tif,
+./ansai_partfilling/5_0.tif,./ansai_partfilling/5_1.tif,./ansai_partfilling/5_2.tif,./ansai_partfilling/5_3.tif,./ansai_partfilling/5_4.tif,

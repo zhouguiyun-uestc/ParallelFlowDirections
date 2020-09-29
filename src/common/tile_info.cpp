@@ -6,6 +6,3 @@ TileInfo::TileInfo()
 }
 
 
-TileInfo::~TileInfo()
-{
-}

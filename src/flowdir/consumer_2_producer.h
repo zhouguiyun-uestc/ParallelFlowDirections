@@ -1,3 +1,4 @@
+
 #ifndef PARADEM_CONSUMER2PRODUCER_H
 #define PARADEM_CONSUMER2PRODUCER_H
 
@@ -10,6 +11,7 @@
 #include<cereal/types/map.hpp>
 #include <iterator>
 #include<paradem/timeInfo.h>
+
 class Consumer2Producer:public IConsumer2Producer
 {
 private:
@@ -47,8 +49,8 @@ public:
 	
 
 public:
-	Consumer2Producer();
-	~Consumer2Producer();
+	Consumer2Producer()=default;
+	~Consumer2Producer()=default;
 public:
 	virtual void free();
 

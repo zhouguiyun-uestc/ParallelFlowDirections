@@ -1,3 +1,4 @@
+
 #include "object_factory.h"
 #include "consumer.h"
 #include "producer.h"
@@ -8,6 +9,7 @@ std::shared_ptr<IConsumer> ObjectFactory::createConsumer()
 {
 	return std::shared_ptr<IConsumer>(new Consumer(), ObjectDeleter());
 }
+
 std::shared_ptr<IProducer> ObjectFactory::createProducer()
 {
 	return std::shared_ptr<IProducer>(new Producer(), ObjectDeleter());
