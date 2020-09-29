@@ -38,7 +38,7 @@ The folder (test_data) constains our test data, in which the text file includes 
 To verify the correctness of the program, The program can be run by typing
 ```
 mpirun -np <processes_number> flowdirPara 2 <OUTPUT_DEM> <THE HEIGHT OF THE DEM > <THE WIDTH OF THE DEM> <OUTPUT SEQUENTIAL FLOW DIRECTION> <TILE HEIGHT> <TILE WIDTH> <DIVIDE PATH> <OUTPUT PARALLEL FLOW DIRECIOTN>
-mpiexec -n 4 flowdirPara 2 ./test_data/dem.tif 2000 3000 ./test_data/seqFlow/seqFlow.tif 500 800 ./test_data/tileDEM ./test_data/paraFlow
+mpirun -np 4 flowdirPara 2 ./test_data/dem.tif 2000 3000 ./test_data/seqFlow/seqFlow.tif 500 800 ./test_data/tileDEM ./test_data/paraFlow
 ```
 In the foregoing example `-np 4` indicates that the program should be run in parallel over 4 processes, which includes one producer process and 3 consumer processes. '2' indicates that the program automatically verify the correctness of the results. `./test_data/dem.tif ` is the output path of automtically generated DEM. `2000` is the height of the DEM, `3000` is the width of the DEM, `./test_data/seqFlow/seqFlow.tif` is the output path of flow directions of the DEM using the sequential Barnes algorithm. `500` is the height of the tile, `800` is the width of the tile. `./test_data/tileDEM` is the output path of the DEM after dividing the DEM. `./test_data/paraFlow` is the output path of the flow directions of tiles. If using the sequential Barnes algorithm and our parallel algorithm results in the same flow direction, the program will output `The two pictures are the same!`.
 
