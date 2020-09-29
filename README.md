@@ -20,7 +20,7 @@ The result is a program called  `flowdirPara`.
 The program is run by typing:
 ```
 mpirun -np <processes_number> flowdirPara 1 <INPUT> <OUTPUT>
-mpirun -np 3 1 flowdirPara ./test_data/ansai_part.txt ./test_data/ansai_flow  
+mpirun -np 3 flowdirPara 1 ./test_data/ansai_part.txt ./test_data/ansai_flow  
 ```
 In the foregoing example `-np 3` indicates that the program should be run in parallel over 3 processes, which includes one producer process and 2 consumer processes. '1' indicates that the program takes a text file as an input parameter, the text file includes the paths of the DEM.
 
