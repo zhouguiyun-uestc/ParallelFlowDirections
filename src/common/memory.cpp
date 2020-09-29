@@ -6,7 +6,7 @@
 void ProcessMemUsage( long& vmpeak, long& vmhwm ) {
 #if defined( __linux__ ) || defined( __linux ) || defined( linux ) || defined( __gnu_linux__ )
     vmpeak = 0;
-    vmhwm  = 0;
+    vmhwm = 0;
 
     std::ifstream fin( "/proc/self/status" );
     if ( !fin.good() )

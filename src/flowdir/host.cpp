@@ -27,12 +27,12 @@ void CommBytesReset() {
 void hostProcess( GridInfo& gridInfo, std::vector< TileInfo >& tileInfos, IObjectFactory* pIObjFactory ) {
     Timer timer_overall;
     timer_overall.start();
-    int                     good_to_go = 1;
+    int good_to_go = 1;
     std::vector< msg_type > msgs;
-    int                     size;
+    int size;
     MPI_Comm_size( MPI_COMM_WORLD, &size );
     const int active_consumer_limit = size - 1;
-    int       jobs_out              = 0;
+    int jobs_out = 0;
     MPI_Bcast( &good_to_go, 1, MPI_INT, 0, MPI_COMM_WORLD );
     for ( int i = 0; i < tileInfos.size(); i++ ) {
         TileInfo& tileInfo = tileInfos[ i ];
@@ -54,10 +54,10 @@ void hostProcess( GridInfo& gridInfo, std::vector< TileInfo >& tileInfos, IObjec
     std::cerr << "n First stage Rx = " << CommBytesRecv() << " B" << std::endl;
     CommBytesReset();
     TimeInfo time_first_total;
-    double   maxTimeoverall = 0;
-    double   minTimeoverall = 1000000000000;
-    double   maxTimecal     = 0;
-    double   minTimecal     = 1000000000000;
+    double maxTimeoverall = 0;
+    double minTimeoverall = 1000000000000;
+    double maxTimecal = 0;
+    double minTimecal = 1000000000000;
     for ( int row = 0; row < gridInfo.gridHeight; row++ ) {
         for ( int col = 0; col < gridInfo.gridWidth; col++ ) {
             if ( tileInfos[ row * gridInfo.gridWidth + col ].nullTile ) {
@@ -66,8 +66,8 @@ void hostProcess( GridInfo& gridInfo, std::vector< TileInfo >& tileInfos, IObjec
             time_first_total += ( ( Consumer2Producer* )gridIConsumer2Producer.at( row, col ).get() )->time_info;
             maxTimeoverall = std::max( maxTimeoverall, ( ( Consumer2Producer* )gridIConsumer2Producer.at( row, col ).get() )->time_info.overall );
             minTimeoverall = std::min( minTimeoverall, ( ( Consumer2Producer* )gridIConsumer2Producer.at( row, col ).get() )->time_info.overall );
-            maxTimecal     = std::max( maxTimecal, ( ( Consumer2Producer* )gridIConsumer2Producer.at( row, col ).get() )->time_info.calc );
-            minTimecal     = std::min( minTimecal, ( ( Consumer2Producer* )gridIConsumer2Producer.at( row, col ).get() )->time_info.calc );
+            maxTimecal = std::max( maxTimecal, ( ( Consumer2Producer* )gridIConsumer2Producer.at( row, col ).get() )->time_info.calc );
+            minTimecal = std::min( minTimecal, ( ( Consumer2Producer* )gridIConsumer2Producer.at( row, col ).get() )->time_info.calc );
         }
     }
     std::cout << "maxTimeOverall:" << maxTimeoverall << ",minTimeoverall:" << minTimeoverall << ",avgTimeoverall:" << time_first_total.overall / active_consumer_limit << std::endl;
@@ -82,17 +82,17 @@ void hostProcess( GridInfo& gridInfo, std::vector< TileInfo >& tileInfos, IObjec
         if ( tileInfo.nullTile ) {
             continue;
         }
-        msgs                                                      = std::vector< msg_type >();
+        msgs = std::vector< msg_type >();
         std::shared_ptr< IProducer2Consumer > pIProducer2Consumer = pIProducer->toConsumer( tileInfo, gridIConsumer2Producer );
-        Producer2Consumer*                    pP2c                = ( Producer2Consumer* )pIProducer2Consumer.get();
+        Producer2Consumer* pP2c = ( Producer2Consumer* )pIProducer2Consumer.get();
         CommSend( &tileInfos[ i ], pP2c, &gridInfo, ( jobs_out % active_consumer_limit ) + 1, TagSecond );
         jobs_out++;
     }
 
     maxTimeoverall = 0;
     minTimeoverall = 1000000000000;
-    maxTimecal     = 0;
-    minTimecal     = 1000000000000;
+    maxTimecal = 0;
+    minTimecal = 1000000000000;
     TimeInfo time_second_total;
     while ( jobs_out-- ) {
         TimeInfo temp;
@@ -101,8 +101,8 @@ void hostProcess( GridInfo& gridInfo, std::vector< TileInfo >& tileInfos, IObjec
 
         maxTimeoverall = std::max( maxTimeoverall, temp.overall );
         minTimeoverall = std::min( minTimeoverall, temp.overall );
-        maxTimecal     = std::max( maxTimecal, temp.calc );
-        minTimecal     = std::min( minTimecal, temp.calc );
+        maxTimecal = std::max( maxTimecal, temp.calc );
+        minTimecal = std::min( minTimecal, temp.calc );
     }
     std::cout << "maxTimeOverall:" << maxTimeoverall << ",minTimeoverall:" << minTimeoverall << ",avgTimeoverall:" << time_second_total.overall / active_consumer_limit << std::endl;
     std::cout << "maxTimecal:" << maxTimecal << ",minTimecal:" << minTimecal << ",avgTimecal:" << time_second_total.calc / active_consumer_limit << std::endl;

@@ -6,18 +6,18 @@
 
 class Node {
 public:
-    int   row;
-    int   col;
+    int row;
+    int col;
     float spill;
 
     Node() {
-        row   = 0;
-        col   = 0;
+        row = 0;
+        col = 0;
         spill = -9999.0;
     }
     Node( int row, int col, float spill ) {
-        this->row   = row;
-        this->col   = col;
+        this->row = row;
+        this->col = col;
         this->spill = spill;
     }
 

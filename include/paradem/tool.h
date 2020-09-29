@@ -31,7 +31,7 @@ void processTileGrid( GridInfo& gridInfo, std::vector< TileInfo >& tileInfos, IO
 #define s_curve( t ) ( t * t * ( 3. - 2. * t ) )
 #define lerp( t, a, b ) ( a + t * ( b - a ) )
 #define setup( i, b0, b1, r0, r1 ) \
-    t  = vec[ i ] + N;             \
+    t = vec[ i ] + N;              \
     b0 = ( ( int )t ) & BM;        \
     b1 = ( b0 + 1 ) & BM;          \
     r0 = t - ( int )t;             \
@@ -41,7 +41,7 @@ const unsigned char value[ 8 ] = { 128, 64, 32, 16, 8, 4, 2, 1 };
 
 class Flag {
 public:
-    int            width, height;
+    int width, height;
     unsigned char* flagArray;
 
 public:
@@ -49,10 +49,10 @@ public:
         Free();
     }
     bool Init( int width, int height ) {
-        flagArray    = NULL;
-        this->width  = width;
+        flagArray = NULL;
+        this->width = width;
         this->height = height;
-        flagArray    = new unsigned char[ ( width * height + 7 ) / 8 ]();
+        flagArray = new unsigned char[ ( width * height + 7 ) / 8 ]();
         return flagArray != NULL;
     }
     void Free() {
@@ -64,7 +64,7 @@ public:
         flagArray[ index / 8 ] |= value[ index % 8 ];
     }
     void SetFlags( int row, int col, Flag& flag ) {
-        int index  = row * width + col;
+        int index = row * width + col;
         int bIndex = index / 8;
         int bShift = index % 8;
         flagArray[ bIndex ] |= value[ bShift ];
@@ -87,15 +87,15 @@ public:
 
 class Node {
 public:
-    int   row;
-    int   col;
+    int row;
+    int col;
     float spill;
-    int   n;
+    int n;
     Node() {
-        row   = 0;
-        col   = 0;
+        row = 0;
+        col = 0;
         spill = -9999.0;
-        n     = -1;
+        n = -1;
     }
 
     struct Greater : public std::binary_function< Node, Node, bool > {
@@ -124,35 +124,35 @@ public:
     }
 };
 
-typedef std::vector< Node >                                    NodeVector;
+typedef std::vector< Node > NodeVector;
 typedef std::priority_queue< Node, NodeVector, Node::Greater > PriorityQueue;
 
-static int   p[ B + B + 2 ];
+static int p[ B + B + 2 ];
 static float g3[ B + B + 2 ][ 3 ];
 static float g2[ B + B + 2 ][ 2 ];
 static float g1[ B + B + 2 ];
-static int   start = 1;
-int          randomi( int m, int n );
-static void  normalize2( float v[ 2 ] );
-static void  normalize3( float v[ 3 ] );
-static void  init( void );
-float        noise2( float vec[ 2 ] );
-void         InitPriorityQue( Raster< float >& dem, Flag& flag, PriorityQueue& priorityQueue );
-void         ProcessPit( Raster< float >& dem, Flag& flag, std::queue< Node >& depressionQue, std::queue< Node >& traceQueue, PriorityQueue& priorityQueue );
-void         ProcessTraceQue( Raster< float >& dem, Flag& flag, std::queue< Node >& traceQueue, PriorityQueue& priorityQueue );
-void         calculateStatistics( Raster< float >& dem, double* min, double* max, double* mean, double* stdDev );
-void         createPerlinNoiseDEM( std::string outputFilePath, int height, int width );
+static int start = 1;
+int randomi( int m, int n );
+static void normalize2( float v[ 2 ] );
+static void normalize3( float v[ 3 ] );
+static void init( void );
+float noise2( float vec[ 2 ] );
+void InitPriorityQue( Raster< float >& dem, Flag& flag, PriorityQueue& priorityQueue );
+void ProcessPit( Raster< float >& dem, Flag& flag, std::queue< Node >& depressionQue, std::queue< Node >& traceQueue, PriorityQueue& priorityQueue );
+void ProcessTraceQue( Raster< float >& dem, Flag& flag, std::queue< Node >& traceQueue, PriorityQueue& priorityQueue );
+void calculateStatistics( Raster< float >& dem, double* min, double* max, double* mean, double* stdDev );
+void createPerlinNoiseDEM( std::string outputFilePath, int height, int width );
 
 /*--------sequential flow direction-----------*/
-static int  d8_FlowDir( Raster< float >& dem, const int row, const int col );
+static int d8_FlowDir( Raster< float >& dem, const int row, const int col );
 static void find_flat_edges( std::deque< GridCell >& low_edges, std::deque< GridCell >& high_edges, Raster< int >& flowdirs, Raster< float >& dem );
 static void label_this( int x0, int y0, const int label, Raster< int32_t >& labels, Raster< float >& dem );
 static void BuildAwayGradient( Raster< int >& flowdirs, Raster< int32_t >& flat_mask, std::deque< GridCell > edges, std::vector< int >& flat_height, Raster< int32_t >& labels );
 static void BuildTowardsCombinedGradient( Raster< int >& flowdirs, Raster< int32_t >& flat_mask, std::deque< GridCell > edges, std::vector< int >& flat_height, Raster< int32_t >& labels );
-void        resolve_flats( Raster< float >& dem, Raster< int >& flowdirs, Raster< int32_t >& flatMask, Raster< int32_t >& labels );
-static int  d8_masked_FlowDir( Raster< int32_t >& flat_mask, Raster< int32_t >& labels, const int row, const int col );
-void        d8_flow_flats( Raster< int32_t >& flat_mask, Raster< int32_t >& labels, Raster< int >& flowdirs );
-void        PerformAlgorithm( std::string filename, std::string outputname );
+void resolve_flats( Raster< float >& dem, Raster< int >& flowdirs, Raster< int32_t >& flatMask, Raster< int32_t >& labels );
+static int d8_masked_FlowDir( Raster< int32_t >& flat_mask, Raster< int32_t >& labels, const int row, const int col );
+void d8_flow_flats( Raster< int32_t >& flat_mask, Raster< int32_t >& labels, Raster< int >& flowdirs );
+void PerformAlgorithm( std::string filename, std::string outputname );
 
 /*---------compare results-----------*/
 bool comPareResults( std::string seqTif, std::string paraTif );

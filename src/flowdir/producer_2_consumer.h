@@ -15,10 +15,10 @@ private:
 
 public:
     std::vector< int > c_low, c_high;
-    OutBoundary        left, right, top, bottom, left_top, right_top, bottom_left, bottom_right;
+    OutBoundary left, right, top, bottom, left_top, right_top, bottom_left, bottom_right;
 
 public:
-    Producer2Consumer()  = default;
+    Producer2Consumer() = default;
     ~Producer2Consumer() = default;
 
 public:

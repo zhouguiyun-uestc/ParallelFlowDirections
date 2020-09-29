@@ -1,13 +1,12 @@
 #pragma once
 
-class GridCell
-{
+class GridCell {
 public:
-	int row;
-	int col;
-public:
-	GridCell()=default;
-	GridCell(int row, int col);
-	~GridCell()=default;
-};
+    int row;
+    int col;
 
+public:
+    GridCell() = default;
+    GridCell( int row, int col );
+    ~GridCell() = default;
+};

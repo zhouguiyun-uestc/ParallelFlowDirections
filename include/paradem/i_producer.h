@@ -1,3 +1,4 @@
+
 #ifndef PARADEM_PRODUCER_I_H
 #define PARADEM_PRODUCER_I_H
 
@@ -10,8 +11,8 @@
 
 class IProducer : public IObject {
 public:
-    virtual void                                  process( std::vector< TileInfo >& tileInfos, Grid< std::shared_ptr< IConsumer2Producer > >& gridIConsumer2Producer ) = 0;
-    virtual std::shared_ptr< IProducer2Consumer > toConsumer( const TileInfo& tileInfo, Grid< std::shared_ptr< IConsumer2Producer > > gridIConsumer2Producer )         = 0;
+    virtual void process( std::vector< TileInfo >& tileInfos, Grid< std::shared_ptr< IConsumer2Producer > >& gridIConsumer2Producer ) = 0;
+    virtual std::shared_ptr< IProducer2Consumer > toConsumer( const TileInfo& tileInfo, Grid< std::shared_ptr< IConsumer2Producer > > gridIConsumer2Producer ) = 0;
 };
 
 #endif

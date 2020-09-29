@@ -90,7 +90,7 @@ template < class T > Raster< T > Raster< T >::operator-( Raster< T >& other ) {
         for ( int col = 0; col < this->width; col++ ) {
             if ( this->isNoData( row, col ) || other.isNoData( row, col ) )
                 diff.at( row, col ) = diff.NoDataValue;
-            T dif               = at( row, col ) - other.at( row, col );
+            T dif = at( row, col ) - other.at( row, col );
             diff.at( row, col ) = dif;
         }
     }

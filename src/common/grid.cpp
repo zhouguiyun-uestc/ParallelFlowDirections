@@ -14,7 +14,7 @@ template < class T > bool Grid< T >::init( int height, int width ) {
     if ( height <= 0 || width <= 0 )
         return false;
     this->height = height;
-    this->width  = width;
+    this->width = width;
     data.resize( height * width );
     return true;
 }
@@ -53,4 +53,3 @@ template class Grid< int >;
 template class Grid< uint8_t >;
 template class Grid< int8_t >;
 template class Grid< std::shared_ptr< IConsumer2Producer > >;
-

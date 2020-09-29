@@ -12,10 +12,10 @@ class Producer : public IProducer {
 public:
     std::vector< int > graphLow;
     std::vector< int > graphHigh;
-    Timer              timer_io, timer_calc;
+    Timer timer_io, timer_calc;
 
 public:
-    virtual void                                  process( std::vector< TileInfo >& tileInfos, Grid< std::shared_ptr< IConsumer2Producer > >& gridIConsumer2Producer );
+    virtual void process( std::vector< TileInfo >& tileInfos, Grid< std::shared_ptr< IConsumer2Producer > >& gridIConsumer2Producer );
     virtual std::shared_ptr< IProducer2Consumer > toConsumer( const TileInfo& tileInfo, Grid< std::shared_ptr< IConsumer2Producer > > gridIConsumer2Producer );
 
 public:

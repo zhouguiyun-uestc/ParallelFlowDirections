@@ -21,9 +21,9 @@
 #define ObjectFirst 4
 #define ObjectSecond 5
 
-typedef uint64_t            comm_count_type;
-static comm_count_type      bytes_sent = 0;  ///< Number of bytes sent
-static comm_count_type      bytes_recv = 0;  ///< Number of bytes received
+typedef uint64_t comm_count_type;
+static comm_count_type bytes_sent = 0;  ///< Number of bytes sent
+static comm_count_type bytes_recv = 0;  ///< Number of bytes received
 typedef std::vector< char > msg_type;
 
 template < class T, class U > void CommRecv( T* a, U* b, int from ) {
@@ -33,7 +33,7 @@ template < class T, class U > void CommRecv( T* a, U* b, int from ) {
     MPI_Probe( from, MPI_ANY_TAG, MPI_COMM_WORLD, &status );
     int msg_size;
     MPI_Get_count( &status, MPI_CHAR, &msg_size );
-    int               receive_Id = status.MPI_SOURCE;
+    int receive_Id = status.MPI_SOURCE;
     std::stringstream ss( std::stringstream::in | std::stringstream::out | std::stringstream::binary );
     ss.unsetf( std::ios_base::skipws );
     char* buf = ( char* )malloc( msg_size );
@@ -42,7 +42,7 @@ template < class T, class U > void CommRecv( T* a, U* b, int from ) {
     int error_code = MPI_Recv( buf, msg_size, MPI_CHAR, receive_Id, MPI_ANY_TAG, MPI_COMM_WORLD, &status );
     if ( error_code != MPI_SUCCESS ) {
         char error_string[ BUFSIZ ];
-        int  length_of_error_string, error_class;
+        int length_of_error_string, error_class;
         MPI_Error_class( error_code, &error_class );
         MPI_Error_string( error_class, error_string, &length_of_error_string );
         fprintf( stderr, "%s\n", error_string );
@@ -79,7 +79,7 @@ template < class T, class U, class V > void CommRecv( T* a, U* b, V* v, int from
     int error_code = MPI_Recv( buf, msg_size, MPI_CHAR, receive_Id, MPI_ANY_TAG, MPI_COMM_WORLD, &status );
     if ( error_code != MPI_SUCCESS ) {
         char error_string[ BUFSIZ ];
-        int  length_of_error_string, error_class;
+        int length_of_error_string, error_class;
         MPI_Error_class( error_code, &error_class );
         MPI_Error_string( error_class, error_string, &length_of_error_string );
         fprintf( stderr, "%s\n", error_string );
@@ -108,7 +108,7 @@ template < class T > void CommRecv( T* a, std::nullptr_t, int from ) {
 
 template < class T, class U > msg_type CommPrepare( const T* a, const U* b ) {
     std::vector< char > omsg;
-    std::stringstream   ss( std::stringstream::in | std::stringstream::out | std::stringstream::binary );
+    std::stringstream ss( std::stringstream::in | std::stringstream::out | std::stringstream::binary );
     ss.unsetf( std::ios_base::skipws );
     cereal::BinaryOutputArchive archive( ss );
     archive( *a );
@@ -120,7 +120,7 @@ template < class T, class U > msg_type CommPrepare( const T* a, const U* b ) {
 
 template < class T, class U, class V > msg_type CommPrepare( const T* a, const U* b, const V* v ) {
     std::vector< char > omsg;
-    std::stringstream   ss( std::stringstream::in | std::stringstream::out | std::stringstream::binary );
+    std::stringstream ss( std::stringstream::in | std::stringstream::out | std::stringstream::binary );
     ss.unsetf( std::ios_base::skipws );
     cereal::BinaryOutputArchive archive( ss );
     archive( *a );
@@ -152,7 +152,7 @@ template < class T, class U, class V > void CommSend( const T* a, const U* b, co
     assert( ret == MPI_SUCCESS );
 }
 
-void            CommISend( msg_type& msg, int dest, int tag );
+void CommISend( msg_type& msg, int dest, int tag );
 comm_count_type CommBytesSent();
 comm_count_type CommBytesRecv();
 void CommBytesReset();

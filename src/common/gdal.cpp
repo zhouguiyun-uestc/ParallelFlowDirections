@@ -1,17 +1,17 @@
 
-#include <paradem/gdal.h>
-#include <paradem/raster.h>
 #include <iostream>
 #include <memory>
+#include <paradem/gdal.h>
+#include <paradem/raster.h>
 
 bool WriteGeoTIFF( const char* path, int height, int width, void* pData, GDALDataType type, double* geoTransformArray6Eles, double* min, double* max, double* mean, double* stdDev,
                    double nodatavalue ) {
     GDALDataset* poDataset;
     GDALAllRegister();
     CPLSetConfigOption( "GDAL_FILENAME_IS_UTF8", "NO" );
-    GDALDriver* poDriver     = GetGDALDriverManager()->GetDriverByName( "GTiff" );
-    char**      papszOptions = NULL;
-    poDataset                = poDriver->Create( path, width, height, 1, type, papszOptions );
+    GDALDriver* poDriver = GetGDALDriverManager()->GetDriverByName( "GTiff" );
+    char** papszOptions = NULL;
+    poDataset = poDriver->Create( path, width, height, 1, type, papszOptions );
     if ( geoTransformArray6Eles != NULL )
         poDataset->SetGeoTransform( geoTransformArray6Eles );
     GDALRasterBand* poBand;
@@ -27,7 +27,7 @@ bool WriteGeoTIFF( const char* path, int height, int width, void* pData, GDALDat
 
 bool readGeoTIFF( const char* path, GDALDataType type, Raster< float >& dem ) {
     if ( path == nullptr ) {
-         std::cout << "path is nullptr" << std::endl;
+        std::cout << "path is nullptr" << std::endl;
     }
     GDALDataset* poDataset;
     GDALAllRegister();
@@ -37,9 +37,9 @@ bool readGeoTIFF( const char* path, GDALDataType type, Raster< float >& dem ) {
         return false;
     }
     GDALRasterBand* poBand;
-    poBand                = poDataset->GetRasterBand( 1 );
+    poBand = poDataset->GetRasterBand( 1 );
     GDALDataType dataType = poBand->GetRasterDataType();
-    dem.geoTransforms     = std::make_shared< std::vector< double > >( std::vector< double >( 6 ) );
+    dem.geoTransforms = std::make_shared< std::vector< double > >( std::vector< double >( 6 ) );
     poDataset->GetGeoTransform( &dem.geoTransforms->at( 0 ) );
     if ( !dem.init( poBand->GetYSize(), poBand->GetXSize() ) ) {
         GDALClose( ( GDALDatasetH )poDataset );
@@ -63,9 +63,9 @@ bool readflowTIFF( const char* path, GDALDataType type, Raster< int >& flow ) {
         return false;
     }
     GDALRasterBand* poBand;
-    poBand                = poDataset->GetRasterBand( 1 );
+    poBand = poDataset->GetRasterBand( 1 );
     GDALDataType dataType = poBand->GetRasterDataType();
-    flow.geoTransforms    = std::make_shared< std::vector< double > >( std::vector< double >( 6 ) );
+    flow.geoTransforms = std::make_shared< std::vector< double > >( std::vector< double >( 6 ) );
     poDataset->GetGeoTransform( &flow.geoTransforms->at( 0 ) );
     if ( !flow.init( poBand->GetYSize(), poBand->GetXSize() ) ) {
         GDALClose( ( GDALDatasetH )poDataset );

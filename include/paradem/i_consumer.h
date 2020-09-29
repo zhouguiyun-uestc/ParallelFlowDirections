@@ -13,10 +13,10 @@ using StorageType = std::map< std::pair< int, int >, storageTile >;
 
 class IConsumer : public IObject {
 public:
-    virtual bool processRound1( const GridInfo& gridInfo, TileInfo& tileInfo, IConsumer2Producer* pIConsumer2Producer )       = 0;
+    virtual bool processRound1( const GridInfo& gridInfo, TileInfo& tileInfo, IConsumer2Producer* pIConsumer2Producer ) = 0;
     virtual bool processRound2( const GridInfo& gridInfo, const TileInfo& tileInfo, IProducer2Consumer* pIProducer2Consumer ) = 0;
-    virtual void SaveToRetain( TileInfo& tile, StorageType& storages )                                                        = 0;
-    virtual void LoadFromRetain( TileInfo& tile, StorageType& storages )                                                      = 0;
+    virtual void SaveToRetain( TileInfo& tile, StorageType& storages ) = 0;
+    virtual void LoadFromRetain( TileInfo& tile, StorageType& storages ) = 0;
 };
 
 #endif

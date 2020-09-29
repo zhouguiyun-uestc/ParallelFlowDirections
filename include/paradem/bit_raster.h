@@ -8,8 +8,8 @@
 class BitRaster {
 private:
     std::vector< uint8_t > flag_array;
-    int                    height, width;
-    const uint8_t          value[ 8 ] = { 128, 64, 32, 16, 8, 4, 2, 1 };
+    int height, width;
+    const uint8_t value[ 8 ] = { 128, 64, 32, 16, 8, 4, 2, 1 };
 
 public:
     BitRaster( int height, int width );

@@ -1,3 +1,4 @@
+
 #ifndef PARADEM_GRIDINFO_H
 #define PARADEM_GRIDINFO_H
 
@@ -15,13 +16,13 @@ private:
     }
 
 public:
-    int         tileHeight, tileWidth;                          // tile dimensions
-    int         gridHeight, gridWidth;                          // number of tiles along rows and cols
-    int         grandHeight, grandWidth;                        // total rows and cols in the grid
+    int tileHeight, tileWidth;                                  // tile dimensions
+    int gridHeight, gridWidth;                                  // number of tiles along rows and cols
+    int grandHeight, grandWidth;                                // total rows and cols in the grid
     std::string inputFolder, outputFolder, intermediateFolder;  // three folders
 public:
-    GridInfo()=default;
-    ~GridInfo()=default;
+    GridInfo()  = default;
+    ~GridInfo() = default;
 };
 
 #endif

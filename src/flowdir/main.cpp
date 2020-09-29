@@ -25,13 +25,14 @@ int main( int argc, char** argv ) {
     int rank;
     MPI_Comm_rank( MPI_COMM_WORLD, &rank );
     if ( rank == 0 ) {
-        if ( std::atoi( argv[ 1 ] ) == 1 ) {
-            std::string inputFile  = argv[ 2 ];
+        char* method = argv[ 1 ];
+        if (  strcmp(method,"parallel")==0) {
+            std::string inputFile = argv[ 2 ];
             std::string outputPath = argv[ 3 ];  // output flow directions
             std::cerr << "inputFile" << inputFile << std::endl;
             std::cerr << "outputPath" << outputPath << std::endl;
             GridInfo gridInfo;
-            Timer    timer_master;
+            Timer timer_master;
             timer_master.start();
             Timer timer_overall;
             timer_overall.start();
@@ -43,14 +44,14 @@ int main( int argc, char** argv ) {
             ObjectFactory objectFactory;
             hostProcess( gridInfo, tileInfos, &objectFactory );
             timer_master.stop();
-            std::cerr << "t Total wall-time=" << timer_master.elapsed() << "s" << std::endl;  
-		}
-        else if ( std::atoi( argv[ 1 ] ) == 2 ) {
+            std::cerr << "t Total wall-time=" << timer_master.elapsed() << "s" << std::endl;
+        }
+        else if (strcmp(method,"test")==0 ) {
             //---------generate DEM with perling DEM--------
             std::cout << "1.generate DEM!" << std::endl;
             std::string outputDEMFile = argv[ 2 ];
-            int         height        = std::stoi( argv[ 3 ] );
-            int         width         = std::stoi( argv[ 4 ] );
+            int height = std::stoi( argv[ 3 ] );
+            int width = std::stoi( argv[ 4 ] );
             createPerlinNoiseDEM( outputDEMFile, height, width );
             //----------sequential Barnes flow direction--------
             std::cout << "2.sequential flow directions!" << std::endl;
@@ -58,50 +59,49 @@ int main( int argc, char** argv ) {
             PerformAlgorithm( outputDEMFile, outputsequentialFlow );
             //-----------divide tiles--------------------
             std::cout << "3.divided tiles!" << std::endl;
-            int         tileHeight          = std::stoi( argv[ 6 ] );
-            int         tileWidth           = std::stoi( argv[ 7 ] );
+            int tileHeight = std::stoi( argv[ 6 ] );
+            int tileWidth = std::stoi( argv[ 7 ] );
             std::string outputtileDEMfolder = argv[ 8 ];
             generateTiles( outputDEMFile.c_str(), tileHeight, tileWidth, outputtileDEMfolder.c_str() );
             std::cout << "4.parallel computing!" << std::endl;
-            std::string inputFile  = outputtileDEMfolder + "\\" + "tileInfo.txt";
+            std::string inputFile = outputtileDEMfolder + "/" + "tileInfo.txt";
             std::string outputPath = argv[ 9 ];  // output flow directions
             std::cerr << "inputFile" << inputFile << std::endl;
             std::cerr << "outputPath" << outputPath << std::endl;
             GridInfo gridInfo;
-            Timer    timer_master;
+            Timer timer_master;
             timer_master.start();
             Timer timer_overall;
             timer_overall.start();
             std::vector< TileInfo > tileInfos;
             readTXTInfo( inputFile, tileInfos, gridInfo );
-            gridInfo.inputFolder  = outputtileDEMfolder;
+            gridInfo.inputFolder = outputtileDEMfolder;
             gridInfo.outputFolder = outputPath;
             timer_overall.stop();
             std::cerr << "t Preparer time = " << timer_overall.elapsed() << "s" << std::endl;
             ObjectFactory objectFactory;
             hostProcess( gridInfo, tileInfos, &objectFactory );
             std::cout << "5.merge flow tif!" << std::endl;
-            gridInfo.grandHeight   = height;
-            gridInfo.grandWidth    = width;
-            gridInfo.tileHeight    = tileHeight;
-            gridInfo.tileWidth     = tileWidth;
-            std::string outputFile = outputPath + "\\merge.tif";
+            gridInfo.grandHeight = height;
+            gridInfo.grandWidth = width;
+            gridInfo.tileHeight = tileHeight;
+            gridInfo.tileWidth = tileWidth;
+            std::string outputFile = outputPath + "/merge.tif";
             mergeTiles( gridInfo, outputFile.c_str() );
             //-----------compare  results---------------
             std::cout << "6.compare results!" << std::endl;
             comPareResults( outputsequentialFlow, outputFile );
             timer_master.stop();
             std::cerr << "t Total wall-time=" << timer_master.elapsed() << "s" << std::endl;
-		}
+        }
         else {
             std::cout << " parameter error!" << std::endl;
             return -1;
         }
-        
     }
     else {
         ObjectFactory pIObjFactory;
-        GridInfo      gridInfo;
+        GridInfo gridInfo;
         while ( true ) {
             MPI_Status status;
             MPI_Probe( 0, MPI_ANY_TAG, MPI_COMM_WORLD, &status );
@@ -112,7 +112,7 @@ int main( int argc, char** argv ) {
                 TileInfo tileInfo;
                 CommRecv( &tileInfo, &gridInfo, 0 );
                 std::shared_ptr< IConsumer2Producer > pIConsumer2Producer = pIObjFactory.createConsumer2Producer();
-                std::shared_ptr< IConsumer >          pIConsumer          = pIObjFactory.createConsumer();
+                std::shared_ptr< IConsumer > pIConsumer = pIObjFactory.createConsumer();
                 pIConsumer->processRound1( gridInfo, tileInfo, pIConsumer2Producer.get() );
                 timer_overall.stop();
                 long vmpeak, vmhwm;
@@ -124,9 +124,9 @@ int main( int argc, char** argv ) {
             else if ( the_job == TagSecond ) {
                 Timer timer_overall;
                 timer_overall.start();
-                TileInfo                              tileInfo;
+                TileInfo tileInfo;
                 std::shared_ptr< IProducer2Consumer > pIProducer2Consumer;
-                Producer2Consumer                     pP2C;
+                Producer2Consumer pP2C;
                 CommRecv( &tileInfo, &pP2C, &gridInfo, 0 );
                 std::shared_ptr< IConsumer > pIConsumer = pIObjFactory.createConsumer();
                 pIConsumer->processRound2( gridInfo, tileInfo, &pP2C );

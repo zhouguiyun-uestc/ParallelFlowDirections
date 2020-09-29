@@ -19,16 +19,16 @@ void Producer::process( std::vector< TileInfo >& tileInfos, Grid< std::shared_pt
     Timer timer_mg_construct;
     timer_mg_construct.start();
     const int gridHeight = gridIConsumer2Producer.getHeight();
-    const int gridWidth  = gridIConsumer2Producer.getWidth();
-    int32_t   maxIDcells = 0;
+    const int gridWidth = gridIConsumer2Producer.getWidth();
+    int32_t maxIDcells = 0;
     for ( int row = 0; row < gridHeight; row++ ) {
         for ( int col = 0; col < gridWidth; col++ ) {
             IConsumer2Producer* Ic2p = gridIConsumer2Producer.at( row, col ).get();
             if ( tileInfos[ row * gridWidth + col ].nullTile ) {
                 Consumer2Producer pC2P;
-                pC2P.nullTile                         = true;
-                pC2P.gridRow                          = row;
-                pC2P.gridCol                          = col;
+                pC2P.nullTile = true;
+                pC2P.gridRow = row;
+                pC2P.gridCol = col;
                 gridIConsumer2Producer.at( row, col ) = std::make_shared< Consumer2Producer >( pC2P );
                 continue;
             }
@@ -39,15 +39,15 @@ void Producer::process( std::vector< TileInfo >& tileInfos, Grid< std::shared_pt
     std::vector< std::map< int, int > > masterLowEdgeGraph( maxIDcells );
     std::vector< std::map< int, int > > masterHighEdgeGraph( maxIDcells );
     std::cerr << "!Total labels required: " << maxIDcells << std::endl;
-    uint32_t                       idOffset = 0;
-    uint32_t                       lowMap   = 0;
-    uint32_t                       highMap  = 0;
+    uint32_t idOffset = 0;
+    uint32_t lowMap = 0;
+    uint32_t highMap = 0;
     std::map< int, int >::iterator skey;
     for ( int row = 0; row < gridHeight; row++ ) {
         for ( int col = 0; col < gridWidth; col++ ) {
 
             IConsumer2Producer* Ic2p = gridIConsumer2Producer.at( row, col ).get();
-            Consumer2Producer*  c2p  = ( Consumer2Producer* )Ic2p;
+            Consumer2Producer* c2p = ( Consumer2Producer* )Ic2p;
             if ( c2p->nullTile || tileInfos[ row * gridWidth + col ].nullTile ) {
                 continue;
             }
@@ -55,7 +55,7 @@ void Producer::process( std::vector< TileInfo >& tileInfos, Grid< std::shared_pt
             try {
                 for ( int m = 0; m < ( int )c2p->lowEdgeGraph.size(); m++ ) {
                     for ( skey = c2p->lowEdgeGraph[ m ].begin(); skey != c2p->lowEdgeGraph[ m ].end(); skey++ ) {
-                        int first_id  = m;
+                        int first_id = m;
                         int second_id = skey->first;
                         if ( first_id > 1 ) {
                             first_id += idOffset;
@@ -68,7 +68,7 @@ void Producer::process( std::vector< TileInfo >& tileInfos, Grid< std::shared_pt
                         lowMap++;
                     }
                     for ( skey = c2p->highEdgeGraph[ m ].begin(); skey != c2p->highEdgeGraph[ m ].end(); skey++ ) {
-                        int first_id  = m;
+                        int first_id = m;
                         int second_id = skey->first;
                         if ( first_id > 1 ) {
                             first_id += idOffset;
@@ -99,7 +99,7 @@ void Producer::process( std::vector< TileInfo >& tileInfos, Grid< std::shared_pt
     for ( int row = 0; row < gridHeight; row++ ) {
         for ( int col = 0; col < gridWidth; col++ ) {
             IConsumer2Producer* Ic2p = gridIConsumer2Producer.at( row, col ).get();
-            Consumer2Producer*  c    = ( Consumer2Producer* )Ic2p;
+            Consumer2Producer* c = ( Consumer2Producer* )Ic2p;
             if ( c->nullTile ) {
                 continue;
             }
@@ -155,18 +155,18 @@ void Producer::process( std::vector< TileInfo >& tileInfos, Grid< std::shared_pt
 }
 
 std::shared_ptr< IProducer2Consumer > Producer::toConsumer( const TileInfo& tileInfo, Grid< std::shared_ptr< IConsumer2Producer > > gridIConsumer2Producer ) {
-    int                gridRow    = tileInfo.gridRow;
-    int                gridCol    = tileInfo.gridCol;
-    int                gridWidth  = gridIConsumer2Producer.getWidth();
-    int                gridHeight = gridIConsumer2Producer.getHeight();
-    Producer2Consumer* p2c        = new Producer2Consumer();
-    auto               job_low    = std::vector< int >( graphLow.begin() + ( ( Consumer2Producer* )gridIConsumer2Producer.at( gridRow, gridCol ).get() )->idOffset,
+    int gridRow = tileInfo.gridRow;
+    int gridCol = tileInfo.gridCol;
+    int gridWidth = gridIConsumer2Producer.getWidth();
+    int gridHeight = gridIConsumer2Producer.getHeight();
+    Producer2Consumer* p2c = new Producer2Consumer();
+    auto job_low = std::vector< int >( graphLow.begin() + ( ( Consumer2Producer* )gridIConsumer2Producer.at( gridRow, gridCol ).get() )->idOffset,
                                        graphLow.begin() + ( ( Consumer2Producer* )gridIConsumer2Producer.at( gridRow, gridCol ).get() )->idOffset
                                            + ( ( Consumer2Producer* )gridIConsumer2Producer.at( gridRow, gridCol ).get() )->idIncrement );
-    auto               job_high   = std::vector< int >( graphHigh.begin() + ( ( Consumer2Producer* )gridIConsumer2Producer.at( gridRow, gridCol ).get() )->idOffset,
+    auto job_high = std::vector< int >( graphHigh.begin() + ( ( Consumer2Producer* )gridIConsumer2Producer.at( gridRow, gridCol ).get() )->idOffset,
                                         graphHigh.begin() + ( ( Consumer2Producer* )gridIConsumer2Producer.at( gridRow, gridCol ).get() )->idOffset
                                             + ( ( Consumer2Producer* )gridIConsumer2Producer.at( gridRow, gridCol ).get() )->idIncrement );
-    OutBoundary        left, right, bottom, top, left_top, right_top, left_bottom, right_bottom;
+    OutBoundary left, right, bottom, top, left_top, right_top, left_bottom, right_bottom;
     if ( gridCol > 0 )  // left  1
     {
         Consumer2Producer* c2p = ( Consumer2Producer* )&*gridIConsumer2Producer.at( gridRow, gridCol - 1 );
@@ -231,16 +231,16 @@ std::shared_ptr< IProducer2Consumer > Producer::toConsumer( const TileInfo& tile
                                        std::vector< int >( graphHigh.begin() + c2p->idOffset, graphHigh.begin() + c2p->idOffset + c2p->idIncrement ), std::vector< int >( 1, c2p->top_ID.back() ) );
         }
     }
-    p2c->top          = top;
-    p2c->left         = left;
-    p2c->right        = right;
-    p2c->bottom       = bottom;
-    p2c->left_top     = left_top;
-    p2c->right_top    = right_top;
+    p2c->top = top;
+    p2c->left = left;
+    p2c->right = right;
+    p2c->bottom = bottom;
+    p2c->left_top = left_top;
+    p2c->right_top = right_top;
     p2c->bottom_right = right_bottom;
-    p2c->bottom_left  = left_bottom;
-    p2c->c_high       = job_high;
-    p2c->c_low        = job_low;
+    p2c->bottom_left = left_bottom;
+    p2c->c_high = job_high;
+    p2c->c_low = job_low;
     return std::shared_ptr< IProducer2Consumer >( p2c, ObjectDeleter() );
 }
 
@@ -311,7 +311,7 @@ void Producer::HandleEdge( std::vector< float >& elev_a, std::vector< float >& e
 
 void Producer::HandleCorner( float& elev_a, float& elev_b, int ident_a, int ident_b, std::vector< std::map< int, int > >& masterGraph_lowEdge, const int ident_a_offset, const int ident_b_offset,
                              std::vector< std::map< int, int > >& masterGraph_highEdge ) {
-    bool flagLow  = false;
+    bool flagLow = false;
     bool flagTrue = false;
     if ( ident_a > 0 ) {
         if ( ident_a > 1 ) {
@@ -322,8 +322,8 @@ void Producer::HandleCorner( float& elev_a, float& elev_b, int ident_a, int iden
         }
         if ( elev_a == elev_b ) {
             if ( ident_b > 0 ) {
-                masterGraph_lowEdge[ ident_a ][ ident_b ]  = 2;
-                masterGraph_lowEdge[ ident_b ][ ident_a ]  = 2;
+                masterGraph_lowEdge[ ident_a ][ ident_b ] = 2;
+                masterGraph_lowEdge[ ident_b ][ ident_a ] = 2;
                 masterGraph_highEdge[ ident_a ][ ident_b ] = 1;
                 masterGraph_highEdge[ ident_b ][ ident_a ] = 1;
             }
@@ -352,10 +352,10 @@ void Producer::HandleCorner( float& elev_a, float& elev_b, int ident_a, int iden
 void Producer::dijkstra( std::vector< std::map< int, int > >& masterGraph_lowEdge, std::vector< std::map< int, int > >& masterGraph_highEdge, int v0 ) {
     Timer flowDir_timer;
     flowDir_timer.start();
-    int                                                                 v;
-    typedef std::pair< int, int >                                       pii;
+    int v;
+    typedef std::pair< int, int > pii;
     std::priority_queue< pii, std::vector< pii >, std::greater< pii > > q;
-    int                                                                 maxlabel = masterGraph_lowEdge.size();
+    int maxlabel = masterGraph_lowEdge.size();
     graphLow.resize( maxlabel, 9999999 );
     graphHigh.resize( maxlabel, 9999999 );
     pii cur;
@@ -370,7 +370,7 @@ void Producer::dijkstra( std::vector< std::map< int, int > >& masterGraph_lowEdg
         }
         for ( auto& n : masterGraph_lowEdge[ v ] ) {
             auto n_vertex_num = n.first;
-            auto n_elev       = n.second;
+            auto n_elev = n.second;
             if ( graphLow[ v ] + n_elev < graphLow[ n_vertex_num ] ) {
                 graphLow[ n_vertex_num ] = graphLow[ v ] + n_elev;
                 q.push( pii( graphLow[ n_vertex_num ], n_vertex_num ) );
@@ -389,7 +389,7 @@ void Producer::dijkstra( std::vector< std::map< int, int > >& masterGraph_lowEdg
         }
         for ( auto& n : masterGraph_highEdge[ v ] ) {
             auto n_vertex_num = n.first;
-            auto n_elev       = n.second;
+            auto n_elev = n.second;
             if ( graphHigh[ v ] + n_elev < graphHigh[ n_vertex_num ] ) {
 
                 graphHigh[ n_vertex_num ] = graphHigh[ v ] + n_elev;
