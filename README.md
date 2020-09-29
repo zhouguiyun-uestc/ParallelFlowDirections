@@ -24,14 +24,14 @@ mpirun -np 3 flowdirPara 1 ./test_data/ansai_part.txt ./test_data/ansai_flow
 ```
 In the foregoing example `-np 3` indicates that the program should be run in parallel over 3 processes, which includes one producer process and 2 consumer processes. '1' indicates that the program takes a text file as an input parameter, the text file includes the paths of the DEM.
 
-# A input file 
-A input file is a text file with the format:
+# Input file 
+The input file includes a two dimensional array of file paths of tiles.  
 ```
 f1.tif, f2.tif, f3.tif, f4.tif,
       , f5.tif, f6.tif, f7.tif,
       , f8.tif, f9.tif,
 ```
-fx.tifs with same row have the same height. fx.tifs with same column have the same width. The text file specifies how fx.tifs are arranged in relation to each other in space, blanks between commas indicate that there is no tile there. Note that the files need not have TIF format: they can be of any type which GDAL can read. 
+If the file path is blank, it indicate that there is no tile there. The file format can be any type that GDAL support. 
 
 # Testing
 The folder (test_data) constains our test data, in which the text file includes the paths of the corresponding DEM.
