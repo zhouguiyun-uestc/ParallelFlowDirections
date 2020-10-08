@@ -3,6 +3,7 @@
 #include "consumer.h"
 #include "consumer_2_producer.h"
 #include "producer.h"
+
 #include <paradem/object_deleter.h>
 
 std::shared_ptr< IConsumer > ObjectFactory::createConsumer() {

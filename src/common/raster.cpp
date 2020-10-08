@@ -1,8 +1,9 @@
 
+#include <paradem/raster.h>
+
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
-#include <paradem/raster.h>
 
 template < class T > Raster< T >::Raster() {
     NoDataValue = 0;

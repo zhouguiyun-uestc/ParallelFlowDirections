@@ -1,18 +1,20 @@
+
 #ifndef PARADEM_CONSUMER_H
 #define PARADEM_CONSUMER_H
 
-#include <deque>
-#include <paradem/i_consumer.h>
-#include <stdint.h>
-
 #include "host.h"
-#include "paradem/pStorage.h"
-#include "paradem/raster.h"
-#include "paradem/timer.h"
 #include "producer_2_consumer.h"
+
+#include <paradem/GridCell.h>
+#include <paradem/i_consumer.h>
+#include <paradem/pStorage.h>
+#include <paradem/raster.h>
+#include <paradem/timer.h>
+
+#include <deque>
 #include <list>
 #include <map>
-#include <paradem/GridCell.h>
+#include <stdint.h>
 
 using StorageType = std::map< std::pair< int, int >, storageTile >;
 

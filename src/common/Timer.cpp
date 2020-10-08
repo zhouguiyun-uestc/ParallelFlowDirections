@@ -1,6 +1,7 @@
 
+#include <paradem/timer.h>
+
 #include <chrono>
-#include <paradem/Timer.h>
 
 void Timer::start() {
     start_time = clock::now();

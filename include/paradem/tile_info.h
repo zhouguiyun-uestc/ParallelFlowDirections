@@ -3,6 +3,7 @@
 #define PARADEM_TILECOORD_H
 
 #include <cereal/archives/binary.hpp>
+
 #include <iterator>
 
 const uint8_t TILE_RIGHT = 1;         ///< Indicates a NullTile is on the LHS of the tile

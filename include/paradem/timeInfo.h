@@ -2,9 +2,10 @@
 #ifndef PARADEM_TIMEINFO_H
 #define PARADEM_TIMEINFO_H
 
-#include <algorithm>
 #include <cereal/access.hpp>
+
 #include <cmath>
+#include <algorithm>
 
 class TimeInfo {
 private:

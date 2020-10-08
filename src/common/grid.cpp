@@ -1,7 +1,9 @@
 
-#include <memory>
+
 #include <paradem/grid.h>
 #include <paradem/i_consumer_2_producer.h>
+
+#include <memory>
 #include <stdint.h>
 
 template < class T > Grid< T >::Grid() {

@@ -3,8 +3,10 @@
 #define PARADEM_PRODUCER2CONSUMER_H
 
 #include "outBoundary.h"
-#include <cereal/archives/binary.hpp>
+
 #include <paradem/i_producer_2_consumer.h>
+
+#include <cereal/archives/binary.hpp>
 
 class Producer2Consumer : public IProducer2Consumer {
 private:

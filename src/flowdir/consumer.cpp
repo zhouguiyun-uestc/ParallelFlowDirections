@@ -1,11 +1,13 @@
 
 #include "consumer.h"
 #include "consumer_2_producer.h"
-#include <algorithm>
-#include <iostream>
+
 #include <paradem/gdal.h>
 #include <paradem/raster.h>
+
 #include <queue>
+#include <algorithm>
+#include <iostream>
 
 bool Consumer::processRound1( const GridInfo& gridInfo, TileInfo& tileInfo, IConsumer2Producer* pIC2P ) {
     NoFlat = false;

@@ -6,6 +6,7 @@
 #include <cereal/types/map.hpp>
 #include <cereal/types/string.hpp>
 #include <cereal/types/vector.hpp>
+
 #include <string>
 
 class GridInfo {
@@ -21,7 +22,7 @@ public:
     int grandHeight, grandWidth;                                // total rows and cols in the grid
     std::string inputFolder, outputFolder, intermediateFolder;  // three folders
 public:
-    GridInfo()  = default;
+    GridInfo() = default;
     ~GridInfo() = default;
 };
 

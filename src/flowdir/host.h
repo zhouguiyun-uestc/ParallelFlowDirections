@@ -2,16 +2,19 @@
 #define HOST_H
 
 #include "consumer_2_producer.h"
-#include <assert.h>
-#include <cereal/archives/binary.hpp>
-#include <cereal/types/map.hpp>
-#include <cereal/types/vector.hpp>
-#include <mpi.h>
+
 #include <paradem/grid_info.h>
 #include <paradem/i_object_factory.h>
 #include <paradem/raster.h>
 #include <paradem/tile_info.h>
 #include <paradem/tool.h>
+
+#include <cereal/archives/binary.hpp>
+#include <cereal/types/map.hpp>
+#include <cereal/types/vector.hpp>
+
+#include <assert.h>
+#include <mpi.h>
 #include <type_traits>
 #include <vector>
 

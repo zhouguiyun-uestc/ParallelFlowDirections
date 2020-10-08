@@ -1,6 +1,8 @@
 #pragma once
+
 #include <cereal/archives/binary.hpp>
 #include <cereal/types/vector.hpp>
+
 #include <vector>
 
 class OutBoundary {

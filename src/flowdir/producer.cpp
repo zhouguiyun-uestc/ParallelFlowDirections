@@ -3,13 +3,15 @@
 #include "consumer_2_producer.h"
 #include "outBoundary.h"
 #include "producer_2_consumer.h"
+
+#include <paradem/object_deleter.h>
+
 #include <algorithm>
 #include <assert.h>
 #include <fstream>
 #include <functional>
 #include <iostream>
 #include <memory>
-#include <paradem/object_deleter.h>
 #include <queue>
 
 using namespace std;
