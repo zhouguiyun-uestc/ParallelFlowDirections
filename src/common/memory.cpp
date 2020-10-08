@@ -1,6 +1,8 @@
 
-#include <fstream>
+
 #include <paradem/memory.h>
+
+#include <fstream>
 #include <string>
 
 void ProcessMemUsage( long& vmpeak, long& vmhwm ) {

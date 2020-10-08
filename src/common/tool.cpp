@@ -1,5 +1,14 @@
 
-#include "mpi.h"
+#include <paradem/gdal.h>
+#include <paradem/grid.h>
+#include <paradem/i_consumer.h>
+#include <paradem/i_object_factory.h>
+#include <paradem/i_producer.h>
+#include <paradem/object_deleter.h>
+#include <paradem/tool.h>
+
+#include <mpi.h>
+
 #include <algorithm>
 #include <assert.h>
 #include <cmath>
@@ -8,13 +17,6 @@
 #include <iostream>
 #include <map>
 #include <memory>
-#include <paradem/gdal.h>
-#include <paradem/grid.h>
-#include <paradem/i_consumer.h>
-#include <paradem/i_object_factory.h>
-#include <paradem/i_producer.h>
-#include <paradem/object_deleter.h>
-#include <paradem/tool.h>
 #include <string>
 #include <vector>
 
@@ -182,7 +184,7 @@ bool mergeTiles( GridInfo& gridInfo, const char* outputFilePath ) {
     std::vector< double > geotransform( 6 );
     for ( int tileRow = 0; tileRow < gridHeight; tileRow++ ) {
         for ( int tileCol = 0; tileCol < gridWidth; tileCol++ ) {
-            std::string fileName = inputFolder + "/" + std::to_string( tileRow ) + "_" + std::to_string( tileCol ) + "flowdir.tif";
+            std::string fileName = inputFolder + "\\" + std::to_string( tileRow ) + "_" + std::to_string( tileCol ) + "flowdir.tif";
             Raster< float > tile;
             if ( !readGeoTIFF( fileName.data(), GDALDataType::GDT_Int32, tile ) ) {
                 std::cout << fileName << " not exist!" << std::endl;
@@ -216,7 +218,7 @@ bool createDiffFile( const char* filePath1, const char* filePath2, const char* d
     if ( !readGeoTIFF( filePath2, GDALDataType::GDT_Float32, dem2 ) )
         return false;
     Raster< float > diff = dem1 - dem2;
-    WriteGeoTIFF( diffFilePath, diff.getHeight(), diff.getWidth(), &diff, GDALDataType::GDT_Float32, diff.getGeoTransformsPtr(), nullptr, nullptr, nullptr, nullptr, diff.NoDataValue );
+    WriteGeoTIFF( "d:\\temp\\filled.tif", diff.getHeight(), diff.getWidth(), &diff, GDALDataType::GDT_Float32, diff.getGeoTransformsPtr(), nullptr, nullptr, nullptr, nullptr, diff.NoDataValue );
     return true;
 }
 
@@ -295,7 +297,7 @@ void createTileInfoArray( GridInfo& gridInfo, std::vector< TileInfo >& tileInfos
             tileInfo.gridCol = tileCol;
             tileInfo.height = height;
             tileInfo.width = width;
-            std::string path = gridInfo.inputFolder + "/" + std::to_string( tileRow ) + "_" + std::to_string( tileCol ) + ".tif";
+            std::string path = gridInfo.inputFolder + "\\" + std::to_string( tileRow ) + "_" + std::to_string( tileCol ) + ".tif";
             const char* cPath = path.c_str();
             tileInfo.nullTile = false;
             tileInfo.filename = path;

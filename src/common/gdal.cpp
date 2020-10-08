@@ -1,8 +1,9 @@
 
-#include <iostream>
-#include <memory>
 #include <paradem/gdal.h>
 #include <paradem/raster.h>
+
+#include <iostream>
+#include <memory>
 
 bool WriteGeoTIFF( const char* path, int height, int width, void* pData, GDALDataType type, double* geoTransformArray6Eles, double* min, double* max, double* mean, double* stdDev,
                    double nodatavalue ) {

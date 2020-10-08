@@ -2,10 +2,11 @@
 #ifndef PARADEM_PRODUCER_H
 #define PARADEM_PRODUCER_H
 
-#include <map>
-#include <memory>
 #include <paradem/i_producer.h>
 #include <paradem/timer.h>
+
+#include <map>
+#include <memory>
 #include <vector>
 
 class Producer : public IProducer {

@@ -2,8 +2,9 @@
 #ifndef PARADEM_DEM_H
 #define PARADEM_DEM_H
 
-#include <memory>
 #include <paradem/grid.h>
+
+#include <memory>
 
 template < class T > class Raster : public Grid< T > {
 public:

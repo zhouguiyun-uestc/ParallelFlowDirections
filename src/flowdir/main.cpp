@@ -1,23 +1,24 @@
 ﻿
 #include "consumer.h"
 #include "consumer_2_producer.h"
-#include "exception"
-#include "host.h"
-#include "mpi.h"
 #include "object_factory.h"
 #include "producer_2_consumer.h"
-#include <assert.h>
-#include <cereal/archives/binary.hpp>
-#include <cereal/types/map.hpp>
-#include <cereal/types/vector.hpp>
-#include <iostream>
-#include <map>
+
 #include <paradem/gdal.h>
 #include <paradem/memory.h>
 #include <paradem/raster.h>
 #include <paradem/timeInfo.h>
 #include <paradem/timer.h>
 #include <paradem/tool.h>
+
+#include <cereal/archives/binary.hpp>
+#include <cereal/types/map.hpp>
+#include <cereal/types/vector.hpp>
+
+#include <assert.h>
+#include <exception>
+#include <iostream>
+#include <map>
 #include <vector>
 
 int main( int argc, char** argv ) {
@@ -26,7 +27,7 @@ int main( int argc, char** argv ) {
     MPI_Comm_rank( MPI_COMM_WORLD, &rank );
     if ( rank == 0 ) {
         char* method = argv[ 1 ];
-        if (  strcmp(method,"parallel")==0) {
+        if ( strcmp( method, "parallel" ) == 0 ) {
             std::string inputFile = argv[ 2 ];
             std::string outputPath = argv[ 3 ];  // output flow directions
             std::cerr << "inputFile" << inputFile << std::endl;
@@ -46,7 +47,7 @@ int main( int argc, char** argv ) {
             timer_master.stop();
             std::cerr << "t Total wall-time=" << timer_master.elapsed() << "s" << std::endl;
         }
-        else if (strcmp(method,"test")==0 ) {
+        else if ( strcmp( method, "test" ) == 0 ) {
             //---------generate DEM with perling DEM--------
             std::cout << "1.generate DEM!" << std::endl;
             std::string outputDEMFile = argv[ 2 ];

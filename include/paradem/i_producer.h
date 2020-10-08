@@ -2,12 +2,13 @@
 #ifndef PARADEM_PRODUCER_I_H
 #define PARADEM_PRODUCER_I_H
 
-#include <memory>
 #include <paradem/grid.h>
 #include <paradem/grid_info.h>
 #include <paradem/i_consumer_2_producer.h>
 #include <paradem/i_producer_2_consumer.h>
 #include <paradem/tile_info.h>
+
+#include <memory>
 
 class IProducer : public IObject {
 public:

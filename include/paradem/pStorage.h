@@ -3,6 +3,7 @@
 #define PARADEM_PSTORAGE_H
 
 #include "raster.h"
+
 #include <map>
 
 typedef struct storageTile {

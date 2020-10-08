@@ -2,15 +2,17 @@
 #ifndef PARADEM_TOOL_H
 #define PARADEM_TOOL_H
 
-#include "mpi.h"
-#include <assert.h>
-#include <cereal/archives/binary.hpp>
-#include <cereal/types/map.hpp>
-#include <cereal/types/vector.hpp>
 #include <paradem/GridCell.h>
 #include <paradem/grid_info.h>
 #include <paradem/i_object_factory.h>
 #include <paradem/tile_info.h>
+
+#include <cereal/archives/binary.hpp>
+#include <cereal/types/map.hpp>
+#include <cereal/types/vector.hpp>
+#include <mpi.h>
+
+#include <assert.h>
 #include <queue>
 #include <vector>
 
