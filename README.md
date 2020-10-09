@@ -25,9 +25,9 @@ The result is a program called  `ParallelFlowDir`.
 
 # Program argumens
 
-The program can be run using MPI with two modes: parallel and test. In parallel mode, the program derives flow directions. In test mode, the program run test cases on randomly generated DEMs.
+The program can be run using MPI with two modes: `parallel` and `test`. In `parallel` mode, the program derives flow directions. In `test` mode, the program run test cases on randomly generated DEMs.
 
-In parallel mode, the program has the following arguments: 
+In `parallel` mode, the program has the following arguments: 
 ```
 mpirun -np <PROCESSES_NUMBER> ParallelFlowDir parallel <INPUT> <OUTPUT>
 ```
@@ -37,7 +37,7 @@ The `<OUTPUT>` argument specifes the output folder.
 An example command is: `mpirun -np 3 ParallelFlowDir parallel ./test_data/ansai_part.txt ./test_data/ansai_flow`   
 `-np 3` indicates that the program is run in parallel over 3 processes, which includes 1 producer process and 2 consumer processes.  
 
-In test mode, the program has the following arguments: 
+In `test` mode, the program has the following arguments: 
 ```
 mpirun -np <PROCESSES_NUMBER> ParallelFlowDir test <OUTPUT_PATH_OF_DEM> <HEIGHT_OF_THE_DEM > <WIDTH_OF_THE_DEM> <OUTPUT_PATH_OF_SEQUENTIAL_FLOW_DIRECTIONS> <TILE_HEIGHT> <TILE_WIDTH> <DIVIDE_FOLDER> <OUTPUT_FOLDER_OF_PARALLEL_FLOW_DIRECIOTNS>   
 ```
