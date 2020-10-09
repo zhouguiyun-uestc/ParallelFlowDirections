@@ -184,7 +184,7 @@ bool mergeTiles( GridInfo& gridInfo, const char* outputFilePath ) {
     std::vector< double > geotransform( 6 );
     for ( int tileRow = 0; tileRow < gridHeight; tileRow++ ) {
         for ( int tileCol = 0; tileCol < gridWidth; tileCol++ ) {
-            std::string fileName = inputFolder + "\\" + std::to_string( tileRow ) + "_" + std::to_string( tileCol ) + "flowdir.tif";
+            std::string fileName = inputFolder + "/" + std::to_string( tileRow ) + "_" + std::to_string( tileCol ) + "flowdir.tif";
             Raster< float > tile;
             if ( !readGeoTIFF( fileName.data(), GDALDataType::GDT_Int32, tile ) ) {
                 std::cout << fileName << " not exist!" << std::endl;
