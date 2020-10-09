@@ -1,6 +1,7 @@
 # Text files
-`ansai_partfilling` includes the tiles of DEM.  
-`grant_3m_partfilling` includes the tiles of DEM.  
-`ansai_part.txt` contains the paths of the tiles which are put in `ansai_partfilling` folder.    
-`grant_3m_part.txt` contains the paths of the tiles which are put in `grant_3m_partfilling` folder.   
+Two test DEMs are provided.
+
+The `ansai_partfilling` folder includes the tiles of the first DEM.  The file `ansai_part.txt` is the input file for the program.   
+
+The `grant_3m_partfilling` folder includes the tiles of the second DEM.  The file `grant_3m_part.txt` is the input file for the program.   
  
