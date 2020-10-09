@@ -26,22 +26,20 @@ The program can be run using MPI with two modes: parallel and test. In parallel 
 In parallel mode, the program has the following arguments: 
 ```
 mpirun -np <processes_number> ParallelFlowDir parallel <INPUT> <OUTPUT>
-
 The <INPUT> argument is a text file and contains the paths of the tiles of the DEM. The <OUTPUT> argument specifes the output folder. 
 
 An example command is: mpirun -np 3 ParallelFlowDir parallel ./test_data/ansai_part.txt ./test_data/ansai_flow.  
-`-np 3` indicates that the program is run in parallel over 3 processes, which includes one producer process and 2 consumer processes.
+`-np 3` indicates that the program is run in parallel over 3 processes, which includes 1 producer process and 2 consumer processes.
 ```
 
 In test mode, the program has the following arguments: 
-
-mpirun -np <processes_number> ParallelFlowDir test <OUTPUT_DEM> <THE HEIGHT OF THE DEM > <THE WIDTH OF THE DEM> <OUTPUT PATH OF SEQUENTIAL FLOW DIRECTION > <TILE HEIGHT> <TILE WIDTH> <DIVIDE PATH> <OUTPUT FOLDER OF PARALLEL FLOW DIRECIOTN>
-
-# Run
-
-mpirun -np 3 ParallelFlowDir parallel ./test_data/ansai_part.txt ./test_data/ansai_flow  
 ```
-In the foregoing example, `-np 3` indicates that the program is run in parallel over 3 processes, which includes one producer process and 2 consumer processes. 
+mpirun -np <processes_number> ParallelFlowDir test <OUTPUT PATH OF DEM> <THE HEIGHT OF THE DEM > <THE WIDTH OF THE DEM> <OUTPUT PATH OF SEQUENTIAL FLOW DIRECTIONS> <TILE HEIGHT> <TILE WIDTH> <DIVIDE FOLDER> <OUTPUT FOLDER OF PARALLEL FLOW DIRECIOTNS>   
+The <OUTPUT PATH OF DEM> argument specifes the output path of the randomly generated DEM. The <THE HEIGHT OF THE DEM> argument specifes the height of the DEM. The <THE WIDTH OF THE DEM> argument specifes the width of the DEM. The <OUTPUT PATH OF SEQUENTIAL FLOW DIRECTIONS> argument specifes the output path of the flow directions using the sequential Barnes algorithm. The <TILE HEIGHT> argument specifes the height of the tile. The <TILE WIDTH> argument specifes the width of the tile. The <DIVIDE PATH> argument specifes the output folder of the tiles. The <OUTPUT FOLDER OF PARALLEL FLOW DIRECTIONS> argument specifes the output folder of flow directions using our proposed parallel algorithm.
+
+An example command is: mpirun -np 4 ParallelFlowDir test ./test_data/dem.tif 2000 3000 ./test_data/seqFlow/seqFlow.tif 500 800 ./test_data/tileDEM ./test_data/paraFlow
+`-np 4` indicates that the program is run in parallel over 4 processes, which includes one producer process and 3 consumer processes. 
+```
 
 # Format of input file 
 The input file includes a two dimensional array of file paths of tiles.  
@@ -55,14 +53,9 @@ If the file path is blank, it indicate that there is no tile there. The file for
 # Testing
 
 The program has a `test` mode, which verifies the correctness of our proposed parallel algorithm by comparing with the output of sequential algorithm using randomly generated DEMs.   
-To run the program in `test` mode, The program can be run by typing:
-```
+If using the sequential Barnes algorithm and our parallel algorithm results in the same flow directions, the program will output `The two pictures are the same!`.
 
-mpirun -np 4 ParallelFlowDir test ./test_data/dem.tif 2000 3000 ./test_data/seqFlow/seqFlow.tif 500 800 ./test_data/tileDEM ./test_data/paraFlow
-```
-In the foregoing example, the mode is `test`. `-np 4` indicates that the program is run in parallel over 4 processes, which includes one producer process and 3 consumer processes.  `./test_data/dem.tif ` is the output path of automtically generated DEM. `2000` is the height of the DEM, `3000` is the width of the DEM, `./test_data/seqFlow/seqFlow.tif` is the output path of flow directions of the DEM using the sequential Barnes algorithm. `500` is the height of the tile, `800` is the width of the tile. `./test_data/tileDEM` is the output path of the tiles of DEM. `./test_data/paraFlow` is the output path of the flow directions of tiles. If using the sequential Barnes algorithm and our parallel algorithm results in the same flow directions, the program will output `The two pictures are the same!`.
-
-#Test data
+# Test data
 
 The test_data folder contains our test data.
 
