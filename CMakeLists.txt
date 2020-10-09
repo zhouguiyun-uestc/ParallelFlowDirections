@@ -19,8 +19,8 @@ include_directories(${PROJECT_SOURCE_DIR}/ParaDEM/include)
 #header file 2
 include_directories(${PROJECT_SOURCE_DIR}/ParaDEM/src/flowdir})
 
-#Add the cereal libraty file path
-include_directories();
+#Add the cereal libraty path
+include_directories(/share/home/cereal/include);
 
 aux_source_directory(${PROJECT_SOURCE_DIR}/ParaDEM/src/common c_files)
 aux_source_directory(${PROJECT_SOURCE_DIR}/ParaDEM/src/flowdir c_files)
@@ -30,8 +30,8 @@ set(CMAKE_MPI MPI::MPI_CXX)
 
 
 #If find_package(GDAL REQUIRED) cannot find GDAL, you can set the GDAL_LIBRARY by yourself
-#set(GDAL_INCLUDE_DIR /share/home/slh/CommSDK/user/gdalBuild/include)
-#set(GDAL_LIBRARY /share/home/slh/CommSDK/user/gdalBuild/lib/libgdal.so)
+#set(GDAL_INCLUDE_DIR /share/home/user/gdalBuild/include)
+#set(GDAL_LIBRARY /share/home/user/gdalBuild/lib/libgdal.so)
 
 find_package(GDAL REQUIRED)
 message(STATUS " version:${GDAL_VERSION}")
