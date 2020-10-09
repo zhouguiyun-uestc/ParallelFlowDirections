@@ -21,14 +21,29 @@ make
 ```
 The result is a program called  `ParallelFlowDir`.
 
-The program is run by typing:
+The program can be run using MPI with two modes: parallel and test. In parallel mode, the program derives flow directions. In test mode, the program run test cases on randomly generated DEMs.
+
+In parallel mode, the program has the following arguments: 
 ```
-mpirun -np <processes_number> flowdirPara <method> <INPUT> <OUTPUT>
+mpirun -np <processes_number> ParallelFlowDir parallel <INPUT> <OUTPUT>
+
+The <INPUT> argument is a text file and contains the paths of the tiles of the DEM. The <OUTPUT> argument specifes the output folder. 
+
+An example command is: mpirun -np 3 ParallelFlowDir parallel ./test_data/ansai_part.txt ./test_data/ansai_flow.  
+`-np 3` indicates that the program is run in parallel over 3 processes, which includes one producer process and 2 consumer processes.
+```
+
+In test mode, the program has the following arguments: 
+
+mpirun -np <processes_number> ParallelFlowDir test <OUTPUT_DEM> <THE HEIGHT OF THE DEM > <THE WIDTH OF THE DEM> <OUTPUT PATH OF SEQUENTIAL FLOW DIRECTION > <TILE HEIGHT> <TILE WIDTH> <DIVIDE PATH> <OUTPUT FOLDER OF PARALLEL FLOW DIRECIOTN>
+
+# Run
+
 mpirun -np 3 ParallelFlowDir parallel ./test_data/ansai_part.txt ./test_data/ansai_flow  
 ```
-In the foregoing example `-np 3` indicates that the program should be run in parallel over 3 processes, which includes one producer process and 2 consumer processes. 'parallel' indicates that the program takes a text file as an input parameter, the text file includes the paths of the tile of DEMs.
+In the foregoing example, `-np 3` indicates that the program is run in parallel over 3 processes, which includes one producer process and 2 consumer processes. 
 
-# Input file 
+# Format of input file 
 The input file includes a two dimensional array of file paths of tiles.  
 ```
 f1.tif, f2.tif, f3.tif, f4.tif,
@@ -38,13 +53,17 @@ f1.tif, f2.tif, f3.tif, f4.tif,
 If the file path is blank, it indicate that there is no tile there. The file format can be any type that GDAL support. 
 
 # Testing
-The folder (test_data) constains our test data, in which the text file includes the paths of the corresponding DEM.
-To verify the correctness of the program, The program can be run by typing
+
+The program has a `test` mode, which verifies the correctness of our proposed parallel algorithm by comparing with the output of sequential algorithm using randomly generated DEMs.   
+To run the program in `test` mode, The program can be run by typing:
 ```
-mpirun -np <processes_number> ParallelFlowDir <method> <OUTPUT_DEM> <THE HEIGHT OF THE DEM > <THE WIDTH OF THE DEM> <OUTPUT SEQUENTIAL FLOW DIRECTION> <TILE HEIGHT> <TILE WIDTH> <DIVIDE PATH> <OUTPUT PARALLEL FLOW DIRECIOTN>
+
 mpirun -np 4 ParallelFlowDir test ./test_data/dem.tif 2000 3000 ./test_data/seqFlow/seqFlow.tif 500 800 ./test_data/tileDEM ./test_data/paraFlow
 ```
-In the foregoing example `-np 4` indicates that the program should be run in parallel over 4 processes, which includes one producer process and 3 consumer processes. 'test' indicates that the program automatically verify the correctness of the results. `./test_data/dem.tif ` is the output path of automtically generated DEM. `2000` is the height of the DEM, `3000` is the width of the DEM, `./test_data/seqFlow/seqFlow.tif` is the output path of flow directions of the DEM using the sequential Barnes algorithm. `500` is the height of the tile, `800` is the width of the tile. `./test_data/tileDEM` is the output path of the tiles of DEM. `./test_data/paraFlow` is the output path of the flow directions of tiles. If using the sequential Barnes algorithm and our parallel algorithm results in the same flow directions, the program will output `The two pictures are the same!`.
+In the foregoing example, the mode is `test`. `-np 4` indicates that the program is run in parallel over 4 processes, which includes one producer process and 3 consumer processes.  `./test_data/dem.tif ` is the output path of automtically generated DEM. `2000` is the height of the DEM, `3000` is the width of the DEM, `./test_data/seqFlow/seqFlow.tif` is the output path of flow directions of the DEM using the sequential Barnes algorithm. `500` is the height of the tile, `800` is the width of the tile. `./test_data/tileDEM` is the output path of the tiles of DEM. `./test_data/paraFlow` is the output path of the flow directions of tiles. If using the sequential Barnes algorithm and our parallel algorithm results in the same flow directions, the program will output `The two pictures are the same!`.
 
+#Test data
+
+The test_data folder contains our test data.
 
 
