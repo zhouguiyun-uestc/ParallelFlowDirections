@@ -19,8 +19,8 @@ include_directories(${PROJECT_SOURCE_DIR}/ParaDEM/include)
 #header file 2
 include_directories(${PROJECT_SOURCE_DIR}/ParaDEM/src/flowdir})
 
-#header file 3
-include_directories(${PROJECT_SOURCE_DIR}/ParaDEM)
+#Add the cereal libraty file path
+include_directories();
 
 aux_source_directory(${PROJECT_SOURCE_DIR}/ParaDEM/src/common c_files)
 aux_source_directory(${PROJECT_SOURCE_DIR}/ParaDEM/src/flowdir c_files)
