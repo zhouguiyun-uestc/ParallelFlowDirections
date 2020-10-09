@@ -31,9 +31,9 @@ In parallel mode, the program has the following arguments:
 ```
 mpirun -np <processes_number> ParallelFlowDir parallel <INPUT> <OUTPUT>
 ```
-The <INPUT> argument is a text file and contains the paths of the tiles of the DEM. The <OUTPUT> argument specifes the output folder. 
+The <INPUT> argument is a text file and contains the paths of the tiles of the DEM. The <OUTPUT> argument specifes the output folder.   
 
-An example command is: `mpirun -np 3 ParallelFlowDir parallel ./test_data/ansai_part.txt ./test_data/ansai_flow`  
+An example command is: `mpirun -np 3 ParallelFlowDir parallel ./test_data/ansai_part.txt ./test_data/ansai_flow`   
 `-np 3` indicates that the program is run in parallel over 3 processes, which includes 1 producer process and 2 consumer processes.  
 
 In test mode, the program has the following arguments: 
@@ -57,7 +57,7 @@ If the file path is blank, it indicate that there is no tile there. The file for
 # Testing
 
 The program has a `test` mode, which verifies the correctness of our proposed parallel algorithm by comparing with the output of sequential algorithm using randomly generated DEMs.   
-If using the sequential Barnes algorithm and our parallel algorithm results in the same flow directions, the program will output `The two pictures are the same!`.
+If using the sequential Barnes algorithm and our parallel algorithm results in the same flow directions, the program will output `The two Rasters are the same!`.
 
 # Test data
 
