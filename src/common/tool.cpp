@@ -224,14 +224,14 @@ bool createDiffFile( const char* filePath1, const char* filePath2, const char* d
 
 void processTileGrid( GridInfo& gridInfo, std::vector< TileInfo >& tileInfos, IObjectFactory* pIObjFactory ) {
     Grid< std::shared_ptr< IConsumer2Producer > > gridIConsumer2Producer;
-    gridIConsumer2Producer.init( gridInfo.gridHeight, gridInfo.gridWidth );  //³õÊ¼»¯£¬È«²¿Îª¿Õ
+    gridIConsumer2Producer.init( gridInfo.gridHeight, gridInfo.gridWidth );  //Â³ÃµÃŠÂ¼Â»Â¯Â£Â¬ÃˆÂ«Â²Â¿ÃŽÂªÂ¿Ã•
 
     for ( int i = 0; i < tileInfos.size(); i++ )  // tileInfos.size()
     {
         TileInfo& tileInfo = tileInfos[ i ];
         std::shared_ptr< IConsumer2Producer > pIConsumer2Producer = pIObjFactory->createConsumer2Producer();
         std::shared_ptr< IConsumer > pIConsumer = pIObjFactory->createConsumer();
-        std::cout << "th " << i << "is processing£¡" << std::endl;
+        std::cout << "th " << i << "is processingÂ£Â¡" << std::endl;
         if ( tileInfos[ i ].nullTile ) {
             continue;
         }
@@ -970,6 +970,6 @@ bool comPareResults( std::string seqTif, std::string paraTif ) {
             }
         }
     }
-    std::cout << "The two pictures are the same!" << std::endl;
+    std::cout << "The two rasters are the same!" << std::endl;
     return true;
 }
