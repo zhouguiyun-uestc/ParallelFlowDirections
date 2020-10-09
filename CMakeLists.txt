@@ -30,8 +30,8 @@ set(CMAKE_MPI MPI::MPI_CXX)
 
 
 #If find_package(GDAL REQUIRED) cannot find GDAL, you can set the GDAL_LIBRARY by yourself
-set(GDAL_INCLUDE_DIR /share/home/slh/CommSDK/user/gdalBuild/include)
-set(GDAL_LIBRARY /share/home/slh/CommSDK/user/gdalBuild/lib/libgdal.so)
+#set(GDAL_INCLUDE_DIR /share/home/slh/CommSDK/user/gdalBuild/include)
+#set(GDAL_LIBRARY /share/home/slh/CommSDK/user/gdalBuild/lib/libgdal.so)
 
 find_package(GDAL REQUIRED)
 message(STATUS " version:${GDAL_VERSION}")
