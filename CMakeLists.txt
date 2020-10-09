@@ -11,7 +11,7 @@ add_compile_options(-std=c++11 -fpermissive -O3)
 #set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 #The output directory of the execution file
-set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
+set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR})
 
 #header file 1
 include_directories(${PROJECT_SOURCE_DIR}/ParaDEM/include)
