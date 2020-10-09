@@ -10,6 +10,10 @@
 # Abstract
 The assignment of flow directions in flat regions needs to be treated with special algorithms to obtain hydrologically correct flow patterns. Based on the sequential algorithm and the three-step parallel framework, we propose a parallel algorithm for assigning the hydrologically correct flow directions in flat regions. The proposed parallel algorithm assigns pre-divided tiles to multiple consumer processes, which construct local graphs that encode the geodesic distance information among tile border flat cells and higher terrain or lower terrain. Based on the local graphs in all tiles, the producer process constructs the global graph and computes the global geodesic distances of tile border flat cells from higher terrain and lower terrain. The consumer processes then compute the final geodesic distance in each tile and assign the hydrologically correct flow directions. Three experiments are conducted to evaluate the performance of our proposed algorithm. The memory requirement is much less than the total DEM file size. The speed-up ratio generally increases with more consumer processes. The scaling efficiency decreases with more consumer processes. The proposed parallel algorithm can process massive DEMs that cannot be successfully processed using the sequential algorithm. It fills the void in the processing pipeline of automatic drainage network extraction based on the three-step parallel framework and enables efficient parallel implementation of the entire processing pipeline possible, which should substantially improve the attractiveness of the three-step parallel framework.
 
+# Prerequisite
+Ensure you have a working compiler
+Ensure you install GDAL and MPI. which are needed to run our project.
+
 # Compilation
 To compile the programs run:
 ```
