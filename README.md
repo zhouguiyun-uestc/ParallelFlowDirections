@@ -29,7 +29,7 @@ The program can be run using MPI with two modes: parallel and test. In parallel 
 
 In parallel mode, the program has the following arguments: 
 ```
-mpirun -np <processes_number> ParallelFlowDir parallel <INPUT> <OUTPUT>
+mpirun -np <PROCESSES_NUMBER> ParallelFlowDir parallel <INPUT> <OUTPUT>
 ```
 The <INPUT> argument is a text file and contains the paths of the tiles of the DEM. The <OUTPUT> argument specifes the output folder.   
 
@@ -38,9 +38,9 @@ An example command is: `mpirun -np 3 ParallelFlowDir parallel ./test_data/ansai_
 
 In test mode, the program has the following arguments: 
 ```
-mpirun -np <processes_number> ParallelFlowDir test <OUTPUT PATH OF DEM> <THE HEIGHT OF THE DEM > <THE WIDTH OF THE DEM> <OUTPUT PATH OF SEQUENTIAL FLOW DIRECTIONS> <TILE HEIGHT> <TILE WIDTH> <DIVIDE FOLDER> <OUTPUT FOLDER OF PARALLEL FLOW DIRECIOTNS>   
+mpirun -np <PROCESSES_NUMBER> ParallelFlowDir test <OUTPUT_PATH_OF_DEM> <HEIGHT_OF_THE_DEM > <WIDTH_OF_THE_DEM> <OUTPUT PATH OF SEQUENTIAL FLOW DIRECTIONS> <TILE HEIGHT> <TILE WIDTH> <DIVIDE FOLDER> <OUTPUT FOLDER OF PARALLEL FLOW DIRECIOTNS>   
 ```
-The OUTPUT PATH OF DEM argument specifes the output path of the randomly generated DEM. The <THE_HEIGHT_OF_THE_DEM> argument specifes the height of the DEM. The <THE WIDTH OF THE DEM> argument specifes the width of the DEM. The <OUTPUT PATH OF SEQUENTIAL FLOW DIRECTIONS> argument specifes the output path of the flow directions using the sequential Barnes algorithm. The <TILE HEIGHT> argument specifes the height of the tile. The <TILE WIDTH> argument specifes the width of the tile. The <DIVIDE PATH> argument specifes the output folder of the tiles. The <OUTPUT FOLDER OF PARALLEL FLOW DIRECTIONS> argument specifes the output folder of flow directions using our proposed parallel algorithm.  
+The <OUTPUT_PATH_OF_DEM> argument specifes the output path of the randomly generated DEM. The <THE_HEIGHT_OF_THE_DEM> argument specifes the height of the DEM. The <THE WIDTH OF THE DEM> argument specifes the width of the DEM. The <OUTPUT PATH OF SEQUENTIAL FLOW DIRECTIONS> argument specifes the output path of the flow directions using the sequential Barnes algorithm. The <TILE HEIGHT> argument specifes the height of the tile. The <TILE WIDTH> argument specifes the width of the tile. The <DIVIDE PATH> argument specifes the output folder of the tiles. The <OUTPUT FOLDER OF PARALLEL FLOW DIRECTIONS> argument specifes the output folder of flow directions using our proposed parallel algorithm.  
 An example command is: `mpirun -np 4 ParallelFlowDir test ./test_data/dem.tif 2000 3000 ./test_data/seqFlow/seqFlow.tif 500 800 ./test_data/tileDEM ./test_data/paraFlow `   
 `-np 4` indicates that the program is run in parallel over 4 processes, which includes one producer process and 3 consumer processes. 
 
