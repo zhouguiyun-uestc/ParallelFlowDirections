@@ -38,8 +38,6 @@ message(STATUS " version:${GDAL_VERSION}")
 message(STATUS " libraries:${GDAL_LIBRARY}")
 message(STATUS " include path:${GDAL_INCLUDE_DIR}")
 
-include_directories(${GDAL_INCLUDE_DIR})
-
 add_executable(${PROJECT_NAME} ${c_files})
 
 target_link_libraries(${PROJECT_NAME} ${GDAL_LIBRARY} ${CMAKE_MPI})
