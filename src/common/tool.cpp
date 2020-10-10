@@ -644,6 +644,14 @@ void createPerlinNoiseDEM( std::string outputFilePath, int height, int width ) {
             dem.at( x, y ) = noise2( vec2 ) * 100;
         }
     }
+    //save the DEM with depression.
+    double min0, max0, mean0, stdDev0;
+    calculateStatistics( dem, &min0, &max0, &mean0, &stdDev0 );
+    int length = outputFilePath.length();
+    std::string path = outputFilePath.substr( 0, length - 4 ) + "_unfilling.tif";
+    WriteGeoTIFF( path.data(), dem.getHeight(), dem.getWidth(), &dem, GDALDataType::GDT_Float32, nullptr, &min0, &max0, &mean0, &stdDev0, -9999 );
+	readGeoTIFF( path.data(), GDALDataType::GDT_Float32, dem );
+    
     Flag flag;
     if ( !flag.Init( width, height ) ) {
         std::cout << "Failed to allocate memory for depression-filling !\n" << std::endl;
@@ -863,7 +871,7 @@ void resolve_flats( Raster< float >& dem, Raster< int >& flowdirs, Raster< int32
     find_flat_edges( low_edges, high_edges, flowdirs, dem );
     if ( low_edges.size() == 0 ) {
         if ( high_edges.size() > 0 ) {
-            std::cout << "There were flats, but none of them had outlets!" << std::endl;
+            std::cout << "There were flats, but none of them had outlets!\n" << std::endl;
         }
         else {
             std::cout << "There were no flats!" << std::endl;
@@ -880,7 +888,7 @@ void resolve_flats( Raster< float >& dem, Raster< int >& flowdirs, Raster< int32
         if ( labels.at( i->row, i->col ) != 0 )
             temp.push_back( *i );
     if ( temp.size() < high_edges.size() )
-        std::cout << "Not all flats have outlets; the DEM contains sinks/pits/depressions!";
+        std::cout << "Not all flats have outlets; the DEM contains sinks/pits/depressions!\n";
     high_edges = temp;
     temp.clear();
     std::vector< int > flat_height( group_number );
