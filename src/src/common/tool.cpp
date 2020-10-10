@@ -177,6 +177,7 @@ bool mergeTiles( GridInfo& gridInfo, const char* outputFilePath ) {
     int tileHeight = gridInfo.tileHeight;
     int tileWidth = gridInfo.tileWidth;
     std::string inputFolder = gridInfo.outputFolder;
+    std::cout << "mergeTiles's inputFolder : " << inputFolder << std::endl;
     Raster< float > tiles;
     if ( !tiles.init( grandHeight, grandWidth ) )
         return false;
@@ -223,14 +224,14 @@ bool createDiffFile( const char* filePath1, const char* filePath2, const char* d
 
 void processTileGrid( GridInfo& gridInfo, std::vector< TileInfo >& tileInfos, IObjectFactory* pIObjFactory ) {
     Grid< std::shared_ptr< IConsumer2Producer > > gridIConsumer2Producer;
-    gridIConsumer2Producer.init( gridInfo.gridHeight, gridInfo.gridWidth );  //Â³ÃµÃŠÂ¼Â»Â¯Â£Â¬ÃˆÂ«Â²Â¿ÃŽÂªÂ¿Ã•
+    gridIConsumer2Producer.init( gridInfo.gridHeight, gridInfo.gridWidth );  //³õÊ¼»¯£¬È«²¿Îª¿Õ
 
     for ( int i = 0; i < tileInfos.size(); i++ )  // tileInfos.size()
     {
         TileInfo& tileInfo = tileInfos[ i ];
         std::shared_ptr< IConsumer2Producer > pIConsumer2Producer = pIObjFactory->createConsumer2Producer();
         std::shared_ptr< IConsumer > pIConsumer = pIObjFactory->createConsumer();
-        std::cout << "th " << i << "is processingÂ£Â¡" << std::endl;
+        std::cout << "th " << i << "is processing£¡" << std::endl;
         if ( tileInfos[ i ].nullTile ) {
             continue;
         }
@@ -632,7 +633,6 @@ void calculateStatistics( Raster< float >& dem, double* min, double* max, double
 
 void createPerlinNoiseDEM( std::string outputFilePath, int height, int width ) {
     Raster< float > dem;
-	dem.NoDataValue = -9999;
     if ( !dem.init( height, width ) ) {
         std::cout << "Failed to allocate memory correctly!" << std::endl;
         return;
@@ -644,13 +644,13 @@ void createPerlinNoiseDEM( std::string outputFilePath, int height, int width ) {
             dem.at( x, y ) = noise2( vec2 ) * 100;
         }
     }
-    //save the DEM with depression.
+       //save unfilling_DEM.
     double min0, max0, mean0, stdDev0;
     calculateStatistics( dem, &min0, &max0, &mean0, &stdDev0 );
     int length = outputFilePath.length();
     std::string path = outputFilePath.substr( 0, length - 4 ) + "_unfilling.tif";
     WriteGeoTIFF( path.data(), dem.getHeight(), dem.getWidth(), &dem, GDALDataType::GDT_Float32, nullptr, &min0, &max0, &mean0, &stdDev0, -9999 );
-  
+    readGeoTIFF( path.data(), GDALDataType::GDT_Float32, dem );
     Flag flag;
     if ( !flag.Init( width, height ) ) {
         std::cout << "Failed to allocate memory for depression-filling !\n" << std::endl;
@@ -887,7 +887,7 @@ void resolve_flats( Raster< float >& dem, Raster< int >& flowdirs, Raster< int32
         if ( labels.at( i->row, i->col ) != 0 )
             temp.push_back( *i );
     if ( temp.size() < high_edges.size() )
-        std::cout << "Not all flats have outlets; the DEM contains sinks/pits/depressions!"<< std::endl;
+        std::cout << "Not all flats have outlets; the DEM contains sinks/pits/depressions!";
     high_edges = temp;
     temp.clear();
     std::vector< int > flat_height( group_number );
@@ -977,6 +977,6 @@ bool comPareResults( std::string seqTif, std::string paraTif ) {
             }
         }
     }
-    std::cout << "The two rasters are the same!" << std::endl;
+    std::cout << "The two pictures are the same!" << std::endl;
     return true;
 }

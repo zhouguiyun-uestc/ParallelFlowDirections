@@ -14,16 +14,16 @@ add_compile_options(-std=c++11 -fpermissive -O3)
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR})
 
 #header file 1
-include_directories(${PROJECT_SOURCE_DIR}/ParaDEM/include)
+include_directories(${PROJECT_SOURCE_DIR}/include)
 
 #header file 2
-include_directories(${PROJECT_SOURCE_DIR}/ParaDEM/src/flowdir})
+include_directories(${PROJECT_SOURCE_DIR}/src/flowdir})
 
 #Add the cereal libraty path
 include_directories(/share/home/cereal/include)
 
-aux_source_directory(${PROJECT_SOURCE_DIR}/ParaDEM/src/common c_files)
-aux_source_directory(${PROJECT_SOURCE_DIR}/ParaDEM/src/flowdir c_files)
+aux_source_directory(${PROJECT_SOURCE_DIR}/src/common c_files)
+aux_source_directory(${PROJECT_SOURCE_DIR}/src/flowdir c_files)
 
 find_package(MPI REQUIRED)
 set(CMAKE_MPI MPI::MPI_CXX)
