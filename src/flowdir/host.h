@@ -3,17 +3,16 @@
 
 #include "consumer_2_producer.h"
 
+#include <cereal/archives/binary.hpp>
+#include <cereal/types/map.hpp>
+#include <cereal/types/vector.hpp>
+
 #include <paradem/grid_info.h>
 #include <paradem/i_object_factory.h>
 #include <paradem/raster.h>
 #include <paradem/tile_info.h>
 #include <paradem/tool.h>
 
-#include <cereal/archives/binary.hpp>
-#include <cereal/types/map.hpp>
-#include <cereal/types/vector.hpp>
-
-#include <assert.h>
 #include <mpi.h>
 #include <type_traits>
 #include <vector>
@@ -29,6 +28,7 @@ static comm_count_type bytes_sent = 0;  ///< Number of bytes sent
 static comm_count_type bytes_recv = 0;  ///< Number of bytes received
 typedef std::vector< char > msg_type;
 
+
 template < class T, class U > void CommRecv( T* a, U* b, int from ) {
     MPI_Status status;
     if ( from == -1 )
@@ -40,7 +40,6 @@ template < class T, class U > void CommRecv( T* a, U* b, int from ) {
     std::stringstream ss( std::stringstream::in | std::stringstream::out | std::stringstream::binary );
     ss.unsetf( std::ios_base::skipws );
     char* buf = ( char* )malloc( msg_size );
-    assert( buf != NULL );
     MPI_Comm_set_errhandler( MPI_COMM_WORLD, MPI_ERRORS_RETURN );
     int error_code = MPI_Recv( buf, msg_size, MPI_CHAR, receive_Id, MPI_ANY_TAG, MPI_COMM_WORLD, &status );
     if ( error_code != MPI_SUCCESS ) {
@@ -49,9 +48,6 @@ template < class T, class U > void CommRecv( T* a, U* b, int from ) {
         MPI_Error_class( error_code, &error_class );
         MPI_Error_string( error_class, error_string, &length_of_error_string );
         fprintf( stderr, "%s\n", error_string );
-        fprintf( stderr, "%s\n", error_class );
-        fprintf( stderr, "%d\n", error_code );
-        fprintf( stderr, "%d,%d,%d\n", status.MPI_ERROR, status.MPI_SOURCE, status.MPI_TAG );
         MPI_Abort( MPI_COMM_WORLD, error_code );
     }
     bytes_recv += msg_size;
@@ -76,7 +72,6 @@ template < class T, class U, class V > void CommRecv( T* a, U* b, V* v, int from
     std::stringstream ss( std::stringstream::in | std::stringstream::out | std::stringstream::binary );
     ss.unsetf( std::ios_base::skipws );
     char* buf = ( char* )malloc( msg_size );
-    assert( buf != NULL );
     MPI_Comm_set_errhandler( MPI_COMM_WORLD, MPI_ERRORS_RETURN );
     int receive_Id = status.MPI_SOURCE;
     int error_code = MPI_Recv( buf, msg_size, MPI_CHAR, receive_Id, MPI_ANY_TAG, MPI_COMM_WORLD, &status );
@@ -86,7 +81,6 @@ template < class T, class U, class V > void CommRecv( T* a, U* b, V* v, int from
         MPI_Error_class( error_code, &error_class );
         MPI_Error_string( error_class, error_string, &length_of_error_string );
         fprintf( stderr, "%s\n", error_string );
-        fprintf( stderr, "%s\n", error_class );
         MPI_Error_string( error_code, error_string, &length_of_error_string );
         fprintf( stderr, "%s\n", error_string );
         fprintf( stderr, "%d\n", error_code );
@@ -136,8 +130,7 @@ template < class T, class U, class V > msg_type CommPrepare( const T* a, const U
 template < class T, class U > void CommSend( const T* a, const U* b, int dest, int tag ) {
     auto omsg = CommPrepare( a, b );
     bytes_sent += omsg.size();
-    int ret = MPI_Send( omsg.data(), omsg.size(), MPI_CHAR, dest, tag, MPI_COMM_WORLD );
-    assert( ret == MPI_SUCCESS );
+    MPI_Send( omsg.data(), omsg.size(), MPI_CHAR, dest, tag, MPI_COMM_WORLD );
 }
 
 template < class T > void CommSend( const T* a, std::nullptr_t, int dest, int tag ) {
@@ -151,8 +144,7 @@ template < class T > void CommSend( const T* a, std::nullptr_t, int dest, int ta
 template < class T, class U, class V > void CommSend( const T* a, const U* b, const V* v, int dest, int tag ) {
     auto omsg = CommPrepare( a, b, v );
     bytes_sent += omsg.size();
-    int ret = MPI_Send( omsg.data(), omsg.size(), MPI_CHAR, dest, tag, MPI_COMM_WORLD );
-    assert( ret == MPI_SUCCESS );
+    MPI_Send( omsg.data(), omsg.size(), MPI_CHAR, dest, tag, MPI_COMM_WORLD );
 }
 
 void CommISend( msg_type& msg, int dest, int tag );

@@ -4,9 +4,8 @@
 
 #include "outBoundary.h"
 
-#include <paradem/i_producer_2_consumer.h>
-
 #include <cereal/archives/binary.hpp>
+#include <paradem/i_producer_2_consumer.h>
 
 class Producer2Consumer : public IProducer2Consumer {
 private:
@@ -21,7 +20,7 @@ public:
 
 public:
     Producer2Consumer() = default;
-    ~Producer2Consumer() = default;
+    virtual ~Producer2Consumer() = default;
 
 public:
     virtual void free();
