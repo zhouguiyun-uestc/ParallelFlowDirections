@@ -74,7 +74,7 @@ If the file path is blank, it indicate that there is no tile there. The file for
 # Testing
 
 The program has a `test` mode, which verifies the correctness of our proposed parallel algorithm by comparing with the output of sequential algorithm using randomly generated DEMs.   
-If using the sequential Barnes algorithm and our parallel algorithm results in the same flow directions, the program will output `The two Rasters are the same!`.
+If using the sequential Barnes algorithm and our parallel algorithm results in the same flow directions, the program will output `The two rasters are the same!`.
 
 # Test data
 
