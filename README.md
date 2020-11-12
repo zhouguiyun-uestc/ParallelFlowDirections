@@ -14,6 +14,14 @@ The assignment of flow directions in flat regions needs to be treated with speci
 
 GDAL , MPI, and cereal
 
+The packages can be installed using standard install procedures. For example, to install cereal, the following command can be used on Ubuntu:   
+```
+sudo apt install libcereal-dev
+```
+
+
+
+
 # Compilation
 
 To compile the programs run:
