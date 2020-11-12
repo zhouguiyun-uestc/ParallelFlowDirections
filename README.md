@@ -18,7 +18,10 @@ GDAL , MPI and cereal
 
 To compile the programs run:
 ```
-cmake .
+mkdir build
+mkdir bin
+cd build
+cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo ..
 make
 ```
 The result is a program called  `ParallelFlowDir`.
