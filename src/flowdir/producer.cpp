@@ -313,8 +313,6 @@ void Producer::HandleEdge( std::vector< float >& elev_a, std::vector< float >& e
 
 void Producer::HandleCorner( float& elev_a, float& elev_b, int ident_a, int ident_b, std::vector< std::map< int, int > >& masterGraph_lowEdge, const int ident_a_offset, const int ident_b_offset,
                              std::vector< std::map< int, int > >& masterGraph_highEdge ) {
-    bool flagLow = false;
-    bool flagTrue = false;
     if ( ident_a > 0 ) {
         if ( ident_a > 1 ) {
             ident_a += ident_a_offset;

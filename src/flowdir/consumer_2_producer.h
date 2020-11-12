@@ -2,12 +2,12 @@
 #ifndef PARADEM_CONSUMER2PRODUCER_H
 #define PARADEM_CONSUMER2PRODUCER_H
 
-#include <paradem/i_consumer_2_producer.h>
-#include <paradem/timeInfo.h>
-
 #include <cereal/archives/binary.hpp>
 #include <cereal/types/map.hpp>
 #include <cereal/types/vector.hpp>
+
+#include <paradem/i_consumer_2_producer.h>
+#include <paradem/timeInfo.h>
 
 #include <iterator>
 #include <map>
@@ -35,7 +35,7 @@ public:
 
 public:
     Consumer2Producer() = default;
-    ~Consumer2Producer() = default;
+    virtual ~Consumer2Producer() = default;
 
 public:
     virtual void free();

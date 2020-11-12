@@ -21,6 +21,7 @@ public:
 
 public:
     virtual void free();
+    virtual ~Producer() = default;
 
 public:
     void HandleEdge( std::vector< float >& elev_a, std::vector< float >& elev_b, std::vector< int >& ident_a, std::vector< int >& ident_b, std::vector< std::map< int, int > >& masterGraph_lowEdge,

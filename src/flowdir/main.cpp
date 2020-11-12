@@ -67,8 +67,6 @@ int main( int argc, char** argv ) {
             std::cout << "4.parallel computing!" << std::endl;
             std::string inputFile = outputtileDEMfolder + "/" + "tileInfo.txt";
             std::string outputPath = argv[ 9 ];  // output flow directions
-            std::cerr << "inputFile" << inputFile << std::endl;
-            std::cerr << "outputPath" << outputPath << std::endl;
             GridInfo gridInfo;
             Timer timer_master;
             timer_master.start();

@@ -39,7 +39,6 @@ bool readGeoTIFF( const char* path, GDALDataType type, Raster< float >& dem ) {
     }
     GDALRasterBand* poBand;
     poBand = poDataset->GetRasterBand( 1 );
-    GDALDataType dataType = poBand->GetRasterDataType();
     dem.geoTransforms = std::make_shared< std::vector< double > >( std::vector< double >( 6 ) );
     poDataset->GetGeoTransform( &dem.geoTransforms->at( 0 ) );
     if ( !dem.init( poBand->GetYSize(), poBand->GetXSize() ) ) {
@@ -65,7 +64,6 @@ bool readflowTIFF( const char* path, GDALDataType type, Raster< int >& flow ) {
     }
     GDALRasterBand* poBand;
     poBand = poDataset->GetRasterBand( 1 );
-    GDALDataType dataType = poBand->GetRasterDataType();
     flow.geoTransforms = std::make_shared< std::vector< double > >( std::vector< double >( 6 ) );
     poDataset->GetGeoTransform( &flow.geoTransforms->at( 0 ) );
     if ( !flow.init( poBand->GetYSize(), poBand->GetXSize() ) ) {

@@ -35,7 +35,7 @@ void hostProcess( GridInfo& gridInfo, std::vector< TileInfo >& tileInfos, IObjec
     const int active_consumer_limit = size - 1;
     int jobs_out = 0;
     MPI_Bcast( &good_to_go, 1, MPI_INT, 0, MPI_COMM_WORLD );
-    for ( int i = 0; i < tileInfos.size(); i++ ) {
+    for ( size_t i = 0; i < tileInfos.size(); i++ ) {
         TileInfo& tileInfo = tileInfos[ i ];
         if ( tileInfo.nullTile ) {
             continue;
@@ -78,7 +78,7 @@ void hostProcess( GridInfo& gridInfo, std::vector< TileInfo >& tileInfos, IObjec
     pIProducer->process( tileInfos, gridIConsumer2Producer );
     jobs_out = 0;
 
-    for ( int i = 0; i < tileInfos.size(); i++ ) {
+    for ( size_t i = 0; i < tileInfos.size(); i++ ) {
         TileInfo& tileInfo = tileInfos[ i ];
         if ( tileInfo.nullTile ) {
             continue;

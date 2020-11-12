@@ -2,15 +2,14 @@
 #ifndef PARADEM_TOOL_H
 #define PARADEM_TOOL_H
 
+#include "mpi.h"
+#include <cereal/archives/binary.hpp>
+#include <cereal/types/map.hpp>
+#include <cereal/types/vector.hpp>
 #include <paradem/GridCell.h>
 #include <paradem/grid_info.h>
 #include <paradem/i_object_factory.h>
 #include <paradem/tile_info.h>
-
-#include <cereal/archives/binary.hpp>
-#include <cereal/types/map.hpp>
-#include <cereal/types/vector.hpp>
-#include <mpi.h>
 
 #include <assert.h>
 #include <queue>
@@ -129,15 +128,7 @@ public:
 typedef std::vector< Node > NodeVector;
 typedef std::priority_queue< Node, NodeVector, Node::Greater > PriorityQueue;
 
-static int p[ B + B + 2 ];
-static float g3[ B + B + 2 ][ 3 ];
-static float g2[ B + B + 2 ][ 2 ];
-static float g1[ B + B + 2 ];
-static int start = 1;
 int randomi( int m, int n );
-static void normalize2( float v[ 2 ] );
-static void normalize3( float v[ 3 ] );
-static void init( void );
 float noise2( float vec[ 2 ] );
 void InitPriorityQue( Raster< float >& dem, Flag& flag, PriorityQueue& priorityQueue );
 void ProcessPit( Raster< float >& dem, Flag& flag, std::queue< Node >& depressionQue, std::queue< Node >& traceQueue, PriorityQueue& priorityQueue );
@@ -146,13 +137,8 @@ void calculateStatistics( Raster< float >& dem, double* min, double* max, double
 void createPerlinNoiseDEM( std::string outputFilePath, int height, int width );
 
 /*--------sequential flow direction-----------*/
-static int d8_FlowDir( Raster< float >& dem, const int row, const int col );
-static void find_flat_edges( std::deque< GridCell >& low_edges, std::deque< GridCell >& high_edges, Raster< int >& flowdirs, Raster< float >& dem );
-static void label_this( int x0, int y0, const int label, Raster< int32_t >& labels, Raster< float >& dem );
-static void BuildAwayGradient( Raster< int >& flowdirs, Raster< int32_t >& flat_mask, std::deque< GridCell > edges, std::vector< int >& flat_height, Raster< int32_t >& labels );
-static void BuildTowardsCombinedGradient( Raster< int >& flowdirs, Raster< int32_t >& flat_mask, std::deque< GridCell > edges, std::vector< int >& flat_height, Raster< int32_t >& labels );
+
 void resolve_flats( Raster< float >& dem, Raster< int >& flowdirs, Raster< int32_t >& flatMask, Raster< int32_t >& labels );
-static int d8_masked_FlowDir( Raster< int32_t >& flat_mask, Raster< int32_t >& labels, const int row, const int col );
 void d8_flow_flats( Raster< int32_t >& flat_mask, Raster< int32_t >& labels, Raster< int >& flowdirs );
 void PerformAlgorithm( std::string filename, std::string outputname );
 

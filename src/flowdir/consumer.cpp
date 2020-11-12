@@ -5,9 +5,9 @@
 #include <paradem/gdal.h>
 #include <paradem/raster.h>
 
-#include <queue>
 #include <algorithm>
 #include <iostream>
+#include <queue>
 
 bool Consumer::processRound1( const GridInfo& gridInfo, TileInfo& tileInfo, IConsumer2Producer* pIC2P ) {
     NoFlat = false;
@@ -101,55 +101,55 @@ void Consumer::FlowAssign( Raster< int >& flowdirs, uint8_t d8Tile ) {
 int Consumer::D8FlowDir( const int& row, const int& col, const int& height, const int& width, uint8_t d8Tile ) {
     float minimum_dem = dem.at( row, col );
     int flowdir = -1;
-    if ( gridRow == 0 || gridRow == gridHeight - 1 || gridCol == 0 || gridCol == gridWidth - 1 ) {
-        if ( gridRow == 0 && gridCol == 0 && row == 0 && col == 0 ) {
+    if ( ( gridRow == 0 ) || ( gridRow == gridHeight - 1 ) || ( gridCol == 0 ) || ( gridCol == gridWidth - 1 ) ) {
+        if ( ( gridRow == 0 ) && ( gridCol == 0 ) && ( row == 0 ) && ( col == 0 ) ) {
             return 5;
         }
-        else if ( gridRow == 0 && gridCol == gridWidth - 1 && row == 0 && col == width - 1 ) {
+        else if ( ( gridRow == 0 ) && ( gridCol == gridWidth - 1 ) && ( row == 0 ) && ( col == width - 1 ) ) {
             return 7;
         }
-        else if ( gridRow == gridHeight - 1 && gridCol == gridWidth - 1 && row == height - 1 && col == width - 1 ) {
+        else if ( ( gridRow == gridHeight - 1 ) && ( gridCol == gridWidth - 1 ) && ( row == height - 1 ) && ( col == width - 1 ) ) {
             return 1;
         }
-        else if ( gridRow == gridHeight - 1 && gridCol == 0 && row == height - 1 && col == 0 ) {
+        else if ( ( gridRow == gridHeight - 1 ) && ( gridCol == 0 ) && ( row == height - 1 ) && ( col == 0 ) ) {
             return 3;
         }
-        else if ( gridRow == 0 && row == 0 ) {
+        else if ( ( gridRow == 0 ) && ( row == 0 ) ) {
             return 6;
         }
-        else if ( gridCol == gridWidth - 1 && col == width - 1 ) {
+        else if ( ( gridCol == gridWidth - 1 ) && ( col == width - 1 ) ) {
             return 0;
         }
-        else if ( gridRow == gridHeight - 1 && row == height - 1 ) {
+        else if ( ( gridRow == gridHeight - 1 ) && ( row == height - 1 ) ) {
             return 2;
         }
-        else if ( gridCol == 0 && col == 0 ) {
+        else if ( ( gridCol == 0 ) && ( col == 0 ) ) {
             return 4;
         }
     }
-    if ( row == 0 || row == height - 1 || col == 0 || col == width - 1 ) {
-        if ( row == 0 && col == 0 && ( d8Tile & TILE_LEFT_TOP ) ) {
+    if ( ( row == 0 ) || ( row == height - 1 ) || ( col == 0 ) || ( col == width - 1 ) ) {
+        if ( ( row == 0 ) && ( col == 0 ) && ( d8Tile & TILE_LEFT_TOP ) ) {
             return 5;
         }
-        else if ( row == 0 && col == width - 1 && ( d8Tile & TILE_RIGHT_TOP ) ) {
+        else if ( ( row == 0 ) && ( col == width - 1 ) && ( d8Tile & TILE_RIGHT_TOP ) ) {
             return 7;
         }
-        else if ( row == height - 1 && col == width - 1 && ( d8Tile & TILE_RIGHT_BOTTOM ) ) {
+        else if ( ( row == height - 1 ) && ( col == width - 1 ) && ( d8Tile & TILE_RIGHT_BOTTOM ) ) {
             return 1;
         }
-        else if ( row == height - 1 && col == 0 && ( d8Tile & TILE_LEFT_BOTTOM ) ) {
+        else if ( ( row == height - 1 ) && ( col == 0 ) && ( d8Tile & TILE_LEFT_BOTTOM ) ) {
             return 3;
         }
-        else if ( row == 0 && ( d8Tile & TILE_TOP ) ) {
+        else if ( ( row == 0 ) && ( d8Tile & TILE_TOP ) ) {
             return 6;
         }
-        else if ( col == 0 && ( d8Tile & TILE_LEFT ) ) {
+        else if ( ( col == 0 ) && ( d8Tile & TILE_LEFT ) ) {
             return 4;
         }
-        else if ( row == height - 1 && ( d8Tile & TILE_BOTTOM ) ) {
+        else if ( ( row == height - 1 ) && ( d8Tile & TILE_BOTTOM ) ) {
             return 2;
         }
-        else if ( col == width - 1 && ( d8Tile & TILE_RIGHT ) ) {
+        else if ( ( col == width - 1 ) && ( d8Tile & TILE_RIGHT ) ) {
             return 0;
         }
     }
@@ -157,8 +157,8 @@ int Consumer::D8FlowDir( const int& row, const int& col, const int& height, cons
         if ( !dem.isInGrid( dem.getRow( n, row ), dem.getCol( n, col ) ) ) {
             continue;
         }
-        if ( dem.at( dem.getRow( n, row ), dem.getCol( n, col ) ) < minimum_dem
-             || dem.at( dem.getRow( n, row ), dem.getCol( n, col ) ) == minimum_dem && flowdir > -1 && flowdir % 2 == 1 && n % 2 == 0 ) {
+        if ( ( dem.at( dem.getRow( n, row ), dem.getCol( n, col ) ) < minimum_dem )
+             || ( ( dem.at( dem.getRow( n, row ), dem.getCol( n, col ) ) == minimum_dem ) && ( flowdir > -1 ) && ( flowdir % 2 == 1 ) && ( n % 2 ) == 0 ) ) {
             minimum_dem = dem.at( dem.getRow( n, row ), dem.getCol( n, col ) );
             flowdir = n;
         }
@@ -361,7 +361,7 @@ void Consumer::BuildPartGraph( const int groupNumber, bool firstTime, std::vecto
     col = flowdirs.getWidth() - 1;
     for ( row = 0; row < flowdirs.getHeight() - 2; row++ ) {
         if ( ( labels.at( row, col ) > 0 && flowdirs.at( row, col ) == -1 ) || FlatTile == true ) {
-            if ( labels.at( row, col ) != labels.at( row + 1, col ) || flowdirs.at( row + 1, col ) > -1 ) {
+            if ( ( labels.at( row, col ) != labels.at( row + 1, col ) ) || flowdirs.at( row + 1, col ) > -1 ) {
                 bulk_num[ labels.at( row, col ) ].push_back( boundaryCell[ labels.at( row, col ) ].size() + 1 );
             }
             boundaryCell[ labels.at( row, col ) ].push_back( GridCell( row, col ) );
@@ -398,10 +398,6 @@ void Consumer::BuildPartGraph( const int groupNumber, bool firstTime, std::vecto
     col = 0;
     for ( row = flowdirs.getHeight() - 1; row > 1; row-- ) {
         if ( ( labels.at( row, col ) > 0 && flowdirs.at( row, col ) == -1 ) || FlatTile == true ) {
-            if ( row == 126 ) {
-                int jdsfsd = 0;
-            }
-
             if ( labels.at( row - 1, col ) != labels.at( row, col ) || flowdirs.at( row - 1, col ) > -1 ) {
                 bulk_num[ labels.at( row, col ) ].push_back( boundaryCell[ labels.at( row, col ) ].size() + 1 );
             }
@@ -529,7 +525,6 @@ void Consumer::block2block( std::vector< GridCell >& boundarySet, std::vector< i
             my_iden = IdBounderyCells[ pos ];
             n_iden = nEnd_iden - j + 1;
         }
-        int i = 0;  // 1-3 2-4
         int row = 0, col = 0;
         int nRow = height - 1;
         while ( col < width - 1 ) {
@@ -547,7 +542,6 @@ void Consumer::block2block( std::vector< GridCell >& boundarySet, std::vector< i
             }
             col++;
         }
-        i = 1;
         col = width - 1;
         int nCol = 0;
         row = 0;
@@ -669,7 +663,6 @@ void Consumer::bc2block( GridCell source, std::vector< int32_t >& minimum_distan
     int height = labels.getHeight();
 
     std::deque< GridCell > this_edges;
-    int sourceLabel = labels.at( source.row, source.col );
     GridCell iteration_marker( -1, -1 );
     int loops = 0;
     this_edges.push_back( source );
@@ -715,7 +708,6 @@ void Consumer::block2blockminDis( std::deque< GridCell >& this_edges, std::vecto
         return;
     }
     GridCell source = this_edges.front();
-    int sourceLabel = labels.at( source.row, source.col );
     GridCell iteration_marker( -1, -1 );
     int loops = 0;
     this_edges.push_back( iteration_marker );
@@ -766,20 +758,17 @@ void Consumer::ExternalGraph2( std::vector< int >& bulk, int& source_bulk, int& 
 
     bool flag = true;
     GridCell object_qi = boundarySet[ bulk[ object_bulk ] ];
-    int object_current_1 = bulk[ object_bulk ];
     GridCell object_zhong = boundarySet[ bulk[ object_bulk + 1 ] - 1 ];
 
     int pos_qi = xy2positionNum( object_qi.row, object_qi.col, width, height );
     int pos_zhong = xy2positionNum( object_zhong.row, object_zhong.col, width, height );
 
-    int object_current_n = bulk[ object_bulk + 1 ] - 1;
     int pre_current_i;
     int after_current_i;
     int current_i, pos_i;
 
     do {
         int32_t jiange = minimum_distances[ pos_1 ][ pos_qi ] - minimum_distances[ pos_n ][ pos_qi ];
-        int32_t jiange_zhong = minimum_distances[ pos_1 ][ pos_qi ] - minimum_distances[ pos_n ][ pos_zhong ];
 
         if ( jiange <= 0 ) {
             pre_current_i = current_1 - 1;
@@ -1230,7 +1219,7 @@ int8_t Consumer::D8MaskedFlowDir( const int row, const int col, Raster< int >& l
         if ( labels.at( nRow, nCol ) != labels.at( row, col ) ) {
             continue;
         }
-        if ( flatMask.at( nRow, nCol ) < minimum_elevation || flatMask.at( nRow, nCol ) == minimum_elevation && flowdir > -1 && flowdir % 2 == 1 && n % 2 == 0 ) {
+        if ( ( flatMask.at( nRow, nCol ) < minimum_elevation ) || ( ( flatMask.at( nRow, nCol ) == minimum_elevation ) && ( flowdir > -1 ) && ( flowdir % 2 == 1 ) && ( n % 2 == 0 ) ) ) {
             minimum_elevation = flatMask.at( nRow, nCol );
             flowdir = n;
         }
@@ -1262,12 +1251,12 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
                 for ( int t = 0; t <= 2; t++ ) {
                     nCol = flowdirs.getCol( t, col );
                     nRow = flowdirs.getRow( t, row );
-                    if ( minimum_elevation > dem.at( nRow, nCol ) || minimum_elevation == dem.at( nRow, nCol ) && n > -1 && n % 2 == 1 && t % 2 == 0 ) {
+                    if ( ( minimum_elevation > dem.at( nRow, nCol ) ) || ( ( minimum_elevation == dem.at( nRow, nCol ) ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                         minimum_elevation = dem.at( nRow, nCol );
                         n = t;
                     }
                 }
-                if ( minimum_elevation > dem.NoDataValue || minimum_elevation == dem.NoDataValue && n > -1 && n % 2 == 1 ) {
+                if ( ( minimum_elevation > dem.NoDataValue ) || ( ( minimum_elevation == dem.NoDataValue ) && ( n > -1 ) && ( n % 2 == 1 ) ) ) {
                     minimum_elevation = dem.NoDataValue;
                     n = 4;
                 }
@@ -1276,7 +1265,7 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
                 continue;
             }
             int po = xy2positionNum( row, col, width, height );
-            if ( IdBounderyCells[ po ] == 0 || lowEdgeMask.at( row, col ) == 2 )  // find the minimum elevation
+            if ( ( IdBounderyCells[ po ] == 0 ) || ( lowEdgeMask.at( row, col ) == 2 ) )  // find the minimum elevation
             {
                 float minimum_elevation = dem.at( row, col );
                 int n = -1;
@@ -1286,7 +1275,7 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
                 {
                     nCol = flowdirs.getCol( t, col );
                     nRow = flowdirs.getRow( t, row );
-                    if ( minimum_elevation > dem.at( nRow, nCol ) || minimum_elevation == dem.at( nRow, nCol ) && n > -1 && n % 2 == 1 && t % 2 == 0 ) {
+                    if ( ( minimum_elevation > dem.at( nRow, nCol ) ) || ( ( minimum_elevation == dem.at( nRow, nCol ) ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                         minimum_elevation = dem.at( nRow, nCol );
                         n = t;
                     }
@@ -1294,7 +1283,7 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
                 for ( int t = 3; t <= 5; t++ )  // 4-5
                 {
                     nRow = flowdirs.getRow( t, row );
-                    if ( minimum_elevation > p2c->left.dem[ nRow ] || ( minimum_elevation == p2c->left.dem[ nRow ] && n > -1 && n % 2 == 1 && t % 2 == 0 ) ) {
+                    if ( ( minimum_elevation > p2c->left.dem[ nRow ] ) || ( ( minimum_elevation == p2c->left.dem[ nRow ] ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                         minimum_elevation = p2c->left.dem[ nRow ];
                         n = t;
                     }
@@ -1303,7 +1292,7 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
                 {
                     nCol = flowdirs.getCol( t, col );
                     nRow = flowdirs.getRow( t, row );
-                    if ( minimum_elevation > dem.at( nRow, nCol ) || minimum_elevation == dem.at( nRow, nCol ) && n > -1 && n % 2 == 1 && t % 2 == 0 ) {
+                    if ( ( minimum_elevation > dem.at( nRow, nCol ) ) || ( ( minimum_elevation == dem.at( nRow, nCol ) ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                         minimum_elevation = dem.at( nRow, nCol );
                         n = t;
                     }
@@ -1321,7 +1310,7 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
                     if ( labels.at( row, col ) != labels.at( nRow, nCol ) ) {
                         continue;
                     }
-                    if ( minimum_elevation > flatMask.at( nRow, nCol ) || minimum_elevation == flatMask.at( nRow, nCol ) && n > -1 && n % 2 == 1 && t % 2 == 0 ) {
+                    if ( ( minimum_elevation > flatMask.at( nRow, nCol ) ) || ( ( minimum_elevation == flatMask.at( nRow, nCol ) ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                         minimum_elevation = flatMask.at( nRow, nCol );
                         n = t;
                     }
@@ -1331,15 +1320,15 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
 
                     if ( dem.at( row, col ) == p2c->left.dem[ nRow ] ) {
                         int id = p2c->left.ID[ nRow ];
-                        if ( id == 0 || p2c->left.low[ id ] == 2 ) {
-                            if ( minimum_elevation > 2 || ( minimum_elevation == 2 && n > 0 && n % 2 == 1 && t % 2 == 0 ) ) {
+                        if ( ( id == 0 ) || ( p2c->left.low[ id ] == 2 ) ) {
+                            if ( ( minimum_elevation > 2 ) || ( ( minimum_elevation == 2 ) && ( n > 0 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                                 minimum_elevation = 2;
                                 n = t;
                             }
                         }
                         else {
-                            if ( minimum_elevation > p2c->left.low[ id ] - p2c->left.high[ id ] + flatHeight[ labels.at( row, col ) ]
-                                 || ( minimum_elevation == p2c->left.low[ id ] - p2c->left.high[ id ] + flatHeight[ labels.at( row, col ) ] && n > 0 && n % 2 == 1 && t % 2 == 0 ) ) {
+                            if ( ( minimum_elevation > p2c->left.low[ id ] - p2c->left.high[ id ] + flatHeight[ labels.at( row, col ) ] )
+                                 || ( ( minimum_elevation == p2c->left.low[ id ] - p2c->left.high[ id ] + flatHeight[ labels.at( row, col ) ] ) && ( n > 0 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                                 minimum_elevation = p2c->left.low[ id ] - p2c->left.high[ id ] + flatHeight[ labels.at( row, col ) ];
                                 n = t;
                             }
@@ -1352,7 +1341,7 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
                     if ( labels.at( row, col ) != labels.at( nRow, nCol ) ) {
                         continue;
                     }
-                    if ( minimum_elevation > flatMask.at( nRow, nCol ) || minimum_elevation == flatMask.at( nRow, nCol ) && n > -1 && n % 2 == 1 && t % 2 == 0 ) {
+                    if ( ( minimum_elevation > flatMask.at( nRow, nCol ) ) || ( ( minimum_elevation == flatMask.at( nRow, nCol ) ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                         minimum_elevation = flatMask.at( nRow, nCol );
                         n = t;
                     }
@@ -1378,13 +1367,13 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
                 {
                     nCol = flowdirs.getCol( t, col );
                     nRow = flowdirs.getRow( t, row );
-                    if ( minimum_elevation > dem.at( nRow, nCol ) || minimum_elevation == dem.at( nRow, nCol ) && n > -1 && n % 2 == 1 && t % 2 == 0 ) {
+                    if ( ( minimum_elevation > dem.at( nRow, nCol ) ) || ( ( minimum_elevation == dem.at( nRow, nCol ) ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                         minimum_elevation = dem.at( nRow, nCol );
                         n = t;
                     }
                 }
 
-                if ( minimum_elevation > dem.NoDataValue || minimum_elevation == dem.NoDataValue && n > -1 && n % 2 == 1 ) {
+                if ( ( minimum_elevation > dem.NoDataValue ) || ( ( minimum_elevation == dem.NoDataValue ) && ( n > -1 ) && ( n % 2 == 1 ) ) ) {
                     n = 6;
                 }
                 flowdirs.at( row, col ) = n;
@@ -1400,7 +1389,7 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
                 {
                     nCol = flowdirs.getCol( t, col );
                     nRow = flowdirs.getRow( t, row );
-                    if ( minimum_elevation > dem.at( nRow, nCol ) || minimum_elevation == dem.at( nRow, nCol ) && n > -1 && n % 2 == 1 && t % 2 == 0 ) {
+                    if ( ( minimum_elevation > dem.at( nRow, nCol ) ) || ( ( minimum_elevation == dem.at( nRow, nCol ) ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                         minimum_elevation = dem.at( nRow, nCol );
                         n = t;
                     }
@@ -1408,7 +1397,7 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
                 for ( int t = 5; t <= 7; t++ )  // 5-7
                 {
                     nCol = flowdirs.getCol( t, col );
-                    if ( minimum_elevation > p2c->top.dem[ nCol ] || minimum_elevation == p2c->top.dem[ nCol ] && n > -1 && n % 2 == 1 && t % 2 == 0 ) {
+                    if ( ( minimum_elevation > p2c->top.dem[ nCol ] ) || ( ( minimum_elevation == p2c->top.dem[ nCol ] ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                         minimum_elevation = p2c->top.dem[ nCol ];
                         n = t;
                     }
@@ -1428,7 +1417,7 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
                     if ( labels.at( row, col ) != labels.at( nRow, nCol ) ) {
                         continue;
                     }
-                    if ( minimum_elevation > flatMask.at( nRow, nCol ) || minimum_elevation == flatMask.at( nRow, nCol ) && n > -1 && n % 2 == 1 && t % 2 == 0 ) {
+                    if ( ( minimum_elevation > flatMask.at( nRow, nCol ) ) || ( ( minimum_elevation == flatMask.at( nRow, nCol ) ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                         minimum_elevation = flatMask.at( nRow, nCol );
                         n = t;
                     }
@@ -1439,14 +1428,14 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
                     int id = p2c->top.ID[ nCol ];
                     if ( dem.at( row, col ) == p2c->top.dem[ nCol ] ) {
                         if ( id > 0 && p2c->top.low[ id ] != 2 ) {
-                            if ( minimum_elevation > p2c->top.low[ id ] - p2c->top.high[ id ] + flatHeight[ labels.at( row, col ) ]
-                                 || minimum_elevation == p2c->top.low[ id ] - p2c->top.high[ id ] + flatHeight[ labels.at( row, col ) ] && n > -1 && n % 2 == 1 && t % 2 == 0 ) {
+                            if ( ( minimum_elevation > p2c->top.low[ id ] - p2c->top.high[ id ] + flatHeight[ labels.at( row, col ) ] )
+                                 || ( ( minimum_elevation == p2c->top.low[ id ] - p2c->top.high[ id ] + flatHeight[ labels.at( row, col ) ] ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                                 minimum_elevation = p2c->top.low[ id ] - p2c->top.high[ id ] + flatHeight[ labels.at( row, col ) ];
                                 n = t;
                             }
                         }
                         else {
-                            if ( minimum_elevation > 2 || minimum_elevation == 2 && n > -1 && n % 2 == 1 && t % 2 == 0 ) {
+                            if ( minimum_elevation > 2 || ( minimum_elevation == 2 && n > -1 && n % 2 == 1 && t % 2 == 0 ) ) {
                                 minimum_elevation = 2;
                                 n = t;
                             }
@@ -1476,7 +1465,7 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
                 for ( int t = 0; t <= 1; t++ )  // 0-1
                 {
                     nRow = flowdirs.getRow( t, row );
-                    if ( minimum_elevation > p2c->right.dem[ nRow ] || minimum_elevation == p2c->right.dem[ nRow ] && n > -1 && n % 2 == 1 && t % 2 == 0 ) {
+                    if ( ( minimum_elevation > p2c->right.dem[ nRow ] ) || ( ( minimum_elevation == p2c->right.dem[ nRow ] ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                         minimum_elevation = p2c->right.dem[ nRow ];
                         n = t;
                     }
@@ -1485,7 +1474,7 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
                 {
                     nCol = flowdirs.getCol( t, col );
                     nRow = flowdirs.getRow( t, row );
-                    if ( minimum_elevation > dem.at( nRow, nCol ) || minimum_elevation == dem.at( nRow, nCol ) && n > -1 && n % 2 == 1 && t % 2 == 0 ) {
+                    if ( ( minimum_elevation > dem.at( nRow, nCol ) ) || ( ( minimum_elevation == dem.at( nRow, nCol ) ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                         minimum_elevation = dem.at( nRow, nCol );
                         n = t;
                     }
@@ -1507,14 +1496,15 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
                     int id = p2c->right.ID[ nRow ];
                     if ( dem.at( row, col ) == p2c->right.dem[ nRow ] ) {
                         if ( id > 0 && p2c->right.low[ id ] != 2 ) {
-                            if ( minimum_elevation > p2c->right.low[ id ] - p2c->right.high[ id ] + flatHeight[ labels.at( row, col ) ]
-                                 || minimum_elevation == p2c->right.low[ id ] - p2c->right.high[ id ] + flatHeight[ labels.at( row, col ) ] && n > -1 && n % 2 == 1 && t % 2 == 0 ) {
+                            if ( ( minimum_elevation > p2c->right.low[ id ] - p2c->right.high[ id ] + flatHeight[ labels.at( row, col ) ] )
+                                 || ( ( minimum_elevation == p2c->right.low[ id ] - p2c->right.high[ id ] + flatHeight[ labels.at( row, col ) ] ) && ( n > -1 ) && ( n % 2 == 1 )
+                                      && ( t % 2 == 0 ) ) ) {
                                 minimum_elevation = p2c->right.low[ id ] - p2c->right.high[ id ] + flatHeight[ labels.at( row, col ) ];
                                 n = t;
                             }
                         }
                         else {
-                            if ( minimum_elevation > 2 || minimum_elevation == 2 && n > -1 && n % 2 == 1 && t % 2 == 0 ) {
+                            if ( ( minimum_elevation > 2 ) || ( ( minimum_elevation == 2 ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                                 minimum_elevation = 2;
                                 n = t;
                             }
@@ -1528,7 +1518,7 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
                     if ( labels.at( nRow, nCol ) != labels.at( row, col ) ) {
                         continue;
                     }
-                    if ( minimum_elevation > flatMask.at( nRow, nCol ) || minimum_elevation == flatMask.at( nRow, nCol ) && n > -1 && n % 2 == 1 && t % 2 == 0 ) {
+                    if ( ( minimum_elevation > flatMask.at( nRow, nCol ) ) || ( ( minimum_elevation == flatMask.at( nRow, nCol ) ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                         minimum_elevation = flatMask.at( nRow, nCol );
                         n = t;
                     }
@@ -1540,7 +1530,7 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
                 if ( dem.at( row, col ) == p2c->right.dem[ nRow ] ) {
                     int id = p2c->right.ID[ nRow ];
                     if ( id > 0 && p2c->right.low[ id ] != 2 ) {
-                        if ( minimum_elevation > p2c->right.low[ id ] - p2c->right.high[ id ] + flatHeight[ labels.at( row, col ) ] ) {
+                        if ( minimum_elevation > ( p2c->right.low[ id ] - p2c->right.high[ id ] + flatHeight[ labels.at( row, col ) ] ) ) {
                             n = t;
                         }
                     }
@@ -1569,7 +1559,7 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
                     n = 0;
                     minimum_elevation = dem.at( row, col + 1 );
                 }
-                if ( minimum_elevation > dem.NoDataValue || minimum_elevation == dem.NoDataValue && n > -1 && n % 2 == 1 ) {
+                if ( ( minimum_elevation > dem.NoDataValue ) || ( ( minimum_elevation == dem.NoDataValue ) && ( n > -1 ) && ( n % 2 == 1 ) ) ) {
                     n = 2;
                 }
                 flowdirs.at( row, col ) = n;
@@ -1577,7 +1567,7 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
             }
             int nCol, nRow, n = -1;
             int po = xy2positionNum( row, col, width, height );
-            if ( IdBounderyCells[ po ] == 0 || lowEdgeMask.at( row, col ) == 2 ) {
+            if ( ( IdBounderyCells[ po ] == 0 ) || ( lowEdgeMask.at( row, col ) == 2 ) ) {
                 float minimum_elevation = dem.at( row, col );
                 int t = 0;
                 nCol = flowdirs.getCol( t, col );
@@ -1589,7 +1579,7 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
                 }
                 for ( int t = 1; t <= 3; t++ ) {
                     nCol = flowdirs.getCol( t, col );
-                    if ( minimum_elevation > p2c->bottom.dem[ nCol ] || minimum_elevation == p2c->bottom.dem[ nCol ] && n > -1 && n % 2 == 1 && t % 2 == 0 ) {
+                    if ( ( minimum_elevation > p2c->bottom.dem[ nCol ] ) || ( ( minimum_elevation == p2c->bottom.dem[ nCol ] ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                         minimum_elevation = p2c->bottom.dem[ nCol ];
                         n = t;
                     }
@@ -1598,7 +1588,7 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
                 {
                     nCol = flowdirs.getCol( t, col );
                     nRow = flowdirs.getRow( t, row );
-                    if ( minimum_elevation > dem.at( nRow, nCol ) || minimum_elevation == dem.at( nRow, nCol ) && n > -1 && n % 2 == 1 && t % 2 == 0 ) {
+                    if ( ( minimum_elevation > dem.at( nRow, nCol ) ) || ( ( minimum_elevation == dem.at( nRow, nCol ) ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                         minimum_elevation = dem.at( nRow, nCol );
                         n = t;
                     }
@@ -1611,7 +1601,7 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
                 int t = 0;
                 nCol = flowdirs.getCol( t, col );
                 nRow = flowdirs.getRow( t, row );
-                if ( labels.at( row, col ) == labels.at( nRow, nCol ) && minimum_elevation > flatMask.at( nRow, nCol ) )  // 0
+                if ( ( labels.at( row, col ) == labels.at( nRow, nCol ) ) && ( minimum_elevation > flatMask.at( nRow, nCol ) ) )  // 0
                 {
                     minimum_elevation = flatMask.at( nRow, nCol );
                     n = t;
@@ -1621,14 +1611,15 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
                     int id = p2c->bottom.ID[ nCol ];
                     if ( dem.at( row, col ) == p2c->bottom.dem[ nCol ] ) {
                         if ( id > 0 && p2c->bottom.low[ id ] != 2 ) {
-                            if ( minimum_elevation > p2c->bottom.low[ id ] - p2c->bottom.high[ id ] + flatHeight[ labels.at( row, col ) ]
-                                 || minimum_elevation == p2c->bottom.low[ id ] - p2c->bottom.high[ id ] + flatHeight[ labels.at( row, col ) ] && n > -1 && n % 2 == 1 && t % 2 == 0 ) {
+                            if ( ( minimum_elevation > ( p2c->bottom.low[ id ] - p2c->bottom.high[ id ] + flatHeight[ labels.at( row, col ) ] ) )
+                                 || ( ( minimum_elevation == ( p2c->bottom.low[ id ] - p2c->bottom.high[ id ] + flatHeight[ labels.at( row, col ) ] ) ) && ( n > -1 ) && ( n % 2 == 1 )
+                                      && ( t % 2 == 0 ) ) ) {
                                 minimum_elevation = p2c->bottom.low[ id ] - p2c->bottom.high[ id ] + flatHeight[ labels.at( row, col ) ];
                                 n = t;
                             }
                         }
                         else {
-                            if ( minimum_elevation > 2 || minimum_elevation == 2 && n > -1 && n % 2 == 1 && t % 2 == 0 ) {
+                            if ( minimum_elevation > 2 || ( minimum_elevation == 2 && n > -1 && n % 2 == 1 && t % 2 == 0 ) ) {
                                 minimum_elevation = 2;
                                 n = t;
                             }
@@ -1641,7 +1632,7 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
                     if ( labels.at( row, col ) != labels.at( nRow, nCol ) ) {
                         continue;
                     }
-                    if ( minimum_elevation > flatMask.at( nRow, nCol ) || minimum_elevation == flatMask.at( nRow, nCol ) && n > -1 && n % 2 == 1 && t % 2 == 0 ) {
+                    if ( ( minimum_elevation > flatMask.at( nRow, nCol ) ) || ( ( minimum_elevation == flatMask.at( nRow, nCol ) ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                         minimum_elevation = flatMask.at( nRow, nCol );
                         n = t;
                     }
@@ -1655,19 +1646,19 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
         int col = 0, row = 0;
         int nCol, nRow, n = -1;
         int po = xy2positionNum( row, col, width, height );
-        if ( p2c->left_top.dem.size() == 0 || p2c->top.dem.size() == 0 || p2c->left.dem.size() == 0 ) {
+        if ( ( p2c->left_top.dem.size() == 0 ) || ( p2c->top.dem.size() == 0 ) || ( p2c->left.dem.size() == 0 ) ) {
             float minimum_elevation = dem.at( row, col );
             for ( int t = 0; t <= 2; t++ )  // 0-2
             {
                 nCol = flowdirs.getCol( t, col );
                 nRow = flowdirs.getRow( t, row );
-                if ( minimum_elevation > dem.at( nRow, nCol ) || minimum_elevation == dem.at( nRow, nCol ) && n > -1 && n % 2 == 1 && t % 2 == 0 ) {
+                if ( ( minimum_elevation > dem.at( nRow, nCol ) ) || ( ( minimum_elevation == dem.at( nRow, nCol ) ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                     minimum_elevation = dem.at( nRow, nCol );
                     n = t;
                 }
             }
             if ( p2c->left.dem.size() == 0 ) {
-                if ( minimum_elevation > dem.NoDataValue || minimum_elevation == dem.NoDataValue && n > -1 && n % 2 == 1 ) {
+                if ( ( minimum_elevation > dem.NoDataValue ) || ( ( minimum_elevation == dem.NoDataValue ) && ( n > -1 ) && ( n % 2 == 1 ) ) ) {
                     minimum_elevation = dem.NoDataValue;
                     n = 4;
                 }
@@ -1676,7 +1667,7 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
                 for ( int t = 3; t <= 4; t++ )  // 3-4
                 {
                     nRow = dem.getRow( t, row );
-                    if ( minimum_elevation > p2c->left.dem[ nRow ] || ( minimum_elevation == p2c->left.dem[ nRow ] && n > -1 && n % 2 == 1 && t % 2 == 0 ) ) {
+                    if ( ( minimum_elevation > p2c->left.dem[ nRow ] ) || ( ( minimum_elevation == p2c->left.dem[ nRow ] ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                         minimum_elevation = p2c->left.dem[ nRow ];
                         n = t;
                     }
@@ -1697,7 +1688,7 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
             }
 
             if ( p2c->top.dem.size() == 0 ) {
-                if ( minimum_elevation > dem.NoDataValue || minimum_elevation == dem.NoDataValue && n > -1 && n % 2 == 1 ) {
+                if ( ( minimum_elevation > dem.NoDataValue ) || ( ( minimum_elevation == dem.NoDataValue ) && ( n > -1 ) && ( n % 2 == 1 ) ) ) {
                     n = 6;
                 }
             }
@@ -1705,20 +1696,20 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
                 for ( int t = 6; t <= 7; t++ )  // 3-4
                 {
                     nCol = flowdirs.getCol( t, col );
-                    if ( minimum_elevation > p2c->top.dem[ nCol ] || minimum_elevation == p2c->top.dem[ nCol ] && n > -1 && n % 2 == 1 && t % 2 == 0 ) {
+                    if ( ( minimum_elevation > p2c->top.dem[ nCol ] ) || ( ( minimum_elevation == p2c->top.dem[ nCol ] ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                         minimum_elevation = p2c->top.dem[ nCol ];
                         n = t;
                     }
                 }
             }
         }
-        else if ( IdBounderyCells[ po ] == 0 || lowEdgeMask.at( row, col ) == 2 ) {
+        else if ( ( IdBounderyCells[ po ] == 0 ) || ( lowEdgeMask.at( row, col ) == 2 ) ) {
             float minimum_elevation = dem.at( row, col );
             for ( int t = 0; t <= 2; t++ )  // 0-2
             {
                 nCol = flowdirs.getCol( t, col );
                 nRow = flowdirs.getRow( t, row );
-                if ( minimum_elevation > dem.at( nRow, nCol ) || minimum_elevation == dem.at( nRow, nCol ) && n > -1 && n % 2 == 1 && t % 2 == 0 ) {
+                if ( ( minimum_elevation > dem.at( nRow, nCol ) ) || ( ( minimum_elevation == dem.at( nRow, nCol ) ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                     minimum_elevation = dem.at( nRow, nCol );
                     n = t;
                 }
@@ -1726,7 +1717,7 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
             for ( int t = 3; t <= 4; t++ )  // 3-4
             {
                 nRow = dem.getRow( t, row );
-                if ( minimum_elevation > p2c->left.dem[ nRow ] || ( minimum_elevation == p2c->left.dem[ nRow ] && n > -1 && n % 2 == 1 && t % 2 == 0 ) ) {
+                if ( ( minimum_elevation > p2c->left.dem[ nRow ] ) || ( ( minimum_elevation == p2c->left.dem[ nRow ] ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                     minimum_elevation = p2c->left.dem[ nRow ];
                     n = t;
                 }
@@ -1741,7 +1732,7 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
             for ( int t = 6; t <= 7; t++ )  // 3-4
             {
                 nCol = flowdirs.getCol( t, col );
-                if ( minimum_elevation > p2c->top.dem[ nCol ] || minimum_elevation == p2c->top.dem[ nCol ] && n > -1 && n % 2 == 1 && t % 2 == 0 ) {
+                if ( ( minimum_elevation > p2c->top.dem[ nCol ] ) || ( ( minimum_elevation == p2c->top.dem[ nCol ] ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                     minimum_elevation = p2c->top.dem[ nCol ];
                     n = t;
                 }
@@ -1758,7 +1749,7 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
                 if ( labels.at( row, col ) != labels.at( nRow, nCol ) ) {
                     continue;
                 }
-                if ( minimum_elevation > flatMask.at( nRow, nCol ) || minimum_elevation == flatMask.at( nRow, nCol ) && n > -1 && n % 2 == 1 && t % 2 == 0 ) {
+                if ( ( minimum_elevation > flatMask.at( nRow, nCol ) ) || ( ( minimum_elevation == flatMask.at( nRow, nCol ) ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                     minimum_elevation = flatMask.at( nRow, nCol );
                     n = t;
                 }
@@ -1767,15 +1758,15 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
                 nRow = flowdirs.getRow( t, row );
                 if ( dem.at( row, col ) == p2c->left.dem[ nRow ] ) {
                     int id = p2c->left.ID[ nRow ];
-                    if ( id > 0 && p2c->left.low[ id ] != 2 ) {
-                        if ( minimum_elevation > p2c->left.low[ id ] - p2c->left.high[ id ] + flatHeight[ labels.at( row, col ) ]
-                             || ( minimum_elevation == p2c->left.low[ id ] - p2c->left.high[ id ] + flatHeight[ labels.at( row, col ) ] && n > -1 && n % 2 == 1 && t % 2 == 0 ) ) {
+                    if ( ( id > 0 ) && ( p2c->left.low[ id ] != 2 ) ) {
+                        if ( ( minimum_elevation > p2c->left.low[ id ] - p2c->left.high[ id ] + flatHeight[ labels.at( row, col ) ] )
+                             || ( ( minimum_elevation == p2c->left.low[ id ] - p2c->left.high[ id ] + flatHeight[ labels.at( row, col ) ] ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                             minimum_elevation = p2c->left.low[ id ] - p2c->left.high[ id ] + flatHeight[ labels.at( row, col ) ];
                             n = t;
                         }
                     }
                     else {
-                        if ( minimum_elevation > 2 || ( minimum_elevation == 2 && n > -1 && n % 2 == 1 && t % 2 == 0 ) ) {
+                        if ( ( minimum_elevation > 2 ) || ( ( minimum_elevation == 2 ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                             minimum_elevation = 2;
                             n = t;
                         }
@@ -1785,8 +1776,8 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
             if ( dem.at( row, col ) == p2c->left_top.dem[ 0 ] )  // 5
             {
                 int id = p2c->left_top.ID[ 0 ];
-                if ( id > 0 && p2c->left_top.low[ id ] != 2 ) {
-                    if ( minimum_elevation > p2c->left_top.low[ id ] - p2c->left_top.high[ id ] + flatHeight[ labels.at( row, col ) ] ) {
+                if ( ( id > 0 ) && ( p2c->left_top.low[ id ] != 2 ) ) {
+                    if ( minimum_elevation > ( p2c->left_top.low[ id ] - p2c->left_top.high[ id ] + flatHeight[ labels.at( row, col ) ] ) ) {
                         minimum_elevation = p2c->left_top.low[ id ] - p2c->left_top.high[ id ] + flatHeight[ labels.at( row, col ) ];
                         n = 5;
                     }
@@ -1805,15 +1796,15 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
                 nCol = flowdirs.getCol( t, col );
                 if ( dem.at( row, col ) == p2c->top.dem[ nCol ] ) {
                     int id = p2c->top.ID[ nCol ];
-                    if ( id > 0 && p2c->top.low[ id ] != 2 ) {
-                        if ( minimum_elevation > p2c->top.low[ id ] - p2c->top.high[ id ] + flatHeight[ labels.at( row, col ) ]
-                             || minimum_elevation == p2c->top.low[ id ] - p2c->top.high[ id ] + flatHeight[ labels.at( row, col ) ] && n > -1 && n % 2 == 1 && t % 2 == 0 ) {
+                    if ( ( id > 0 ) && ( p2c->top.low[ id ] != 2 ) ) {
+                        if ( ( minimum_elevation > ( p2c->top.low[ id ] - p2c->top.high[ id ] + flatHeight[ labels.at( row, col ) ] ) )
+                             || ( ( minimum_elevation == ( p2c->top.low[ id ] - p2c->top.high[ id ] + flatHeight[ labels.at( row, col ) ] ) ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                             minimum_elevation = p2c->top.low[ id ] - p2c->top.high[ id ] + flatHeight[ labels.at( row, col ) ];
                             n = t;
                         }
                     }
                     else {
-                        if ( minimum_elevation > 2 || minimum_elevation == 2 && n > -1 && n % 2 == 1 && t % 2 == 0 ) {
+                        if ( minimum_elevation > 2 || ( ( minimum_elevation == 2 ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                             minimum_elevation = 2;
                             n = t;
                         }
@@ -1825,10 +1816,10 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
     }
     int row = 0;
     int col = flowdirs.getWidth() - 1;
-    if ( gridCol != gridWidth - 1 && gridRow != 0 && flowdirs.at( row, col ) != 255 )  // is not the right top border
+    if ( ( gridCol != gridWidth - 1 ) && ( gridRow != 0 ) && ( flowdirs.at( row, col ) != 255 ) )  // is not the right top border
     {
         int po = xy2positionNum( row, col, width, height );
-        if ( p2c->right.dem.size() == 0 || p2c->top.dem.size() == 0 || p2c->right_top.dem.size() == 0 )  // right  || top
+        if ( ( p2c->right.dem.size() == 0 ) || ( p2c->top.dem.size() == 0 ) || ( p2c->right_top.dem.size() == 0 ) )  // right  || top
         {
             float minimum_elevation = dem.at( row, col );
             int n = -1, nRow, nCol;
@@ -1842,7 +1833,7 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
                 for ( int t = 0; t <= 1; t++ )  // 0-1
                 {
                     nRow = flowdirs.getRow( t, row );
-                    if ( minimum_elevation > p2c->right.dem[ nRow ] || minimum_elevation == p2c->right.dem[ nRow ] && n > -1 && n % 2 == 1 && t % 2 == 0 ) {
+                    if ( ( minimum_elevation > p2c->right.dem[ nRow ] ) || ( ( minimum_elevation == p2c->right.dem[ nRow ] ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                         minimum_elevation = p2c->right.dem[ nRow ];
                         n = t;
                     }
@@ -1851,13 +1842,13 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
             for ( int t = 2; t <= 4; t++ ) {
                 nCol = flowdirs.getCol( t, col );
                 nRow = flowdirs.getRow( t, row );
-                if ( minimum_elevation > dem.at( nRow, nCol ) || minimum_elevation == dem.at( nRow, nCol ) && n > -1 && n % 2 == 1 && t % 2 == 0 ) {
+                if ( ( minimum_elevation > dem.at( nRow, nCol ) ) || ( ( minimum_elevation == dem.at( nRow, nCol ) ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                     minimum_elevation = dem.at( nRow, nCol );
                     n = t;
                 }
             }
             if ( p2c->top.dem.size() == 0 ) {
-                if ( minimum_elevation > dem.NoDataValue || minimum_elevation == dem.NoDataValue && n > -1 && n % 2 == 1 ) {
+                if ( ( minimum_elevation > dem.NoDataValue ) || ( ( minimum_elevation == dem.NoDataValue ) && ( n > -1 ) && ( n % 2 == 1 ) ) ) {
                     minimum_elevation = dem.NoDataValue;
                     n = 6;
                 }
@@ -1866,7 +1857,7 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
                 for ( int t = 5; t <= 6; t++ )  // 5-6
                 {
                     nCol = flowdirs.getCol( t, col );
-                    if ( minimum_elevation > p2c->top.dem[ nCol ] || minimum_elevation == p2c->top.dem[ nCol ] && n > -1 && n % 2 == 1 && t % 2 == 0 ) {
+                    if ( ( minimum_elevation > p2c->top.dem[ nCol ] ) || ( ( minimum_elevation == p2c->top.dem[ nCol ] ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                         minimum_elevation = p2c->top.dem[ nCol ];
                         n = t;
                     }
@@ -1885,7 +1876,7 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
             }
             flowdirs.at( row, col ) = n;
         }
-        else if ( IdBounderyCells[ po ] == 0 || lowEdgeMask.at( row, col ) == 2 ) {
+        else if ( ( IdBounderyCells[ po ] == 0 ) || ( lowEdgeMask.at( row, col ) == 2 ) ) {
             float minimum_elevation = dem.at( row, col );
             int n = -1, nRow, nCol;
             nRow = 0;
@@ -1894,7 +1885,7 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
             for ( int t = 0; t <= 1; t++ )  // 0-1
             {
                 nRow = flowdirs.getRow( t, row );
-                if ( minimum_elevation > p2c->right.dem[ nRow ] || minimum_elevation == p2c->right.dem[ nRow ] && n > -1 && n % 2 == 1 && t % 2 == 0 ) {
+                if ( ( minimum_elevation > p2c->right.dem[ nRow ] ) || ( ( minimum_elevation == p2c->right.dem[ nRow ] ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                     minimum_elevation = p2c->right.dem[ nRow ];
                     n = t;
                 }
@@ -1902,7 +1893,7 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
             for ( int t = 2; t <= 4; t++ ) {
                 nCol = flowdirs.getCol( t, col );
                 nRow = flowdirs.getRow( t, row );
-                if ( minimum_elevation > dem.at( nRow, nCol ) || minimum_elevation == dem.at( nRow, nCol ) && n > -1 && n % 2 == 1 && t % 2 == 0 ) {
+                if ( ( minimum_elevation > dem.at( nRow, nCol ) ) || ( ( minimum_elevation == dem.at( nRow, nCol ) ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                     minimum_elevation = dem.at( nRow, nCol );
                     n = t;
                 }
@@ -1910,7 +1901,7 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
             for ( int t = 5; t <= 6; t++ )  // 5-6
             {
                 nCol = flowdirs.getCol( t, col );
-                if ( minimum_elevation > p2c->top.dem[ nCol ] || minimum_elevation == p2c->top.dem[ nCol ] && n > -1 && n % 2 == 1 && t % 2 == 0 ) {
+                if ( ( minimum_elevation > p2c->top.dem[ nCol ] ) || ( ( minimum_elevation == p2c->top.dem[ nCol ] ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                     minimum_elevation = p2c->top.dem[ nCol ];
                     n = t;
                 }
@@ -1935,14 +1926,14 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
                 }
                 int id = p2c->right.ID[ nRow ];
                 if ( id > 0 && p2c->right.low[ id ] != 2 ) {
-                    if ( minimum_elevation > p2c->right.low[ id ] - p2c->right.high[ id ] + flatHeight[ labels.at( row, col ) ]
-                         || minimum_elevation == p2c->right.low[ id ] - p2c->right.high[ id ] + flatHeight[ labels.at( row, col ) ] && n > -1 && n % 2 == 1 && t % 2 == 0 ) {
+                    if ( ( minimum_elevation > ( p2c->right.low[ id ] - p2c->right.high[ id ] + flatHeight[ labels.at( row, col ) ] ) )
+                         || ( ( minimum_elevation == ( p2c->right.low[ id ] - p2c->right.high[ id ] + flatHeight[ labels.at( row, col ) ] ) ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                         minimum_elevation = p2c->right.low[ id ] - p2c->right.high[ id ] + flatHeight[ labels.at( row, col ) ];
                         n = t;
                     }
                 }
                 else {
-                    if ( minimum_elevation > 2 || minimum_elevation == 2 && n > -1 && n % 2 == 1 && t % 2 == 0 ) {
+                    if ( ( minimum_elevation > 2 ) || ( ( minimum_elevation == 2 ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                         minimum_elevation = 2;
                         n = t;
                     }
@@ -1954,7 +1945,7 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
                 if ( labels.at( row, col ) != labels.at( nRow, nCol ) ) {
                     continue;
                 }
-                if ( minimum_elevation > flatMask.at( nRow, nCol ) || minimum_elevation == flatMask.at( nRow, nCol ) && n > -1 && n % 2 == 1 && t % 2 == 0 ) {
+                if ( ( minimum_elevation > flatMask.at( nRow, nCol ) ) || ( ( minimum_elevation == flatMask.at( nRow, nCol ) ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                     minimum_elevation = flatMask.at( nRow, nCol );
                     n = t;
                 }
@@ -1968,14 +1959,14 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
                 }
                 int id = p2c->top.ID[ nCol ];
                 if ( id > 0 && p2c->top.low[ id ] != 2 ) {
-                    if ( minimum_elevation > p2c->top.low[ id ] - p2c->top.high[ id ] + flatHeight[ labels.at( row, col ) ]
-                         || minimum_elevation == p2c->top.low[ id ] - p2c->top.high[ id ] + flatHeight[ labels.at( row, col ) ] && n > -1 && n % 2 == 1 && t % 2 == 0 ) {
+                    if ( ( minimum_elevation > ( p2c->top.low[ id ] - p2c->top.high[ id ] + flatHeight[ labels.at( row, col ) ] ) )
+                         || ( ( minimum_elevation == ( p2c->top.low[ id ] - p2c->top.high[ id ] + flatHeight[ labels.at( row, col ) ] ) ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                         minimum_elevation = p2c->top.low[ id ] - p2c->top.high[ id ] + flatHeight[ labels.at( row, col ) ];
                         n = t;
                     }
                 }
                 else {
-                    if ( minimum_elevation > 2 || minimum_elevation == 2 && n > -1 && n % 2 == 1 && t % 2 == 0 ) {
+                    if ( ( minimum_elevation > 2 ) || ( ( minimum_elevation == 2 ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                         minimum_elevation = 2;
                         n = t;
                     }
@@ -1983,8 +1974,8 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
             }
             int id = p2c->right_top.ID[ 0 ];
             if ( dem.at( row, col ) == p2c->right_top.dem[ 0 ] ) {
-                if ( id > 0 && p2c->right_top.low[ id ] != 2 ) {
-                    if ( minimum_elevation > p2c->right_top.low[ id ] - p2c->right_top.high[ id ] + flatHeight[ labels.at( row, col ) ] )  // 7
+                if ( ( id > 0 ) && ( p2c->right_top.low[ id ] != 2 ) ) {
+                    if ( ( minimum_elevation > ( p2c->right_top.low[ id ] - p2c->right_top.high[ id ] + flatHeight[ labels.at( row, col ) ] ) ) )  // 7
                     {
 
                         n = 7;
@@ -2002,11 +1993,11 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
     }
     col = flowdirs.getWidth() - 1;
     row = flowdirs.getHeight() - 1;
-    if ( gridRow != gridHeight - 1 && gridCol != gridWidth - 1 && flowdirs.at( row, col ) != 255 )  // is not on the right bottom
+    if ( ( gridRow != gridHeight - 1 ) && ( gridCol != gridWidth - 1 ) && ( flowdirs.at( row, col ) != 255 ) )  // is not on the right bottom
     {
         int n = -1, nCol, nRow;
         int po = xy2positionNum( row, col, width, height );
-        if ( p2c->right.dem.size() == 0 || p2c->bottom_right.dem.size() == 0 || p2c->bottom.dem.size() == 0 )  // right || bottom
+        if ( ( p2c->right.dem.size() == 0 ) || ( p2c->bottom_right.dem.size() == 0 ) || ( p2c->bottom.dem.size() == 0 ) )  // right || bottom
         {
             float minimun_elevation = dem.at( row, col );
             if ( p2c->right.dem.size() == 0 ) {
@@ -2035,7 +2026,7 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
             }
             if ( p2c->bottom.dem.size() == 0 )  //ÏÂ±ßµÄnullTile
             {
-                if ( minimun_elevation > dem.NoDataValue || minimun_elevation == dem.NoDataValue && n > -1 && n % 2 == 1 ) {
+                if ( ( minimun_elevation > dem.NoDataValue ) || ( ( minimun_elevation == dem.NoDataValue ) && ( n > -1 ) && ( n % 2 == 1 ) ) ) {
                     minimun_elevation = dem.NoDataValue;
                     n = 2;
                 }
@@ -2043,7 +2034,7 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
             else {
                 for ( int t = 2; t <= 3; t++ ) {
                     nCol = flowdirs.getCol( t, col );
-                    if ( minimun_elevation > p2c->bottom.dem[ nCol ] || minimun_elevation == p2c->bottom.dem[ nCol ] && n > -1 && n % 2 == 1 && t % 2 == 0 ) {
+                    if ( ( minimun_elevation > p2c->bottom.dem[ nCol ] ) || ( ( minimun_elevation == p2c->bottom.dem[ nCol ] ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                         minimun_elevation = p2c->bottom.dem[ nCol ];
                         n = t;
                     }
@@ -2053,7 +2044,7 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
             {
                 nRow = flowdirs.getRow( t, row );
                 nCol = flowdirs.getCol( t, col );
-                if ( minimun_elevation > dem.at( nRow, nCol ) || minimun_elevation == dem.at( nRow, nCol ) && n > -1 && n % 2 == 1 && t % 2 == 0 ) {
+                if ( ( minimun_elevation > dem.at( nRow, nCol ) ) || ( ( minimun_elevation == dem.at( nRow, nCol ) ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                     minimun_elevation = dem.at( nRow, nCol );
                     n = t;
                 }
@@ -2067,7 +2058,7 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
             }
             flowdirs.at( row, col ) = n;
         }
-        else if ( IdBounderyCells[ po ] == 0 || lowEdgeMask.at( row, col ) == 2 ) {
+        else if ( ( IdBounderyCells[ po ] == 0 ) || ( lowEdgeMask.at( row, col ) == 2 ) ) {
             float minimun_elevation = dem.at( row, col );
 
             int t = 0;
@@ -2082,7 +2073,7 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
             }
             for ( int t = 2; t <= 3; t++ ) {
                 nCol = flowdirs.getCol( t, col );
-                if ( minimun_elevation > p2c->bottom.dem[ nCol ] || minimun_elevation == p2c->bottom.dem[ nCol ] && n > -1 && n % 2 == 1 && t % 2 == 0 ) {
+                if ( ( minimun_elevation > p2c->bottom.dem[ nCol ] ) || ( ( minimun_elevation == p2c->bottom.dem[ nCol ] ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                     minimun_elevation = p2c->bottom.dem[ nCol ];
                     n = t;
                 }
@@ -2091,7 +2082,7 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
             {
                 nRow = flowdirs.getRow( t, row );
                 nCol = flowdirs.getCol( t, col );
-                if ( minimun_elevation > dem.at( nRow, nCol ) || minimun_elevation == dem.at( nRow, nCol ) && n > -1 && n % 2 == 1 && t % 2 == 0 ) {
+                if ( ( minimun_elevation > dem.at( nRow, nCol ) ) || ( ( minimun_elevation == dem.at( nRow, nCol ) ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                     minimun_elevation = dem.at( nRow, nCol );
                     n = t;
                 }
@@ -2110,8 +2101,8 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
             nRow = flowdirs.getRow( t, row );
             if ( dem.at( row, col ) == p2c->right.dem[ nRow ] ) {
                 int id = p2c->right.ID[ nRow ];
-                if ( id > 0 && p2c->right.low[ id ] != 2 ) {
-                    if ( minimun_elevation > p2c->right.low[ id ] - p2c->right.high[ id ] + flatHeight[ labels.at( row, col ) ] ) {
+                if ( ( id > 0 ) && ( p2c->right.low[ id ] != 2 ) ) {
+                    if ( minimun_elevation > ( p2c->right.low[ id ] - p2c->right.high[ id ] + flatHeight[ labels.at( row, col ) ] ) ) {
                         minimun_elevation = p2c->right.low[ id ] - p2c->right.high[ id ] + flatHeight[ labels.at( row, col ) ];
                         n = t;
                     }
@@ -2127,7 +2118,7 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
             if ( dem.at( row, col ) == p2c->bottom_right.dem[ 0 ] )  // 1
             {
                 int id = p2c->bottom_right.ID[ 0 ];
-                if ( id > 0 && p2c->bottom_right.low[ id ] != 2 ) {
+                if ( ( id > 0 ) && ( p2c->bottom_right.low[ id ] != 2 ) ) {
                     if ( minimun_elevation > p2c->bottom_right.low[ id ] - p2c->bottom_right.high[ id ] + flatHeight[ labels.at( row, col ) ] ) {
                         minimun_elevation = p2c->bottom_right.low[ id ] - p2c->bottom_right.high[ id ] + flatHeight[ labels.at( row, col ) ];
                         n = 1;
@@ -2146,15 +2137,15 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
                     continue;
                 }
                 int id = p2c->bottom.ID[ nCol ];
-                if ( id > 0 && p2c->bottom.low[ id ] != 2 ) {
-                    if ( minimun_elevation > p2c->bottom.low[ id ] - p2c->bottom.high[ id ] + flatHeight[ labels.at( row, col ) ]
-                         || minimun_elevation == p2c->bottom.low[ id ] - p2c->bottom.high[ id ] + flatHeight[ labels.at( row, col ) ] && n > -1 && n % 2 == 1 && t % 2 == 0 ) {
+                if ( ( id > 0 ) && ( p2c->bottom.low[ id ] != 2 ) ) {
+                    if ( ( minimun_elevation > ( p2c->bottom.low[ id ] - p2c->bottom.high[ id ] + flatHeight[ labels.at( row, col ) ] ) )
+                         || ( ( minimun_elevation == ( p2c->bottom.low[ id ] - p2c->bottom.high[ id ] + flatHeight[ labels.at( row, col ) ] ) ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                         minimun_elevation = p2c->bottom.low[ id ] - p2c->bottom.high[ id ] + flatHeight[ labels.at( row, col ) ];
                         n = t;
                     }
                 }
                 else {
-                    if ( minimun_elevation > 2 || minimun_elevation == 2 && n > -1 && n % 2 == 1 && t % 2 == 0 ) {
+                    if ( ( minimun_elevation > 2 ) || ( ( minimun_elevation == 2 ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                         minimun_elevation = 2;
                         n = t;
                     }
@@ -2167,7 +2158,7 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
                 if ( labels.at( row, col ) != labels.at( nRow, nCol ) ) {
                     continue;
                 }
-                if ( minimun_elevation > flatMask.at( nRow, nCol ) || minimun_elevation == flatMask.at( nRow, nCol ) && n > -1 && n % 2 == 1 && t % 2 == 0 ) {
+                if ( ( minimun_elevation > flatMask.at( nRow, nCol ) ) || ( ( minimun_elevation == flatMask.at( nRow, nCol ) ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                     minimun_elevation = flatMask.at( nRow, nCol );
                     n = t;
                 }
@@ -2178,7 +2169,7 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
             if ( dem.at( row, col ) == p2c->right.dem[ nRow ] )  // 7
             {
                 int id = p2c->right.ID[ nRow ];
-                if ( id > 0 && p2c->right.low[ id ] != 2 ) {
+                if ( ( id > 0 ) && ( p2c->right.low[ id ] != 2 ) ) {
                     if ( minimun_elevation > p2c->right.low[ id ] - p2c->right.high[ id ] + flatHeight[ labels.at( row, col ) ] ) {
                         n = t;
                     }
@@ -2194,10 +2185,10 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
     }
     row = flowdirs.getHeight() - 1;
     col = 0;
-    if ( gridCol != 0 && gridRow != gridHeight - 1 && flowdirs.at( row, col ) != 255 )  // is not the left bottom border
+    if ( ( gridCol != 0 ) && ( gridRow != gridHeight - 1 ) && ( flowdirs.at( row, col ) != 255 ) )  // is not the left bottom border
     {
         int po = xy2positionNum( row, col, width, height );
-        if ( p2c->left.dem.size() == 0 || p2c->bottom.dem.size() == 0 || p2c->bottom_left.dem.size() == 0 )  // left || bottom
+        if ( ( p2c->left.dem.size() == 0 ) || ( p2c->bottom.dem.size() == 0 ) || ( p2c->bottom_left.dem.size() == 0 ) )  // left || bottom
         {
             float minimum_elevation = dem.at( row, col );
             int n = -1, nCol, nRow;
@@ -2218,7 +2209,7 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
                 for ( int t = 1; t <= 2; t++ )  // 1-2
                 {
                     nCol = flowdirs.getCol( t, col );
-                    if ( minimum_elevation > p2c->bottom.dem[ nCol ] || minimum_elevation == p2c->bottom.dem[ nCol ] && n > -1 && n % 2 == 1 && t % 2 == 0 ) {
+                    if ( ( minimum_elevation > p2c->bottom.dem[ nCol ] ) || ( ( minimum_elevation == p2c->bottom.dem[ nCol ] ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                         minimum_elevation = p2c->bottom.dem[ nCol ];
                         n = t;
                     }
@@ -2237,7 +2228,7 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
                 }
             }
             if ( p2c->left.dem.size() == 0 ) {
-                if ( minimum_elevation > dem.NoDataValue || minimum_elevation == dem.NoDataValue && n > -1 && n % 2 == 1 ) {
+                if ( ( minimum_elevation > dem.NoDataValue ) || ( ( minimum_elevation == dem.NoDataValue ) && ( n > -1 ) && ( n % 2 == 1 ) ) ) {
                     minimum_elevation = dem.NoDataValue;
                     n = 4;
                 }
@@ -2246,7 +2237,7 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
                 for ( int t = 4; t <= 5; t++ )  // 4-5
                 {
                     nRow = flowdirs.getRow( t, row );
-                    if ( minimum_elevation > p2c->left.dem[ nRow ] || ( minimum_elevation == p2c->left.dem[ nRow ] && n > -1 && n % 2 == 1 && t % 2 == 0 ) ) {
+                    if ( ( minimum_elevation > p2c->left.dem[ nRow ] ) || ( ( minimum_elevation == p2c->left.dem[ nRow ] ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                         minimum_elevation = p2c->left.dem[ nRow ];
                         n = t;
                     }
@@ -2256,14 +2247,14 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
             {
                 nCol = flowdirs.getCol( t, col );
                 nRow = flowdirs.getRow( t, row );
-                if ( minimum_elevation > dem.at( nRow, nCol ) || minimum_elevation == dem.at( nRow, nCol ) && n > -1 && n % 2 == 1 && t % 2 == 0 ) {
+                if ( ( minimum_elevation > dem.at( nRow, nCol ) ) || ( ( minimum_elevation == dem.at( nRow, nCol ) ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                     minimum_elevation = dem.at( nRow, nCol );
                     n = t;
                 }
             }
             flowdirs.at( row, col ) = n;
         }
-        else if ( IdBounderyCells[ po ] == 0 || lowEdgeMask.at( row, col ) == 2 ) {
+        else if ( ( IdBounderyCells[ po ] == 0 ) || ( lowEdgeMask.at( row, col ) == 2 ) ) {
             float minimum_elevation = dem.at( row, col );
             int n = -1, nCol, nRow;
             int t = 0;
@@ -2276,7 +2267,7 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
             for ( int t = 1; t <= 2; t++ )  // 1-2
             {
                 nCol = flowdirs.getCol( t, col );
-                if ( minimum_elevation > p2c->bottom.dem[ nCol ] || minimum_elevation == p2c->bottom.dem[ nCol ] && n > -1 && n % 2 == 1 && t % 2 == 0 ) {
+                if ( ( minimum_elevation > p2c->bottom.dem[ nCol ] ) || ( ( minimum_elevation == p2c->bottom.dem[ nCol ] ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                     minimum_elevation = p2c->bottom.dem[ nCol ];
                     n = t;
                 }
@@ -2288,7 +2279,7 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
             for ( int t = 4; t <= 5; t++ )  // 4-5
             {
                 nRow = flowdirs.getRow( t, row );
-                if ( minimum_elevation > p2c->left.dem[ nRow ] || ( minimum_elevation == p2c->left.dem[ nRow ] && n > -1 && n % 2 == 1 && t % 2 == 0 ) ) {
+                if ( ( minimum_elevation > p2c->left.dem[ nRow ] ) || ( ( minimum_elevation == p2c->left.dem[ nRow ] ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                     minimum_elevation = p2c->left.dem[ nRow ];
                     n = t;
                 }
@@ -2297,7 +2288,7 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
             {
                 nCol = flowdirs.getCol( t, col );
                 nRow = flowdirs.getRow( t, row );
-                if ( minimum_elevation > dem.at( nRow, nCol ) || minimum_elevation == dem.at( nRow, nCol ) && n > -1 && n % 2 == 1 && t % 2 == 0 ) {
+                if ( ( minimum_elevation > dem.at( nRow, nCol ) ) || ( ( minimum_elevation == dem.at( nRow, nCol ) ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                     minimum_elevation = dem.at( nRow, nCol );
                     n = t;
                 }
@@ -2311,8 +2302,8 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
             int t = 0;
             nCol = flowdirs.getCol( t, col );
             nRow = flowdirs.getRow( t, row );
-            if ( labels.at( row, col ) == labels.at( nRow, nCol )
-                 && ( minimum_elevation > flatMask.at( nRow, nCol ) || minimum_elevation == flatMask.at( nRow, nCol ) && n > -1 && n % 2 == 1 && t % 2 == 0 ) ) {
+            if ( ( labels.at( row, col ) == labels.at( nRow, nCol ) )
+                 && ( ( minimum_elevation > flatMask.at( nRow, nCol ) ) || ( ( minimum_elevation == flatMask.at( nRow, nCol ) ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) ) {
                 minimum_elevation = flatMask.at( nRow, nCol );
                 n = t;
             }
@@ -2323,15 +2314,15 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
                     continue;
                 }
                 int id = p2c->bottom.ID[ nCol ];
-                if ( id > 0 && p2c->bottom.low[ id ] != 2 ) {
-                    if ( minimum_elevation > p2c->bottom.low[ id ] - p2c->bottom.high[ id ] + flatHeight[ labels.at( row, col ) ]
-                         || minimum_elevation == p2c->bottom.low[ id ] - p2c->bottom.high[ id ] + flatHeight[ labels.at( row, col ) ] && n > -1 && n % 2 == 1 && t % 2 == 0 ) {
+                if ( ( id > 0 ) && ( p2c->bottom.low[ id ] != 2 ) ) {
+                    if ( ( minimum_elevation > ( p2c->bottom.low[ id ] - p2c->bottom.high[ id ] + flatHeight[ labels.at( row, col ) ] ) )
+                         || ( ( minimum_elevation == ( p2c->bottom.low[ id ] - p2c->bottom.high[ id ] + flatHeight[ labels.at( row, col ) ] ) ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                         minimum_elevation = p2c->bottom.low[ id ] - p2c->bottom.high[ id ] + flatHeight[ labels.at( row, col ) ];
                         n = t;
                     }
                 }
                 else {
-                    if ( minimum_elevation > 2 || minimum_elevation == 2 && n > -1 && n % 2 == 1 && t % 2 == 0 ) {
+                    if ( ( minimum_elevation > 2 ) || ( ( minimum_elevation == 2 ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                         minimum_elevation = 2;
                         n = t;
                     }
@@ -2339,7 +2330,7 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
             }
             if ( dem.at( row, col ) == p2c->bottom_left.dem[ 0 ] ) {
                 int id = p2c->bottom_left.ID[ 0 ];
-                if ( id > 0 && p2c->bottom_left.low[ id ] != 2 ) {
+                if ( ( id > 0 ) && ( p2c->bottom_left.low[ id ] != 2 ) ) {
                     if ( minimum_elevation > p2c->bottom_left.low[ id ] - p2c->bottom_left.high[ id ] + flatHeight[ labels.at( row, col ) ] ) {
                         minimum_elevation = p2c->bottom_left.low[ id ] - p2c->bottom_left.high[ id ] + flatHeight[ labels.at( row, col ) ];
                         n = 3;
@@ -2359,15 +2350,15 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
                     continue;
                 }
                 int id = p2c->left.ID[ nRow ];
-                if ( id > 0 && p2c->left.low[ id ] != 2 ) {
-                    if ( minimum_elevation > p2c->left.low[ id ] - p2c->left.high[ id ] + flatHeight[ labels.at( row, col ) ]
-                         || ( minimum_elevation == p2c->left.low[ id ] - p2c->left.high[ id ] + flatHeight[ labels.at( row, col ) ] && n > -1 && n % 2 == 1 && t % 2 == 0 ) ) {
+                if ( ( id > 0 ) && ( p2c->left.low[ id ] != 2 ) ) {
+                    if ( ( minimum_elevation > ( p2c->left.low[ id ] - p2c->left.high[ id ] + flatHeight[ labels.at( row, col ) ] ) )
+                         || ( ( minimum_elevation == ( p2c->left.low[ id ] - p2c->left.high[ id ] + flatHeight[ labels.at( row, col ) ] ) ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                         minimum_elevation = p2c->left.low[ id ] - p2c->left.high[ id ] + flatHeight[ labels.at( row, col ) ];
                         n = t;
                     }
                 }
                 else {
-                    if ( minimum_elevation > 2 || ( minimum_elevation == 2 && n > -1 && n % 2 == 1 && t % 2 == 0 ) ) {
+                    if ( ( minimum_elevation > 2 ) || ( ( minimum_elevation == 2 ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                         minimum_elevation = 2;
                         n = t;
                     }
@@ -2380,7 +2371,7 @@ void Consumer::ModifyBoundaryFlowDir( const TileInfo& tileInfo, IProducer2Consum
                 if ( labels.at( row, col ) != labels.at( nRow, nCol ) ) {
                     continue;
                 }
-                if ( minimum_elevation > flatMask.at( nRow, nCol ) || minimum_elevation == flatMask.at( nRow, nCol ) && n > -1 && n % 2 == 1 && t % 2 == 0 ) {
+                if ( ( minimum_elevation > flatMask.at( nRow, nCol ) ) || ( ( minimum_elevation == flatMask.at( nRow, nCol ) ) && ( n > -1 ) && ( n % 2 == 1 ) && ( t % 2 == 0 ) ) ) {
                     minimum_elevation = flatMask.at( nRow, nCol );
                     n = t;
                 }
@@ -2395,10 +2386,10 @@ void Consumer::SaveFlowDir( const GridInfo& gridInfo, const TileInfo& tileInfo, 
     for ( int i = 0; i < 6; i++ ) {
         geotransform[ i ] = dem.geoTransforms->at( i );
     }
-    int t = tileInfo.filename.find_last_of( "/" );
+    int t = tileInfo.filename.find_last_of( "\\" );
     int length = tileInfo.filename.length();
     std::string name = tileInfo.filename.substr( t + 1, length - t - 5 );
-    std::string path = gridInfo.outputFolder + "/" + name + "flowdir.tif";
+    std::string path = gridInfo.outputFolder + "\\" + name + "flowdir.tif";
     WriteGeoTIFF( path.data(), flowdirs.getHeight(), flowdirs.getWidth(), &flowdirs, GDALDataType::GDT_Int32, &geotransform[ 0 ], nullptr, nullptr, nullptr, nullptr, flowdirs.NoDataValue );
 }
 
@@ -2415,27 +2406,4 @@ int Consumer::xy2positionNum( const int x, const int y, const int width, const i
         return ( width - 1 ) + height - 1 + width - y - 1;
     }
     return 2 * ( width - 1 ) + 2 * ( height - 1 ) - x;  // left-hand side
-}
-void Consumer::SaveToRetain( TileInfo& tile, StorageType& storages ) {
-    auto& temp = storages[ std::make_pair( tile.gridRow, tile.gridCol ) ];
-    temp.NoFlat = NoFlat;
-    temp.dem = std::move( dem );
-    temp.flowdirs = std::move( flowdirs );
-    temp.flatHeight = flatHeight;
-    temp.IdBounderyCell = std::move( IdBounderyCells );
-    temp.highEdgeMask = std::move( highEdgeMask );
-    temp.lowEdgeMask = std::move( lowEdgeMask );
-    temp.labels = std::move( labels );
-    temp.flatHeight = std::move( flatHeight );
-}
-void Consumer::LoadFromRetain( TileInfo& tile, StorageType& storages ) {
-    auto& temp = storages.at( std::make_pair( tile.gridRow, tile.gridCol ) );
-    dem = std::move( temp.dem );
-    flowdirs = std::move( temp.flowdirs );
-    labels = std::move( temp.labels );
-    highEdgeMask = std::move( temp.highEdgeMask );
-    lowEdgeMask = std::move( temp.lowEdgeMask );
-    IdBounderyCells = std::move( temp.IdBounderyCell );
-    NoFlat = temp.NoFlat;
-    flatHeight = std::move( temp.flatHeight );
 }
