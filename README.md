@@ -36,7 +36,10 @@ mpirun -np <PROCESSES_NUMBER> ParallelFlowDir parallel <INPUT> <OUTPUT>
 The `<INPUT>` argument is a text file and contains the paths of the tiles of the DEM.  
 The `<OUTPUT>` argument specifes the output folder.   
 
-An example command is: `mpirun -np 3 ParallelFlowDir parallel ./test_data/ansai_part.txt ./test_data/ansai_flow`   
+An example command is: 
+```
+mpirun -np 3 ParallelFlowDir parallel ./test_data/ansai_part.txt ./test_data/ansai_flow
+```
 `-np 3` indicates that the program is run in parallel over 3 processes, which includes 1 producer process and 2 consumer processes.  
 
 In `test` mode, the program has the following arguments: 
