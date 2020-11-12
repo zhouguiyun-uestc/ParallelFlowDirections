@@ -1,43 +1,54 @@
 #the minimum version
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 3.9)
 
 project (ParallelFlowDir LANGUAGES CXX)
 message("Project Name:" ${PROJECT_NAME})
 
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-add_compile_options(-std=c++11 -fpermissive -O3)
+find_package(MPI REQUIRED)
+find_package(GDAL REQUIRED)
 
 #The output directory of the execution file
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR})
 
 #header file 1
-include_directories(${PROJECT_SOURCE_DIR}/include)
+include_directories(${PROJECT_SOURCE_DIR}/ParaDEM/include)
 
 #header file 2
-include_directories(${PROJECT_SOURCE_DIR}/src/flowdir})
+include_directories(${PROJECT_SOURCE_DIR}/ParaDEM/src/flowdir})
 
 #Add the cereal libraty path
-include_directories(/share/home/cereal/include)
+include_directories(${PROJECT_SOURCE_DIR}/ParaDEM)
 
-aux_source_directory(${PROJECT_SOURCE_DIR}/src/common c_files)
-aux_source_directory(${PROJECT_SOURCE_DIR}/src/flowdir c_files)
-
-find_package(MPI REQUIRED)
-set(CMAKE_MPI MPI::MPI_CXX)
-
-
-#If find_package(GDAL REQUIRED) cannot find GDAL, you can set the GDAL_LIBRARY by yourself
-#set(GDAL_INCLUDE_DIR /share/home/user/gdalBuild/include)
-#set(GDAL_LIBRARY /share/home/user/gdalBuild/lib/libgdal.so)
-
-find_package(GDAL REQUIRED)
 message(STATUS " version:${GDAL_VERSION}")
-message(STATUS " libraries:${GDAL_LIBRARY}")
-message(STATUS " include path:${GDAL_INCLUDE_DIR}")
+message(STATUS " libraries:${GDAL_LIBRARY}")	
+message(STATUS " include path:${GDAL_INCLUDE_DIR}")	
 
-add_executable(${PROJECT_NAME} ${c_files})
+set(SOURCE_FILES 
+${PROJECT_SOURCE_DIR}/ParaDEM/src/common/bit_raster.cpp 
+${PROJECT_SOURCE_DIR}/ParaDEM/src/common/gdal.cpp 
+${PROJECT_SOURCE_DIR}/ParaDEM/src/common/grid.cpp 
+${PROJECT_SOURCE_DIR}/ParaDEM/src/common/memory.cpp 
+${PROJECT_SOURCE_DIR}/ParaDEM/src/common/object_deleter.cpp 
+${PROJECT_SOURCE_DIR}/ParaDEM/src/common/raster.cpp 
+${PROJECT_SOURCE_DIR}/ParaDEM/src/common/tile_info.cpp 
+${PROJECT_SOURCE_DIR}/ParaDEM/src/common/timeInfo.cpp 
+${PROJECT_SOURCE_DIR}/ParaDEM/src/common/Timer.cpp 
+${PROJECT_SOURCE_DIR}/ParaDEM/src/common/tool.cpp 
+${PROJECT_SOURCE_DIR}/ParaDEM/src/flowdir/producer_2_consumer.cpp 
+${PROJECT_SOURCE_DIR}/ParaDEM/src/flowdir/producer.cpp 
+${PROJECT_SOURCE_DIR}/ParaDEM/src/flowdir/outBoundary.cpp 
+${PROJECT_SOURCE_DIR}/ParaDEM/src/flowdir/object_factory.cpp 
+${PROJECT_SOURCE_DIR}/ParaDEM/src/flowdir/main.cpp 
+${PROJECT_SOURCE_DIR}/ParaDEM/src/flowdir/host.cpp 
+${PROJECT_SOURCE_DIR}/ParaDEM/src/flowdir/GridCell.cpp 
+${PROJECT_SOURCE_DIR}/ParaDEM/src/flowdir/consumer_2_producer.cpp 
+${PROJECT_SOURCE_DIR}/ParaDEM/src/flowdir/consumer.cpp)
 
-target_link_libraries(${PROJECT_NAME} ${GDAL_LIBRARY} ${CMAKE_MPI})
+add_executable(${PROJECT_NAME} ${SOURCE_FILES})
+target_include_directories(${PROJECT_NAME} PRIVATE ${GDAL_INCLUDE_DIR})
+target_link_libraries(${PROJECT_NAME} ${GDAL_LIBRARY} MPI::MPI_CXX)
+
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_11)
+target_compile_options(${PROJECT_NAME} PRIVATE -fpermissive -Wall -pedantic)
+
+
