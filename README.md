@@ -4,7 +4,7 @@
 
 **Authors**: Lihui Song, Guiyun Zhou, Yi Liu  
 
-**Corresponding Author**: Guiyun Zhou(zhouguiyun@uestc.edu.cn)  
+**Corresponding Author**: Guiyun Zhou (zhouguiyun@uestc.edu.cn)  
 
 
 # Abstract
@@ -12,7 +12,7 @@ The assignment of flow directions in flat regions needs to be treated with speci
 
 # Prerequisite
 
-GDAL , MPI and cereal
+GDAL , MPI, and cereal
 
 # Compilation
 
@@ -52,7 +52,10 @@ The `<TILE_WIDTH>` argument specifes the width of the tile.
 The `<DIVIDE_PATH>` argument specifes the output folder of the tiles.  
 The `<OUTPUT_FOLDER_OF_PARALLEL_FLOW_DIRECTIONS>` argument specifes the output folder of flow directions using our proposed parallel algorithm.  
 
-An example command is: `mpirun -np 4 ParallelFlowDir test ./test_data/dem.tif 2000 3000 ./test_data/seqFlow/seqFlow.tif 500 800 ./test_data/tileDEM ./test_data/paraFlow `   
+An example command is: 
+```
+mpirun -np 4 ParallelFlowDir test ./test_data/dem.tif 2000 3000 ./test_data/seqFlow/seqFlow.tif 500 800 ./test_data/tileDEM ./test_data/paraFlow 
+```
 `-np 4` indicates that the program is run in parallel over 4 processes, which includes 1 producer process and 3 consumer processes. 
 
 # Format of input file 
