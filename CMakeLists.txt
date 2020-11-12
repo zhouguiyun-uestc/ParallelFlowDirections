@@ -16,9 +16,6 @@ include_directories(${PROJECT_SOURCE_DIR}/ParaDEM/include)
 #header file 2
 include_directories(${PROJECT_SOURCE_DIR}/ParaDEM/src/flowdir})
 
-#Add the cereal libraty path
-include_directories(${PROJECT_SOURCE_DIR}/ParaDEM)
-
 message(STATUS " version:${GDAL_VERSION}")
 message(STATUS " libraries:${GDAL_LIBRARY}")	
 message(STATUS " include path:${GDAL_INCLUDE_DIR}")	
