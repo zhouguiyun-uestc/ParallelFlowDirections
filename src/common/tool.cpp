@@ -21,20 +21,20 @@
 #include <string>
 #include <vector>
 
-static int   p[ B + B + 2 ];
+static int p[ B + B + 2 ];
 static float g3[ B + B + 2 ][ 3 ];
 static float g2[ B + B + 2 ][ 2 ];
 static float g1[ B + B + 2 ];
-static int   start = 1;
-static void  normalize2( float v[ 2 ] );
-static void  normalize3( float v[ 3 ] );
-static void  init( void );
-static int   d8_FlowDir( Raster< float >& dem, const int row, const int col );
-static void  find_flat_edges( std::deque< GridCell >& low_edges, std::deque< GridCell >& high_edges, Raster< int >& flowdirs, Raster< float >& dem );
-static void  label_this( int x0, int y0, const int label, Raster< int32_t >& labels, Raster< float >& dem );
-static void  BuildAwayGradient( Raster< int >& flowdirs, Raster< int32_t >& flat_mask, std::deque< GridCell > edges, std::vector< int >& flat_height, Raster< int32_t >& labels );
-static void  BuildTowardsCombinedGradient( Raster< int >& flowdirs, Raster< int32_t >& flat_mask, std::deque< GridCell > edges, std::vector< int >& flat_height, Raster< int32_t >& labels );
-static int   d8_masked_FlowDir( Raster< int32_t >& flat_mask, Raster< int32_t >& labels, const int row, const int col );
+static int start = 1;
+static void normalize2( float v[ 2 ] );
+static void normalize3( float v[ 3 ] );
+static void init( void );
+static int d8_FlowDir( Raster< float >& dem, const int row, const int col );
+static void find_flat_edges( std::deque< GridCell >& low_edges, std::deque< GridCell >& high_edges, Raster< int >& flowdirs, Raster< float >& dem );
+static void label_this( int x0, int y0, const int label, Raster< int32_t >& labels, Raster< float >& dem );
+static void BuildAwayGradient( Raster< int >& flowdirs, Raster< int32_t >& flat_mask, std::deque< GridCell > edges, std::vector< int >& flat_height, Raster< int32_t >& labels );
+static void BuildTowardsCombinedGradient( Raster< int >& flowdirs, Raster< int32_t >& flat_mask, std::deque< GridCell > edges, std::vector< int >& flat_height, Raster< int32_t >& labels );
+static int d8_masked_FlowDir( Raster< int32_t >& flat_mask, Raster< int32_t >& labels, const int row, const int col );
 
 bool readTXTInfo( std::string filePathTXT, std::vector< TileInfo >& tileInfos, GridInfo& gridInfo ) {
     std::vector< std::vector< std::string > > fgrid;
@@ -83,9 +83,9 @@ bool readTXTInfo( std::string filePathTXT, std::vector< TileInfo >& tileInfos, G
             row.emplace_back();
         else if ( row.size() < max_col_size )  // The line was more than one short of max: uh oh
             throw std::runtime_error( "Not all of the rows in the layout file had the same number of columns!" );
-    auto max_row_size   = fgrid.size();
+    auto max_row_size = fgrid.size();
     gridInfo.gridHeight = max_row_size;
-    gridInfo.gridWidth  = max_col_size;
+    gridInfo.gridWidth = max_col_size;
     tileInfos.resize( max_row_size * max_col_size );
     for ( size_t tileRow = 0; tileRow < max_row_size; tileRow++ ) {
         for ( size_t tileCol = 0; tileCol < max_col_size; tileCol++ ) {
@@ -97,8 +97,8 @@ bool readTXTInfo( std::string filePathTXT, std::vector< TileInfo >& tileInfos, G
                 tileInfo.filename = fgrid[ tileRow ][ tileCol ];
                 tileInfo.nullTile = false;
             }
-            tileInfo.gridRow                              = tileRow;
-            tileInfo.gridCol                              = tileCol;
+            tileInfo.gridRow = tileRow;
+            tileInfo.gridCol = tileCol;
             tileInfos[ tileRow * max_col_size + tileCol ] = tileInfo;
         }
     }
@@ -139,27 +139,27 @@ bool readTXTInfo( std::string filePathTXT, std::vector< TileInfo >& tileInfos, G
 
 bool generateTiles( const char* filePath, int tileHeight, int tileWidth, const char* outputFolder ) {
     std::string inputFilePath = filePath;
-    std::string output        = outputFolder;
+    std::string output = outputFolder;
     GDALAllRegister();
     GDALDataset* fin = ( GDALDataset* )GDALOpen( inputFilePath.c_str(), GA_ReadOnly );
     if ( fin == NULL )
         throw std::runtime_error( "Could not open file '" + inputFilePath + "' to get dimensions." );
     GDALRasterBand* band = fin->GetRasterBand( 1 );
-    GDALDataType    type = band->GetRasterDataType();
+    GDALDataType type = band->GetRasterDataType();
     // file type is assumed to be float
-    int                   grandHeight = band->GetYSize();
-    int                   grandWidth  = band->GetXSize();
+    int grandHeight = band->GetYSize();
+    int grandWidth = band->GetXSize();
     std::vector< double > geotransform( 6 );
     fin->GetGeoTransform( &geotransform[ 0 ] );
     int height, width;
     int gridHeight = std::ceil( ( double )grandHeight / tileHeight );
-    int gridWidth  = std::ceil( ( double )grandWidth / tileWidth );
+    int gridWidth = std::ceil( ( double )grandWidth / tileWidth );
     for ( int tileRow = 0; tileRow < gridHeight; tileRow++ ) {
         for ( int tileCol = 0; tileCol < gridWidth; tileCol++ ) {
             std::string outputFileName = std::to_string( tileRow ) + "_" + std::to_string( tileCol ) + ".tif";
-            std::string path           = output + "/" + outputFileName;
-            height                     = ( grandHeight - tileHeight * tileRow >= tileHeight ) ? tileHeight : ( grandHeight - tileHeight * tileRow );
-            width                      = ( grandWidth - tileWidth * tileCol >= tileWidth ) ? tileWidth : ( grandWidth - tileWidth * tileCol );
+            std::string path = output + "/" + outputFileName;
+            height = ( grandHeight - tileHeight * tileRow >= tileHeight ) ? tileHeight : ( grandHeight - tileHeight * tileRow );
+            width = ( grandWidth - tileWidth * tileCol >= tileWidth ) ? tileWidth : ( grandWidth - tileWidth * tileCol );
             Raster< float > tile;
             if ( !tile.init( height, width ) ) {
                 GDALClose( ( GDALDatasetH )fin );
@@ -174,7 +174,7 @@ bool generateTiles( const char* filePath, int tileHeight, int tileWidth, const c
     }
     GDALClose( ( GDALDatasetH )fin );
 
-    std::string   txtPath = output + "/" + "tileInfo.txt";
+    std::string txtPath = output + "/" + "tileInfo.txt";
     std::ofstream fout;
     fout.open( txtPath );
     if ( fout.fail() ) {
@@ -184,7 +184,7 @@ bool generateTiles( const char* filePath, int tileHeight, int tileWidth, const c
     for ( int tileRow = 0; tileRow < gridHeight; tileRow++ ) {
         for ( int tileCol = 0; tileCol < gridWidth; tileCol++ ) {
             std::string outputFileName = std::to_string( tileRow ) + "_" + std::to_string( tileCol ) + ".tif";
-            std::string path           = output + "/" + outputFileName;
+            std::string path = output + "/" + outputFileName;
             fout << path << ",";
         }
         fout << std::endl;
@@ -193,20 +193,20 @@ bool generateTiles( const char* filePath, int tileHeight, int tileWidth, const c
 }
 
 bool mergeTiles( GridInfo& gridInfo, const char* outputFilePath ) {
-    int             grandHeight = gridInfo.grandHeight;
-    int             grandWidth  = gridInfo.grandWidth;
-    int             gridHeight  = gridInfo.gridHeight;
-    int             gridWidth   = gridInfo.gridWidth;
-    int             tileHeight  = gridInfo.tileHeight;
-    int             tileWidth   = gridInfo.tileWidth;
-    std::string     inputFolder = gridInfo.outputFolder;
+    int grandHeight = gridInfo.grandHeight;
+    int grandWidth = gridInfo.grandWidth;
+    int gridHeight = gridInfo.gridHeight;
+    int gridWidth = gridInfo.gridWidth;
+    int tileHeight = gridInfo.tileHeight;
+    int tileWidth = gridInfo.tileWidth;
+    std::string inputFolder = gridInfo.outputFolder;
     Raster< float > tiles;
     if ( !tiles.init( grandHeight, grandWidth ) )
         return false;
     std::vector< double > geotransform( 6 );
     for ( int tileRow = 0; tileRow < gridHeight; tileRow++ ) {
         for ( int tileCol = 0; tileCol < gridWidth; tileCol++ ) {
-            std::string     fileName = inputFolder + "/" + std::to_string( tileRow ) + "_" + std::to_string( tileCol ) + "flowdir.tif";
+            std::string fileName = inputFolder + "/" + std::to_string( tileRow ) + "_" + std::to_string( tileCol ) + "flowdir.tif";
             Raster< float > tile;
             if ( !readGeoTIFF( fileName.data(), GDALDataType::GDT_Int32, tile ) ) {
                 std::cout << fileName << " not exist!" << std::endl;
@@ -217,8 +217,8 @@ bool mergeTiles( GridInfo& gridInfo, const char* outputFilePath ) {
                     geotransform[ i ] = tile.geoTransforms->at( i );
                 }
             }
-            int height   = tile.getHeight();
-            int width    = tile.getWidth();
+            int height = tile.getHeight();
+            int width = tile.getWidth();
             int startRow = tileHeight * tileRow;
             int startCol = tileWidth * tileCol;
             for ( int row = 0; row < height; row++ ) {
@@ -250,9 +250,9 @@ void processTileGrid( GridInfo& gridInfo, std::vector< TileInfo >& tileInfos, IO
 
     for ( size_t i = 0; i < tileInfos.size(); i++ )  // tileInfos.size()
     {
-        TileInfo&                             tileInfo            = tileInfos[ i ];
+        TileInfo& tileInfo = tileInfos[ i ];
         std::shared_ptr< IConsumer2Producer > pIConsumer2Producer = pIObjFactory->createConsumer2Producer();
-        std::shared_ptr< IConsumer >          pIConsumer          = pIObjFactory->createConsumer();
+        std::shared_ptr< IConsumer > pIConsumer = pIObjFactory->createConsumer();
         std::cout << "th " << i << "is processing£¡" << std::endl;
         if ( tileInfos[ i ].nullTile ) {
             continue;
@@ -269,7 +269,7 @@ void processTileGrid( GridInfo& gridInfo, std::vector< TileInfo >& tileInfos, IO
             continue;
         }
         std::shared_ptr< IProducer2Consumer > pIProducer2Consumer = pIProducer->toConsumer( tileInfo, gridIConsumer2Producer );
-        std::shared_ptr< IConsumer >          pIConsumer          = pIObjFactory->createConsumer();
+        std::shared_ptr< IConsumer > pIConsumer = pIObjFactory->createConsumer();
 
         pIConsumer->processRound2( gridInfo, tileInfo, pIProducer2Consumer.get() );
     }
@@ -282,19 +282,19 @@ bool readGridInfo( const char* filePath, GridInfo& gridInfo ) {
         std::cerr << "Open gridInfo error!" << std::endl;
         return false;
     }
-    std::string                s;
+    std::string s;
     std::vector< std::string > input( 9 );
-    int                        k = 0;
+    int k = 0;
     while ( getline( infile, s ) )
         input[ k++ ] = s;
 
     size_t pos;
-    gridInfo.tileHeight  = stod( input[ 0 ], &pos );
-    gridInfo.tileWidth   = stod( input[ 1 ], &pos );
-    gridInfo.gridHeight  = stod( input[ 2 ], &pos );
-    gridInfo.gridWidth   = stod( input[ 3 ], &pos );
+    gridInfo.tileHeight = stod( input[ 0 ], &pos );
+    gridInfo.tileWidth = stod( input[ 1 ], &pos );
+    gridInfo.gridHeight = stod( input[ 2 ], &pos );
+    gridInfo.gridWidth = stod( input[ 3 ], &pos );
     gridInfo.grandHeight = stod( input[ 4 ], &pos );
-    gridInfo.grandWidth  = stod( input[ 5 ], &pos );
+    gridInfo.grandWidth = stod( input[ 5 ], &pos );
 
     infile.close();
     return true;
@@ -302,26 +302,26 @@ bool readGridInfo( const char* filePath, GridInfo& gridInfo ) {
 
 void createTileInfoArray( GridInfo& gridInfo, std::vector< TileInfo >& tileInfos ) {
     int gridHeight = gridInfo.gridHeight;
-    int gridWidth  = gridInfo.gridWidth;
+    int gridWidth = gridInfo.gridWidth;
     tileInfos.resize( gridHeight * gridWidth );
 
     int grandHeight = gridInfo.grandHeight;
-    int grandWidth  = gridInfo.grandWidth;
-    int tileHeight  = gridInfo.tileHeight;
-    int tileWidth   = gridInfo.tileWidth;
+    int grandWidth = gridInfo.grandWidth;
+    int tileHeight = gridInfo.tileHeight;
+    int tileWidth = gridInfo.tileWidth;
     int height, width;
     for ( int tileRow = 0; tileRow < gridHeight; tileRow++ ) {
         for ( int tileCol = 0; tileCol < gridWidth; tileCol++ ) {
             height = ( grandHeight - tileHeight * tileRow >= tileHeight ) ? tileHeight : ( grandHeight - tileHeight * tileRow );
-            width  = ( grandWidth - tileWidth * tileCol >= tileWidth ) ? tileWidth : ( grandWidth - tileWidth * tileCol );
+            width = ( grandWidth - tileWidth * tileCol >= tileWidth ) ? tileWidth : ( grandWidth - tileWidth * tileCol );
             TileInfo tileInfo;
-            tileInfo.gridRow                           = tileRow;
-            tileInfo.gridCol                           = tileCol;
-            tileInfo.height                            = height;
-            tileInfo.width                             = width;
-            std::string path                           = gridInfo.inputFolder + "/" + std::to_string( tileRow ) + "_" + std::to_string( tileCol ) + ".tif";
-            tileInfo.nullTile                          = false;
-            tileInfo.filename                          = path;
+            tileInfo.gridRow = tileRow;
+            tileInfo.gridCol = tileCol;
+            tileInfo.height = height;
+            tileInfo.width = width;
+            std::string path = gridInfo.inputFolder + "/" + std::to_string( tileRow ) + "_" + std::to_string( tileCol ) + ".tif";
+            tileInfo.nullTile = false;
+            tileInfo.filename = path;
             tileInfos[ tileRow * gridWidth + tileCol ] = tileInfo;
         }
     }
@@ -379,14 +379,14 @@ int randomi( int m, int n ) {
 void normalize2( float v[ 2 ] ) {
     float s;
 
-    s      = sqrt( v[ 0 ] * v[ 0 ] + v[ 1 ] * v[ 1 ] );
+    s = sqrt( v[ 0 ] * v[ 0 ] + v[ 1 ] * v[ 1 ] );
     v[ 0 ] = v[ 0 ] / s;
     v[ 1 ] = v[ 1 ] / s;
 }
 
 void normalize3( float v[ 3 ] ) {
     float s;
-    s      = sqrt( v[ 0 ] * v[ 0 ] + v[ 1 ] * v[ 1 ] + v[ 2 ] * v[ 2 ] );
+    s = sqrt( v[ 0 ] * v[ 0 ] + v[ 1 ] * v[ 1 ] + v[ 2 ] * v[ 2 ] );
     v[ 0 ] = v[ 0 ] / s;
     v[ 1 ] = v[ 1 ] / s;
     v[ 2 ] = v[ 2 ] / s;
@@ -410,13 +410,13 @@ void init( void ) {
     }
 
     while ( --i ) {
-        k      = p[ i ];
+        k = p[ i ];
         p[ i ] = p[ j = rand() % B ];
         p[ j ] = k;
     }
 
     for ( i = 0; i < B + 2; i++ ) {
-        p[ B + i ]  = p[ i ];
+        p[ B + i ] = p[ i ];
         g1[ B + i ] = g1[ i ];
         for ( j = 0; j < 2; j++ )
             g2[ B + i ][ j ] = g2[ i ][ j ];
@@ -426,8 +426,8 @@ void init( void ) {
 }
 
 float noise2( float vec[ 2 ] ) {
-    int          bx0, bx1, by0, by1, b00, b10, b01, b11;
-    float        rx0, rx1, ry0, ry1, *q, sx, sy, a, b, t, u, v;
+    int bx0, bx1, by0, by1, b00, b10, b01, b11;
+    float rx0, rx1, ry0, ry1, *q, sx, sy, a, b, t, u, v;
     register int i, j;
 
     if ( start ) {
@@ -467,10 +467,10 @@ float noise2( float vec[ 2 ] ) {
 }
 
 void InitPriorityQue( Raster< float >& dem, Flag& flag, PriorityQueue& priorityQueue ) {
-    int  width  = dem.getWidth();
-    int  height = dem.getHeight();
+    int width = dem.getWidth();
+    int height = dem.getHeight();
     Node tmpNode;
-    int  iRow, iCol, row, col;
+    int iRow, iCol, row, col;
 
     std::queue< Node > depressionQue;
 
@@ -488,8 +488,8 @@ void InitPriorityQue( Raster< float >& dem, Flag& flag, PriorityQueue& priorityQ
                     if ( flag.IsProcessed( iRow, iCol ) )
                         continue;
                     if ( !dem.isNoData( iRow, iCol ) ) {
-                        tmpNode.row   = iRow;
-                        tmpNode.col   = iCol;
+                        tmpNode.row = iRow;
+                        tmpNode.col = iCol;
                         tmpNode.spill = dem.at( iRow, iCol );
                         priorityQueue.push( tmpNode );
                         flag.SetFlag( iRow, iCol );
@@ -499,8 +499,8 @@ void InitPriorityQue( Raster< float >& dem, Flag& flag, PriorityQueue& priorityQ
             else {
                 if ( row == 0 || row == height - 1 || col == 0 || col == width - 1 ) {
                     // on the DEM border
-                    tmpNode.row   = row;
-                    tmpNode.col   = col;
+                    tmpNode.row = row;
+                    tmpNode.col = col;
                     tmpNode.spill = dem.at( row, col );
                     priorityQueue.push( tmpNode );
                     flag.SetFlag( row, col );
@@ -511,10 +511,10 @@ void InitPriorityQue( Raster< float >& dem, Flag& flag, PriorityQueue& priorityQ
 }
 
 void ProcessPit( Raster< float >& dem, Flag& flag, std::queue< Node >& depressionQue, std::queue< Node >& traceQueue, PriorityQueue& priorityQueue ) {
-    int   iRow, iCol, i;
+    int iRow, iCol, i;
     float iSpill;
-    Node  No;
-    Node  node;
+    Node No;
+    Node node;
     while ( !depressionQue.empty() ) {
         node = depressionQue.front();
         depressionQue.pop();
@@ -525,8 +525,8 @@ void ProcessPit( Raster< float >& dem, Flag& flag, std::queue< Node >& depressio
                 continue;
             iSpill = dem.at( iRow, iCol );
             if ( iSpill > node.spill ) {  // slope cell
-                No.row   = iRow;
-                No.col   = iCol;
+                No.row = iRow;
+                No.col = iCol;
                 No.spill = iSpill;
                 flag.SetFlag( iRow, iCol );
                 traceQueue.push( No );
@@ -535,27 +535,27 @@ void ProcessPit( Raster< float >& dem, Flag& flag, std::queue< Node >& depressio
             // depression cell
             flag.SetFlag( iRow, iCol );
             dem.at( iRow, iCol ) = node.spill;
-            No.row               = iRow;
-            No.col               = iCol;
-            No.spill             = node.spill;
+            No.row = iRow;
+            No.col = iCol;
+            No.spill = node.spill;
             depressionQue.push( No );
         }
     }
 }
 
 void ProcessTraceQue( Raster< float >& dem, Flag& flag, std::queue< Node >& traceQueue, PriorityQueue& priorityQueue ) {
-    bool               HaveSpillPathOrLowerSpillOutlet;
-    int                i, iRow, iCol;
-    int                k, kRow, kCol;
-    int                noderow, nodecol;
-    Node               No, node;
+    bool HaveSpillPathOrLowerSpillOutlet;
+    int i, iRow, iCol;
+    int k, kRow, kCol;
+    int noderow, nodecol;
+    Node No, node;
     std::queue< Node > potentialQueue;
-    int                indexThreshold = 2;  // index threshold, default to 2
+    int indexThreshold = 2;  // index threshold, default to 2
     while ( !traceQueue.empty() ) {
         node = traceQueue.front();
         traceQueue.pop();
-        noderow             = node.row;
-        nodecol             = node.col;
+        noderow = node.row;
+        nodecol = node.col;
         bool Mask[ 5 ][ 5 ] = { { false }, { false }, { false }, { false }, { false } };
         for ( i = 0; i < 8; i++ ) {
             iRow = dem.getRow( i, noderow );
@@ -563,8 +563,8 @@ void ProcessTraceQue( Raster< float >& dem, Flag& flag, std::queue< Node >& trac
             if ( flag.IsProcessedDirect( iRow, iCol ) )
                 continue;
             if ( dem.at( iRow, iCol ) > node.spill ) {
-                No.col   = iCol;
-                No.row   = iRow;
+                No.col = iCol;
+                No.row = iRow;
                 No.spill = dem.at( iRow, iCol );
                 traceQueue.push( No );
                 flag.SetFlag( iRow, iCol );
@@ -577,7 +577,7 @@ void ProcessTraceQue( Raster< float >& dem, Flag& flag, std::queue< Node >& trac
                     kCol = dem.getCol( k, iCol );
                     if ( ( Mask[ kRow - noderow + 2 ][ kCol - nodecol + 2 ] ) || ( flag.IsProcessedDirect( kRow, kCol ) && dem.at( kRow, kCol ) < node.spill ) ) {
                         Mask[ iRow - noderow + 2 ][ iCol - nodecol + 2 ] = true;
-                        HaveSpillPathOrLowerSpillOutlet                  = true;
+                        HaveSpillPathOrLowerSpillOutlet = true;
                         break;
                     }
                 }
@@ -613,15 +613,15 @@ void ProcessTraceQue( Raster< float >& dem, Flag& flag, std::queue< Node >& trac
 }
 
 void calculateStatistics( Raster< float >& dem, double* min, double* max, double* mean, double* stdDev ) {
-    *min                 = 0;
-    *max                 = 0;
-    *mean                = 0;
-    *stdDev              = 0;
-    int    width         = dem.getWidth();
-    int    height        = dem.getHeight();
-    int    validElements = 0;
+    *min = 0;
+    *max = 0;
+    *mean = 0;
+    *stdDev = 0;
+    int width = dem.getWidth();
+    int height = dem.getHeight();
+    int validElements = 0;
     double minValue = 0, maxValue = 0;
-    double sum        = 0.0;
+    double sum = 0.0;
     double sumSqurVal = 0.0;
     for ( int row = 0; row < height; row++ ) {
         for ( int col = 0; col < width; col++ ) {
@@ -645,12 +645,12 @@ void calculateStatistics( Raster< float >& dem, double* min, double* max, double
         }
     }
 
-    double meanValue   = sum / validElements;
+    double meanValue = sum / validElements;
     double stdDevValue = sqrt( ( sumSqurVal / validElements ) - ( meanValue * meanValue ) );
-    *min               = minValue;
-    *max               = maxValue;
-    *mean              = meanValue;
-    *stdDev            = stdDevValue;
+    *min = minValue;
+    *max = maxValue;
+    *mean = meanValue;
+    *stdDev = stdDevValue;
 }
 
 void createPerlinNoiseDEM( std::string outputFilePath, int height, int width ) {
@@ -662,7 +662,7 @@ void createPerlinNoiseDEM( std::string outputFilePath, int height, int width ) {
     float fre = ( float )randomi( 0, 512 ) / 10;
     for ( int x = 0; x < height; x++ ) {
         for ( int y = 0; y < width; y++ ) {
-            float vec2[]   = { x / fre, y / fre };
+            float vec2[] = { x / fre, y / fre };
             dem.at( x, y ) = noise2( vec2 ) * 100;
         }
     }
@@ -670,8 +670,8 @@ void createPerlinNoiseDEM( std::string outputFilePath, int height, int width ) {
     //±£´æÔ­Ê¼DEM.
     double min0, max0, mean0, stdDev0;
     calculateStatistics( dem, &min0, &max0, &mean0, &stdDev0 );
-    int         length = outputFilePath.length();
-    std::string path   = outputFilePath.substr( 0, length - 4 ) + "_unfilling.tif";
+    int length = outputFilePath.length();
+    std::string path = outputFilePath.substr( 0, length - 4 ) + "_unfilling.tif";
     WriteGeoTIFF( path.data(), dem.getHeight(), dem.getWidth(), &dem, GDALDataType::GDT_Float32, nullptr, &min0, &max0, &mean0, &stdDev0, -9999 );
 
     // readGeoTIFF( path.data(), GDALDataType::GDT_Float32, dem );
@@ -681,16 +681,16 @@ void createPerlinNoiseDEM( std::string outputFilePath, int height, int width ) {
         std::cout << "Failed to allocate memory for depression-filling !\n" << std::endl;
     }
     PriorityQueue priorityQueue;
-    int           iRow, iCol, row, col;
-    float         iSpill, spill;
+    int iRow, iCol, row, col;
+    float iSpill, spill;
     InitPriorityQue( dem, flag, priorityQueue );
     std::queue< Node > traceQueue;
     std::queue< Node > depressionQue;
     while ( !priorityQueue.empty() ) {
         Node tmpNode = priorityQueue.top();
         priorityQueue.pop();
-        row   = tmpNode.row;
-        col   = tmpNode.col;
+        row = tmpNode.row;
+        col = tmpNode.col;
         spill = tmpNode.spill;
         for ( int i = 0; i < 8; i++ ) {
             iRow = dem.getRow( i, row );
@@ -702,8 +702,8 @@ void createPerlinNoiseDEM( std::string outputFilePath, int height, int width ) {
                 // depression cell
                 dem.at( iRow, iCol ) = spill;
                 flag.SetFlag( iRow, iCol );
-                tmpNode.row   = iRow;
-                tmpNode.col   = iCol;
+                tmpNode.row = iRow;
+                tmpNode.col = iCol;
                 tmpNode.spill = spill;
                 depressionQue.push( tmpNode );
                 ProcessPit( dem, flag, depressionQue, traceQueue, priorityQueue );
@@ -711,8 +711,8 @@ void createPerlinNoiseDEM( std::string outputFilePath, int height, int width ) {
             else {
                 // slope cell
                 flag.SetFlag( iRow, iCol );
-                tmpNode.row   = iRow;
-                tmpNode.col   = iCol;
+                tmpNode.row = iRow;
+                tmpNode.col = iCol;
                 tmpNode.spill = iSpill;
                 traceQueue.push( tmpNode );
             }
@@ -727,9 +727,9 @@ void createPerlinNoiseDEM( std::string outputFilePath, int height, int width ) {
 /*--------sequential flow direction-----------*/
 int d8_FlowDir( Raster< float >& dem, const int row, const int col ) {
     float minimum_elevation = dem.at( row, col );
-    int   flowdir           = -1;
-    int   height            = dem.getHeight();
-    int   width             = dem.getWidth();
+    int flowdir = -1;
+    int height = dem.getHeight();
+    int width = dem.getWidth();
     // border cells
     if ( ( row == 0 ) && ( col == 0 ) ) {
         return 5;
@@ -760,7 +760,7 @@ int d8_FlowDir( Raster< float >& dem, const int row, const int col ) {
         int iCol = dem.getCol( n, col );
         if ( dem.at( iRow, iCol ) < minimum_elevation || ( dem.at( iRow, iCol ) == minimum_elevation && flowdir > -1 && flowdir % 2 == 1 && n % 2 == 0 ) ) {
             minimum_elevation = dem.at( iRow, iCol );
-            flowdir           = n;
+            flowdir = n;
         }
     }
     return flowdir;
@@ -768,7 +768,7 @@ int d8_FlowDir( Raster< float >& dem, const int row, const int col ) {
 
 void find_flat_edges( std::deque< GridCell >& low_edges, std::deque< GridCell >& high_edges, Raster< int >& flowdirs, Raster< float >& dem ) {
     int height = flowdirs.getHeight();
-    int width  = flowdirs.getWidth();
+    int width = flowdirs.getWidth();
     for ( int row = 0; row < height; row++ ) {
         for ( int col = 0; col < width; col++ ) {
             if ( flowdirs.isNoData( row, col ) )
@@ -813,8 +813,8 @@ void label_this( int x0, int y0, const int label, Raster< int32_t >& labels, Ras
 }
 
 void BuildAwayGradient( Raster< int >& flowdirs, Raster< int32_t >& flat_mask, std::deque< GridCell > edges, std::vector< int >& flat_height, Raster< int32_t >& labels ) {
-    int               loops = 1;
-    GridCell          iteration_marker( -1, -1 );
+    int loops = 1;
+    GridCell iteration_marker( -1, -1 );
     Raster< int32_t > highmask;
     highmask.init( flat_mask.getHeight(), flat_mask.getWidth() );
     highmask.setAllValues( 0 );
@@ -831,8 +831,8 @@ void BuildAwayGradient( Raster< int >& flowdirs, Raster< int32_t >& flat_mask, s
         }
         if ( flat_mask.at( x, y ) > 0 )
             continue;
-        flat_mask.at( x, y )             = loops;
-        highmask.at( x, y )              = loops;
+        flat_mask.at( x, y ) = loops;
+        highmask.at( x, y ) = loops;
         flat_height[ labels.at( x, y ) ] = loops;
         for ( int n = 0; n <= 7; n++ ) {
             int nx = flowdirs.getRow( n, x );
@@ -848,7 +848,7 @@ void BuildTowardsCombinedGradient( Raster< int >& flowdirs, Raster< int32_t >& f
     low_mask.init( flat_mask.getHeight(), flat_mask.getWidth() );
     low_mask.setAllValues( 0 );
     low_mask.NoDataValue = -1;
-    int      loops       = 1;
+    int loops = 1;
     GridCell iteration_marker( -1, -1 );
     for ( int col = 0; col < flat_mask.getWidth(); col++ )
         for ( int row = 0; row < flat_mask.getHeight(); row++ )
@@ -868,11 +868,11 @@ void BuildTowardsCombinedGradient( Raster< int >& flowdirs, Raster< int32_t >& f
             continue;
         if ( flat_mask.at( x, y ) != 0 ) {
             flat_mask.at( x, y ) = ( flat_height[ labels.at( x, y ) ] + flat_mask.at( x, y ) ) + 2 * loops;
-            low_mask.at( x, y )  = 2 * loops;
+            low_mask.at( x, y ) = 2 * loops;
         }
         else {
             flat_mask.at( x, y ) = 2 * loops;
-            low_mask.at( x, y )  = 2 * loops;
+            low_mask.at( x, y ) = 2 * loops;
         }
         for ( int n = 0; n <= 7; n++ ) {
             int nx = labels.getRow( n, x );
@@ -885,8 +885,8 @@ void BuildTowardsCombinedGradient( Raster< int >& flowdirs, Raster< int32_t >& f
 
 void resolve_flats( Raster< float >& dem, Raster< int >& flowdirs, Raster< int32_t >& flatMask, Raster< int32_t >& labels ) {
     std::deque< GridCell > low_edges, high_edges;
-    int                    height = dem.getHeight();
-    int                    width  = dem.getWidth();
+    int height = dem.getHeight();
+    int width = dem.getWidth();
     labels.init( height, width );
     labels.setAllValues( 0 );
     flatMask.init( height, width );
@@ -922,7 +922,7 @@ void resolve_flats( Raster< float >& dem, Raster< int >& flowdirs, Raster< int32
 
 int d8_masked_FlowDir( Raster< int32_t >& flat_mask, Raster< int32_t >& labels, const int row, const int col ) {
     int minimum_elevation = flat_mask.at( row, col );
-    int flowdir           = -1;
+    int flowdir = -1;
     for ( int n = 0; n <= 7; n++ ) {
         int nRow = labels.getRow( n, row );
         int nCol = labels.getCol( n, col );
@@ -930,7 +930,7 @@ int d8_masked_FlowDir( Raster< int32_t >& flat_mask, Raster< int32_t >& labels, 
             continue;
         if ( flat_mask.at( nRow, nCol ) < minimum_elevation || ( flat_mask.at( nRow, nCol ) == minimum_elevation && flowdir > -1 && flowdir % 2 == 1 && n % 2 == 0 ) ) {
             minimum_elevation = flat_mask.at( nRow, nCol );
-            flowdir           = n;
+            flowdir = n;
         }
     }
     return flowdir;
