@@ -51,8 +51,8 @@ void hostProcess( GridInfo& gridInfo, std::vector< TileInfo >& tileInfos, IObjec
         CommRecv( &pC2P, nullptr, -1 );
         gridIConsumer2Producer.at( pC2P.gridRow, pC2P.gridCol ) = std::make_shared< Consumer2Producer >( pC2P );
     }
-    std::cerr << "n First stage Tx = " << CommBytesSent() << " B" << std::endl;
-    std::cerr << "n First stage Rx = " << CommBytesRecv() << " B" << std::endl;
+    std::cerr << "First stage Tx = " << CommBytesSent() << " B" << std::endl;
+    std::cerr << "First stage Rx = " << CommBytesRecv() << " B" << std::endl;
     CommBytesReset();
     TimeInfo time_first_total;
     double maxTimeoverall = 0;
@@ -71,10 +71,9 @@ void hostProcess( GridInfo& gridInfo, std::vector< TileInfo >& tileInfos, IObjec
             minTimecal = std::min( minTimecal, ( ( Consumer2Producer* )gridIConsumer2Producer.at( row, col ).get() )->time_info.calc );
         }
     }
-    std::cout << "maxTimeOverall:" << maxTimeoverall << ",minTimeoverall:" << minTimeoverall << ",avgTimeoverall:" << time_first_total.overall / active_consumer_limit << std::endl;
-    std::cout << "maxTimecal:" << maxTimecal << ",minTimecal:" << minTimecal << ",avgTimecal:" << time_first_total.calc / active_consumer_limit << std::endl;
+    std::cout << "MaxTimeOverall: " << maxTimeoverall << ",minTimeoverall: " << minTimeoverall << ",avgTimeoverall: " << time_first_total.overall / active_consumer_limit << std::endl;
+    std::cout << "MaxTimecal: " << maxTimecal << ",minTimecal: " << minTimecal << ",avgTimecal: " << time_first_total.calc / active_consumer_limit << std::endl;
     std::shared_ptr< IProducer > pIProducer = pIObjFactory->createProducer();
-    std::cout << " start to process producer" << std::endl;
     pIProducer->process( tileInfos, gridIConsumer2Producer );
     jobs_out = 0;
 
@@ -105,29 +104,29 @@ void hostProcess( GridInfo& gridInfo, std::vector< TileInfo >& tileInfos, IObjec
         maxTimecal = std::max( maxTimecal, temp.calc );
         minTimecal = std::min( minTimecal, temp.calc );
     }
-    std::cout << "maxTimeOverall:" << maxTimeoverall << ",minTimeoverall:" << minTimeoverall << ",avgTimeoverall:" << time_second_total.overall / active_consumer_limit << std::endl;
-    std::cout << "maxTimecal:" << maxTimecal << ",minTimecal:" << minTimecal << ",avgTimecal:" << time_second_total.calc / active_consumer_limit << std::endl;
+    std::cout << "MaxTimeOverall: " << maxTimeoverall << ",minTimeoverall: " << minTimeoverall << ",avgTimeoverall: " << time_second_total.overall / active_consumer_limit << std::endl;
+    std::cout << "MaxTimecal: " << maxTimecal << ",minTimecal: " << minTimecal << ",avgTimecal: " << time_second_total.calc / active_consumer_limit << std::endl;
     for ( int i = 1; i < size; i++ ) {
         int temp;
         CommSend( &temp, nullptr, i, TagNull );
     }
     timer_overall.stop();
-    std::cerr << "t First stage total overall time = " << time_first_total.overall << " s" << std::endl;
-    std::cerr << "t First stage total io time = " << time_first_total.io << " s" << std::endl;
-    std::cerr << "t First stage total calc time = " << time_first_total.calc << " s" << std::endl;
-    std::cerr << "r First stage peak child VmPeak = " << time_first_total.vmpeak << std::endl;
-    std::cerr << "r First stage peak child VmHWM = " << time_first_total.vmhwm << std::endl;
-    std::cerr << "n Second stage Tx = " << CommBytesSent() << " B" << std::endl;
-    std::cerr << "n Second stage Rx = " << CommBytesRecv() << " B" << std::endl;
-    std::cerr << "t Second stage total overall time = " << time_second_total.overall << " s" << std::endl;
-    std::cerr << "t Second stage total IO time = " << time_second_total.io << " s" << std::endl;
-    std::cerr << "t Second stage total calc time = " << time_second_total.calc << " s" << std::endl;
-    std::cerr << "r Second stage peak child VmPeak = " << time_second_total.vmpeak << std::endl;
-    std::cerr << "r Second stage peak child VmHWM = " << time_second_total.vmhwm << std::endl;
-    std::cerr << "t Producer overall time = " << timer_overall.elapsed() << " s" << std::endl;
-    std::cerr << "t Producer calc time = " << ( ( Producer* )pIProducer.get() )->timer_calc.elapsed() << " s" << std::endl;
+    std::cerr << "First stage total overall time = " << time_first_total.overall << " s" << std::endl;
+    std::cerr << "First stage total io time = " << time_first_total.io << " s" << std::endl;
+    std::cerr << "First stage total calc time = " << time_first_total.calc << " s" << std::endl;
+    std::cerr << "First stage peak child VmPeak = " << time_first_total.vmpeak << std::endl;
+    std::cerr << "First stage peak child VmHWM = " << time_first_total.vmhwm << std::endl;
+    std::cerr << "Second stage Tx = " << CommBytesSent() << " B" << std::endl;
+    std::cerr << "Second stage Rx = " << CommBytesRecv() << " B" << std::endl;
+    std::cerr << "Second stage total overall time = " << time_second_total.overall << " s" << std::endl;
+    std::cerr << "Second stage total IO time = " << time_second_total.io << " s" << std::endl;
+    std::cerr << "Second stage total calc time = " << time_second_total.calc << " s" << std::endl;
+    std::cerr << "Second stage peak child VmPeak = " << time_second_total.vmpeak << std::endl;
+    std::cerr << "Second stage peak child VmHWM = " << time_second_total.vmhwm << std::endl;
+    std::cerr << "Producer overall time = " << timer_overall.elapsed() << " s" << std::endl;
+    std::cerr << "Producer calc time = " << ( ( Producer* )pIProducer.get() )->timer_calc.elapsed() << " s" << std::endl;
     long vmpeak, vmhwm;
     ProcessMemUsage( vmpeak, vmhwm );
-    std::cerr << "r Producer's VmPeak = " << vmpeak << std::endl;
-    std::cerr << "r Producer's VmHWM = " << vmhwm << std::endl;
+    std::cerr << "Producer's VmPeak = " << vmpeak << std::endl;
+    std::cerr << "Producer's VmHWM = " << vmhwm << std::endl;
 }

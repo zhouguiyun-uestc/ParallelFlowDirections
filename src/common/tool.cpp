@@ -157,7 +157,7 @@ bool generateTiles( const char* filePath, int tileHeight, int tileWidth, const c
     for ( int tileRow = 0; tileRow < gridHeight; tileRow++ ) {
         for ( int tileCol = 0; tileCol < gridWidth; tileCol++ ) {
             std::string outputFileName = std::to_string( tileRow ) + "_" + std::to_string( tileCol ) + ".tif";
-            std::string path           = output + "\\" + outputFileName;
+            std::string path           = output + "/" + outputFileName;
             height                     = ( grandHeight - tileHeight * tileRow >= tileHeight ) ? tileHeight : ( grandHeight - tileHeight * tileRow );
             width                      = ( grandWidth - tileWidth * tileCol >= tileWidth ) ? tileWidth : ( grandWidth - tileWidth * tileCol );
             Raster< float > tile;
@@ -174,7 +174,7 @@ bool generateTiles( const char* filePath, int tileHeight, int tileWidth, const c
     }
     GDALClose( ( GDALDatasetH )fin );
 
-    std::string   txtPath = output + "\\" + "tileInfo.txt";
+    std::string   txtPath = output + "/" + "tileInfo.txt";
     std::ofstream fout;
     fout.open( txtPath );
     if ( fout.fail() ) {
@@ -184,7 +184,7 @@ bool generateTiles( const char* filePath, int tileHeight, int tileWidth, const c
     for ( int tileRow = 0; tileRow < gridHeight; tileRow++ ) {
         for ( int tileCol = 0; tileCol < gridWidth; tileCol++ ) {
             std::string outputFileName = std::to_string( tileRow ) + "_" + std::to_string( tileCol ) + ".tif";
-            std::string path           = output + "\\" + outputFileName;
+            std::string path           = output + "/" + outputFileName;
             fout << path << ",";
         }
         fout << std::endl;
@@ -206,7 +206,7 @@ bool mergeTiles( GridInfo& gridInfo, const char* outputFilePath ) {
     std::vector< double > geotransform( 6 );
     for ( int tileRow = 0; tileRow < gridHeight; tileRow++ ) {
         for ( int tileCol = 0; tileCol < gridWidth; tileCol++ ) {
-            std::string     fileName = inputFolder + "\\" + std::to_string( tileRow ) + "_" + std::to_string( tileCol ) + "flowdir.tif";
+            std::string     fileName = inputFolder + "/" + std::to_string( tileRow ) + "_" + std::to_string( tileCol ) + "flowdir.tif";
             Raster< float > tile;
             if ( !readGeoTIFF( fileName.data(), GDALDataType::GDT_Int32, tile ) ) {
                 std::cout << fileName << " not exist!" << std::endl;

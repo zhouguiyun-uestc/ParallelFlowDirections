@@ -30,8 +30,8 @@ int main( int argc, char** argv ) {
         if ( strcmp( method, "parallel" ) == 0 ) {
             std::string inputFile = argv[ 2 ];
             std::string outputPath = argv[ 3 ];  // output flow directions
-            std::cerr << "inputFile" << inputFile << std::endl;
-            std::cerr << "outputPath" << outputPath << std::endl;
+            std::cerr << "InputFile: " << inputFile << std::endl;
+            std::cerr << "OutputPath: " << outputPath << std::endl;
             GridInfo gridInfo;
             Timer timer_master;
             timer_master.start();
@@ -41,30 +41,30 @@ int main( int argc, char** argv ) {
             readTXTInfo( inputFile, tileInfos, gridInfo );
             gridInfo.outputFolder = outputPath;
             timer_overall.stop();
-            std::cerr << "t Preparer time = " << timer_overall.elapsed() << "s" << std::endl;
+            std::cerr << "Preparer time = " << timer_overall.elapsed() << "s" << std::endl;
             ObjectFactory objectFactory;
             hostProcess( gridInfo, tileInfos, &objectFactory );
             timer_master.stop();
-            std::cerr << "t Total wall-time=" << timer_master.elapsed() << "s" << std::endl;
+            std::cerr << "Total wall-time = " << timer_master.elapsed() << "s" << std::endl;
         }
         else if ( strcmp( method, "test" ) == 0 ) {
             //---------generate DEM with perling DEM--------
-            std::cout << "1.generate DEM!" << std::endl;
+            std::cout << "1.------Generate DEM!------" << std::endl;
             std::string outputDEMFile = argv[ 2 ];
             int height = std::stoi( argv[ 3 ] );
             int width = std::stoi( argv[ 4 ] );
             createPerlinNoiseDEM( outputDEMFile, height, width );
             //----------sequential Barnes flow direction--------
-            std::cout << "2.sequential flow directions!" << std::endl;
+            std::cout << "2.------Sequential flow directions!------" << std::endl;
             std::string outputsequentialFlow = argv[ 5 ];
             PerformAlgorithm( outputDEMFile, outputsequentialFlow );
             //-----------divide tiles--------------------
-            std::cout << "3.divided tiles!" << std::endl;
+            std::cout << "3.------Divided tiles!------" << std::endl;
             int tileHeight = std::stoi( argv[ 6 ] );
             int tileWidth = std::stoi( argv[ 7 ] );
             std::string outputtileDEMfolder = argv[ 8 ];
             generateTiles( outputDEMFile.c_str(), tileHeight, tileWidth, outputtileDEMfolder.c_str() );
-            std::cout << "4.parallel computing!" << std::endl;
+            std::cout << "4.------Parallel computing!------" << std::endl;
             std::string inputFile = outputtileDEMfolder + "/" + "tileInfo.txt";
             std::string outputPath = argv[ 9 ];  // output flow directions
             GridInfo gridInfo;
@@ -77,10 +77,10 @@ int main( int argc, char** argv ) {
             gridInfo.inputFolder = outputtileDEMfolder;
             gridInfo.outputFolder = outputPath;
             timer_overall.stop();
-            std::cerr << "t Preparer time = " << timer_overall.elapsed() << "s" << std::endl;
+            std::cerr << "Preparer time = " << timer_overall.elapsed() << "s" << std::endl;
             ObjectFactory objectFactory;
             hostProcess( gridInfo, tileInfos, &objectFactory );
-            std::cout << "5.merge flow tif!" << std::endl;
+            std::cout << "5.------Merge images!-----" << std::endl;
             gridInfo.grandHeight = height;
             gridInfo.grandWidth = width;
             gridInfo.tileHeight = tileHeight;
@@ -88,13 +88,13 @@ int main( int argc, char** argv ) {
             std::string outputFile = outputPath + "/merge.tif";
             mergeTiles( gridInfo, outputFile.c_str() );
             //-----------compare  results---------------
-            std::cout << "6.compare results!" << std::endl;
+            std::cout << "6.------Compare results!------" << std::endl;
             comPareResults( outputsequentialFlow, outputFile );
             timer_master.stop();
-            std::cerr << "t Total wall-time=" << timer_master.elapsed() << "s" << std::endl;
+            std::cerr << "Total wall-time = " << timer_master.elapsed() << "s" << std::endl;
         }
         else {
-            std::cout << " parameter error!" << std::endl;
+            std::cout << "Parameter error!" << std::endl;
             return -1;
         }
     }

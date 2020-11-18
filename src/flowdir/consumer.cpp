@@ -2386,10 +2386,10 @@ void Consumer::SaveFlowDir( const GridInfo& gridInfo, const TileInfo& tileInfo, 
     for ( int i = 0; i < 6; i++ ) {
         geotransform[ i ] = dem.geoTransforms->at( i );
     }
-    int t = tileInfo.filename.find_last_of( "\\" );
+    int t = tileInfo.filename.find_last_of( "/" );
     int length = tileInfo.filename.length();
     std::string name = tileInfo.filename.substr( t + 1, length - t - 5 );
-    std::string path = gridInfo.outputFolder + "\\" + name + "flowdir.tif";
+    std::string path = gridInfo.outputFolder + "/" + name + "flowdir.tif";
     WriteGeoTIFF( path.data(), flowdirs.getHeight(), flowdirs.getWidth(), &flowdirs, GDALDataType::GDT_Int32, &geotransform[ 0 ], nullptr, nullptr, nullptr, nullptr, flowdirs.NoDataValue );
 }
 

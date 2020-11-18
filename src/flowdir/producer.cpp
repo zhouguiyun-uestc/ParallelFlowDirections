@@ -3,15 +3,13 @@
 #include "consumer_2_producer.h"
 #include "outBoundary.h"
 #include "producer_2_consumer.h"
-
-#include <paradem/object_deleter.h>
-
 #include <algorithm>
 #include <assert.h>
 #include <fstream>
 #include <functional>
 #include <iostream>
 #include <memory>
+#include <paradem/object_deleter.h>
 #include <queue>
 
 using namespace std;
@@ -95,9 +93,9 @@ void Producer::process( std::vector< TileInfo >& tileInfos, Grid< std::shared_pt
         }
     }
 
-    std::cerr << " number of id" << masterLowEdgeGraph.size() << std::endl;
-    std::cerr << "number of map in masterLowEdgeGraph " << lowMap << std::endl;
-    std::cerr << "number of map in masterHighEdgeGraph " << highMap << std::endl;
+    std::cerr << "number of id: " << masterLowEdgeGraph.size() << std::endl;
+    std::cerr << "number of map in masterLowEdgeGraph: " << lowMap << std::endl;
+    std::cerr << "number of map in masterHighEdgeGraph: " << highMap << std::endl;
     for ( int row = 0; row < gridHeight; row++ ) {
         for ( int col = 0; col < gridWidth; col++ ) {
             IConsumer2Producer* Ic2p = gridIConsumer2Producer.at( row, col ).get();
@@ -149,7 +147,7 @@ void Producer::process( std::vector< TileInfo >& tileInfos, Grid< std::shared_pt
         }
     }
     timer_mg_construct.stop();
-    std::cerr << "!Mastergraph constructed in " << timer_mg_construct.elapsed() << "s. " << std::endl;
+    std::cerr << "!Mastergraph constructed is " << timer_mg_construct.elapsed() << "s. " << std::endl;
     if ( maxIDcells != 0 ) {
         dijkstra( masterLowEdgeGraph, masterHighEdgeGraph, 1 );
     }
