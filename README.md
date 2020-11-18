@@ -35,7 +35,9 @@ The result is a program called  `ParallelFlowDir`.
 
 # Program argumens
 
-The program can be run using MPI with two modes: `parallel` and `test`. In `parallel` mode, the program derives flow directions. In `test` mode, the program run test cases on randomly generated DEMs.
+The program can be run using MPI with two modes: `parallel` and `test`.    
+In `parallel` mode, the program derives flow directions.    
+In `test` mode, the program run test cases on randomly generated DEMs.
 
 In `parallel` mode, the program has the following arguments: 
 ```
