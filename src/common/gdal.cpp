@@ -21,7 +21,10 @@ bool WriteGeoTIFF( const char* path, int height, int width, void* pData, GDALDat
     if ( min != NULL && max != NULL && mean != NULL && stdDev != NULL ) {
         poBand->SetStatistics( *min, *max, *mean, *stdDev );
     }
-    poBand->RasterIO( GF_Write, 0, 0, width, height, pData, width, height, type, 0, 0 );
+    auto returnValue = poBand->RasterIO( GF_Write, 0, 0, width, height, pData, width, height, type, 0, 0 );
+    if ( returnValue != CE_None ) {
+        throw std::runtime_error( "An error occured while trying to read '" + ( std::string )path + " 'into RAM with GDAL." );
+    }
     GDALClose( ( GDALDatasetH )poDataset );
     return true;
 }
@@ -45,7 +48,10 @@ bool readGeoTIFF( const char* path, GDALDataType type, Raster< float >& dem ) {
         GDALClose( ( GDALDatasetH )poDataset );
         return false;
     }
-    poBand->RasterIO( GF_Read, 0, 0, dem.getWidth(), dem.getHeight(), ( void* )&dem, dem.getWidth(), dem.getHeight(), type, 0, 0 );
+    auto returnValue = poBand->RasterIO( GF_Read, 0, 0, dem.getWidth(), dem.getHeight(), ( void* )&dem, dem.getWidth(), dem.getHeight(), type, 0, 0 );
+    if ( returnValue != CE_None ) {
+        throw std::runtime_error( "An error occured while trying to read '" + ( std::string )path + " 'into RAM with GDAL." );
+    }
     dem.NoDataValue = poBand->GetNoDataValue();
     GDALClose( ( GDALDatasetH )poDataset );
     return true;
@@ -70,7 +76,10 @@ bool readflowTIFF( const char* path, GDALDataType type, Raster< int >& flow ) {
         GDALClose( ( GDALDatasetH )poDataset );
         return false;
     }
-    poBand->RasterIO( GF_Read, 0, 0, flow.getWidth(), flow.getHeight(), ( void* )&flow, flow.getWidth(), flow.getHeight(), type, 0, 0 );
+    auto returnValue = poBand->RasterIO( GF_Read, 0, 0, flow.getWidth(), flow.getHeight(), ( void* )&flow, flow.getWidth(), flow.getHeight(), type, 0, 0 );
+    if ( returnValue != CE_None ) {
+        throw std::runtime_error( "An error occured while trying to read '" + ( std::string )path + " 'into RAM with GDAL." );
+    }
     flow.NoDataValue = poBand->GetNoDataValue();
     GDALClose( ( GDALDatasetH )poDataset );
     return true;

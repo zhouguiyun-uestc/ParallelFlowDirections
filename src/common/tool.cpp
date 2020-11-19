@@ -165,8 +165,11 @@ bool generateTiles( const char* filePath, int tileHeight, int tileWidth, const c
                 GDALClose( ( GDALDatasetH )fin );
                 return false;
             }
-            band->RasterIO( GF_Read, tileWidth * tileCol, tileHeight * tileRow, tile.getWidth(), tile.getHeight(), ( void* )&tile, tile.getWidth(), tile.getHeight(), type, 0, 0 );
-            std::vector< double > tileGeotransform( geotransform );
+            auto returnValue = band->RasterIO( GF_Read, tileWidth * tileCol, tileHeight * tileRow, tile.getWidth(), tile.getHeight(), ( void* )&tile, tile.getWidth(), tile.getHeight(), type, 0, 0 );
+            if ( returnValue != CE_None ) {
+                throw std::runtime_error( "An error occured while trying to read '" + ( std::string ) path + " 'into RAM with GDAL." );
+            }
+			std::vector< double > tileGeotransform( geotransform );
             tileGeotransform[ 0 ] = geotransform[ 0 ] + tileWidth * tileCol * geotransform[ 1 ] + tileHeight * tileRow * geotransform[ 2 ];
             tileGeotransform[ 3 ] = geotransform[ 3 ] + tileHeight * tileRow * geotransform[ 5 ] + tileWidth * tileCol * geotransform[ 4 ];
             WriteGeoTIFF( path.data(), tile.getHeight(), tile.getWidth(), &tile, type, &tileGeotransform[ 0 ], nullptr, nullptr, nullptr, nullptr, tile.NoDataValue );
