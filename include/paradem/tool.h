@@ -24,7 +24,7 @@ void createTileInfoArray( GridInfo& gridInfo, std::vector< TileInfo >& tileInfos
 void processTileGrid( GridInfo& gridInfo, std::vector< TileInfo >& tileInfos, IObjectFactory* pIObjFactory );
 
 /*-------------create perling DEM---------*/
-#define B 0x100
+#define BO 0x100
 #define BM 0xff
 #define N 0x1000
 #define NP 12 /* 2^N */

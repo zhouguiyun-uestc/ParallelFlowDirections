@@ -1,15 +1,5 @@
 
-
 #include "mpi.h"
-
-#include <paradem/gdal.h>
-#include <paradem/grid.h>
-#include <paradem/i_consumer.h>
-#include <paradem/i_object_factory.h>
-#include <paradem/i_producer.h>
-#include <paradem/object_deleter.h>
-#include <paradem/tool.h>
-
 #include <algorithm>
 #include <assert.h>
 #include <cmath>
@@ -18,13 +8,21 @@
 #include <iostream>
 #include <map>
 #include <memory>
+#include <paradem/gdal.h>
+#include <paradem/grid.h>
+#include <paradem/i_consumer.h>
+#include <paradem/i_object_factory.h>
+#include <paradem/i_producer.h>
+#include <paradem/object_deleter.h>
+#include <paradem/tool.h>
 #include <string>
 #include <vector>
 
-static int p[ B + B + 2 ];
-static float g3[ B + B + 2 ][ 3 ];
-static float g2[ B + B + 2 ][ 2 ];
-static float g1[ B + B + 2 ];
+
+static int p[ BO + BO + 2 ];
+static float g3[ BO + BO + 2 ][ 3 ];
+static float g2[ BO + BO + 2 ][ 2 ];
+static float g1[ BO + BO + 2 ];
 static int start = 1;
 static void normalize2( float v[ 2 ] );
 static void normalize3( float v[ 3 ] );
@@ -47,7 +45,8 @@ bool readTXTInfo( std::string filePathTXT, std::vector< TileInfo >& tileInfos, G
     if ( !fin_layout.good() ) {
         throw std::runtime_error( "Problem opening layout file '" + filePathTXT + "'" );
         return false;
-    }
+    
+	}   
     while ( fin_layout ) {
         // Get a new line from the file.
         std::string row;
@@ -71,7 +70,9 @@ bool readTXTInfo( std::string filePathTXT, std::vector< TileInfo >& tileInfos, G
     if ( !fin_layout.eof() ) {
         throw std::runtime_error( "Failed to read the entire layout file!" );
         return false;
-    }
+    
+	}
+        
 
     // Let's find the longest row
     auto max_col_size = fgrid.front().size();
@@ -134,7 +135,7 @@ bool readTXTInfo( std::string filePathTXT, std::vector< TileInfo >& tileInfos, G
         }
     }
 
-    return true;
+	return true;
 }
 
 bool generateTiles( const char* filePath, int tileHeight, int tileWidth, const char* outputFolder ) {
@@ -167,7 +168,7 @@ bool generateTiles( const char* filePath, int tileHeight, int tileWidth, const c
             }
             auto returnValue = band->RasterIO( GF_Read, tileWidth * tileCol, tileHeight * tileRow, tile.getWidth(), tile.getHeight(), ( void* )&tile, tile.getWidth(), tile.getHeight(), type, 0, 0 );
             if ( returnValue != CE_None ) {
-                throw std::runtime_error( "An error occured while trying to read '" + ( std::string ) path + " 'into RAM with GDAL." );
+                throw std::runtime_error( "An error occured while trying to read '" + path + " 'into RAM with GDAL." );
             }
 			std::vector< double > tileGeotransform( geotransform );
             tileGeotransform[ 0 ] = geotransform[ 0 ] + tileWidth * tileCol * geotransform[ 1 ] + tileHeight * tileRow * geotransform[ 2 ];
@@ -398,33 +399,33 @@ void normalize3( float v[ 3 ] ) {
 void init( void ) {
     int i, j, k;
 
-    for ( i = 0; i < B; i++ ) {
+    for ( i = 0; i < BO; i++ ) {
         p[ i ] = i;
 
-        g1[ i ] = ( float )( ( rand() % ( B + B ) ) - B ) / B;
+        g1[ i ] = ( float )( ( rand() % ( BO + BO ) ) - BO ) / BO;
 
         for ( j = 0; j < 2; j++ )
-            g2[ i ][ j ] = ( float )( ( rand() % ( B + B ) ) - B ) / B;
+            g2[ i ][ j ] = ( float )( ( rand() % ( BO + BO ) ) - BO ) / BO;
         normalize2( g2[ i ] );
 
         for ( j = 0; j < 3; j++ )
-            g3[ i ][ j ] = ( float )( ( rand() % ( B + B ) ) - B ) / B;
+            g3[ i ][ j ] = ( float )( ( rand() % ( BO + BO ) ) - BO ) / BO;
         normalize3( g3[ i ] );
     }
 
     while ( --i ) {
         k = p[ i ];
-        p[ i ] = p[ j = rand() % B ];
+        p[ i ] = p[ j = rand() % BO ];
         p[ j ] = k;
     }
 
-    for ( i = 0; i < B + 2; i++ ) {
-        p[ B + i ] = p[ i ];
-        g1[ B + i ] = g1[ i ];
+    for ( i = 0; i < BO + 2; i++ ) {
+        p[ BO + i ] = p[ i ];
+        g1[ BO + i ] = g1[ i ];
         for ( j = 0; j < 2; j++ )
-            g2[ B + i ][ j ] = g2[ i ][ j ];
+            g2[ BO + i ][ j ] = g2[ i ][ j ];
         for ( j = 0; j < 3; j++ )
-            g3[ B + i ][ j ] = g3[ i ][ j ];
+            g3[ BO + i ][ j ] = g3[ i ][ j ];
     }
 }
 
@@ -620,10 +621,10 @@ void calculateStatistics( Raster< float >& dem, double* min, double* max, double
     *max = 0;
     *mean = 0;
     *stdDev = 0;
-    int width = dem.getWidth();
+	int width = dem.getWidth();
     int height = dem.getHeight();
     int validElements = 0;
-    double minValue = 0, maxValue = 0;
+    double minValue=0, maxValue=0;
     double sum = 0.0;
     double sumSqurVal = 0.0;
     for ( int row = 0; row < height; row++ ) {
@@ -670,15 +671,15 @@ void createPerlinNoiseDEM( std::string outputFilePath, int height, int width ) {
         }
     }
     dem.NoDataValue = -9999;
-    //保存原始DEM.
+	//保存原始DEM.
     double min0, max0, mean0, stdDev0;
     calculateStatistics( dem, &min0, &max0, &mean0, &stdDev0 );
     int length = outputFilePath.length();
     std::string path = outputFilePath.substr( 0, length - 4 ) + "_unfilling.tif";
     WriteGeoTIFF( path.data(), dem.getHeight(), dem.getWidth(), &dem, GDALDataType::GDT_Float32, nullptr, &min0, &max0, &mean0, &stdDev0, -9999 );
-
-    // readGeoTIFF( path.data(), GDALDataType::GDT_Float32, dem );
-    // dem_filling
+    
+	//readGeoTIFF( path.data(), GDALDataType::GDT_Float32, dem );
+	// dem_filling
     Flag flag;
     if ( !flag.Init( width, height ) ) {
         std::cout << "Failed to allocate memory for depression-filling !\n" << std::endl;
@@ -734,16 +735,16 @@ int d8_FlowDir( Raster< float >& dem, const int row, const int col ) {
     int height = dem.getHeight();
     int width = dem.getWidth();
     // border cells
-    if ( ( row == 0 ) && ( col == 0 ) ) {
+    if ( (row == 0) && (col == 0) ) {
         return 5;
     }
-    else if ( ( row == 0 ) && ( col == width - 1 ) ) {
+    else if ( (row == 0) && (col == width - 1) ) {
         return 7;
     }
-    else if ( ( row == height - 1 ) && ( col == width - 1 ) ) {
+    else if ( (row == height - 1) && (col == width - 1) ) {
         return 1;
     }
-    else if ( ( row == height - 1 ) && ( col == 0 ) ) {
+    else if ( (row == height - 1) && (col == 0) ) {
         return 3;
     }
     else if ( row == 0 ) {
@@ -761,7 +762,7 @@ int d8_FlowDir( Raster< float >& dem, const int row, const int col ) {
     for ( int n = 0; n < 8; n++ ) {
         int iRow = dem.getRow( n, row );
         int iCol = dem.getCol( n, col );
-        if ( dem.at( iRow, iCol ) < minimum_elevation || ( dem.at( iRow, iCol ) == minimum_elevation && flowdir > -1 && flowdir % 2 == 1 && n % 2 == 0 ) ) {
+        if ( dem.at( iRow, iCol ) < minimum_elevation || (dem.at( iRow, iCol ) == minimum_elevation && flowdir > -1 && flowdir % 2 == 1 && n % 2 == 0 )) {
             minimum_elevation = dem.at( iRow, iCol );
             flowdir = n;
         }
@@ -991,7 +992,7 @@ bool comPareResults( std::string seqTif, std::string paraTif ) {
     int h2 = paraFlowdirections.getHeight();
     int w2 = paraFlowdirections.getWidth();
     if ( h1 != h2 || w1 != w2 ) {
-        std::cout << "-----------The sizes of the two rasters do not agree!---------------" << std::endl;
+        std::cout << "-----------The sizes of the two pictures do not agree!---------------" << std::endl;
         return false;
     }
     for ( int row = 0; row < h1; row++ ) {
@@ -1002,6 +1003,6 @@ bool comPareResults( std::string seqTif, std::string paraTif ) {
             }
         }
     }
-    std::cout << "The two rasters are the same!" << std::endl;
+    std::cout << "The two Rasters are the same!" << std::endl;
     return true;
 }

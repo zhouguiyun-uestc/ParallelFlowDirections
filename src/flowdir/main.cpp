@@ -11,6 +11,7 @@
 #include <paradem/timer.h>
 #include <paradem/tool.h>
 
+#include <CLI/CLI.hpp>
 #include <cereal/archives/binary.hpp>
 #include <cereal/types/map.hpp>
 #include <cereal/types/vector.hpp>
@@ -22,16 +23,35 @@
 #include <vector>
 
 int main( int argc, char** argv ) {
+    if ( argc < 4 ) {
+        std::cout << "Too few arguments." << std::endl;
+        return -1;
+    }
+
     MPI_Init( &argc, &argv );
     int rank;
     MPI_Comm_rank( MPI_COMM_WORLD, &rank );
+
+    int size;
+    MPI_Comm_size( MPI_COMM_WORLD, &size );
+    if ( size < 2 ) {
+        std::cout << "Specify at least 2 processes." << std::endl;
+        return -1;
+    }
     if ( rank == 0 ) {
         char* method = argv[ 1 ];
+        std::cout << "Running with = " << size << " processes." << std::endl;
         if ( strcmp( method, "parallel" ) == 0 ) {
-            std::string inputFile = argv[ 2 ];
-            std::string outputPath = argv[ 3 ];  // output flow directions
-            std::cerr << "InputFile: " << inputFile << std::endl;
-            std::cerr << "OutputPath: " << outputPath << std::endl;
+            CLI::App app( "Parallel-Flow-Directions Example Program" );
+            std::string inputFile;
+            std::string outputPath;
+            app.add_option( "method", method, "parallel model" )->required();
+            app.add_option( "inputFile", inputFile, "A text file which includes the path of DEMs" )->required();
+            app.add_option( "outputPath", outputPath, "Path of flow-directios output folder" )->required();
+            CLI11_PARSE( app, argc, argv );
+            std::cout << "The program is running with paralel mode." << std::endl;
+            std::cout << "Input File: " << inputFile << std::endl;
+            std::cout << "Path of flow-directios output folder: " << outputPath << std::endl;
             GridInfo gridInfo;
             Timer timer_master;
             timer_master.start();
@@ -49,24 +69,42 @@ int main( int argc, char** argv ) {
         }
         else if ( strcmp( method, "test" ) == 0 ) {
             //---------generate DEM with perling DEM--------
+            CLI::App app( "Parallel-Flow-Directions Test Program" );
+            std::string outputDEMFile;
+            int height, width;
+            std::string outputsequentialFlow;
+            int tileHeight, tileWidth;
+            std::string outputtileDEMfolder, outputPath;
+            app.add_option( "method", method, "parallel model" )->required();
+            app.add_option( "outputDEMFile", outputDEMFile, "Path of GeoTif output file" )->required();
+            app.add_option( "height", height, "The height of the generated DEM is a numeric constant" )->required();
+            app.add_option( "width", width, "The width of the generated DEM is a numeric constant" )->required();
+            app.add_option( "GeoTif of flow-directions", outputsequentialFlow, "Path of GeoTif output file" )->required();
+            app.add_option( "tileHeight", tileHeight, "The height of the divied tile is a numeric constant" )->required();
+            app.add_option( "tileWidth", tileWidth, "The width of the divied tile is a numeric constant" )->required();
+            app.add_option( "outputDEMFolder", outputtileDEMfolder, "Output folder of DEMs" )->required();
+            app.add_option( "outputPath", outputPath, "Path of flow-directions output folder" )->required();
+            CLI11_PARSE( app, argc, argv );
+            std::cout << "The program is running  with test mode." << std::endl;
+            std::cout << "Path of DEM output file: " << outputDEMFile << std::endl;
+            std::cout << "Height of DEM: " << height << std::endl;
+            std::cout << "Width of DEM: " << width << std::endl;
+            std::cout << "Output file of flow-directions: " << outputsequentialFlow << std::endl;
+            std::cout << "Height of tile: " << tileHeight << std::endl;
+            std::cout << "Width of tile: " << tileWidth << std::endl;
+            std::cout << "Output folder of DEMs: " << outputtileDEMfolder << std::endl;
+            std::cout << "Path of flow-directions output folder: " << outputPath << std::endl;
+
             std::cout << "1.------Generate DEM!------" << std::endl;
-            std::string outputDEMFile = argv[ 2 ];
-            int height = std::stoi( argv[ 3 ] );
-            int width = std::stoi( argv[ 4 ] );
             createPerlinNoiseDEM( outputDEMFile, height, width );
             //----------sequential Barnes flow direction--------
             std::cout << "2.------Sequential flow directions!------" << std::endl;
-            std::string outputsequentialFlow = argv[ 5 ];
             PerformAlgorithm( outputDEMFile, outputsequentialFlow );
             //-----------divide tiles--------------------
             std::cout << "3.------Divided tiles!------" << std::endl;
-            int tileHeight = std::stoi( argv[ 6 ] );
-            int tileWidth = std::stoi( argv[ 7 ] );
-            std::string outputtileDEMfolder = argv[ 8 ];
             generateTiles( outputDEMFile.c_str(), tileHeight, tileWidth, outputtileDEMfolder.c_str() );
             std::cout << "4.------Parallel computing!------" << std::endl;
             std::string inputFile = outputtileDEMfolder + "/" + "tileInfo.txt";
-            std::string outputPath = argv[ 9 ];  // output flow directions
             GridInfo gridInfo;
             Timer timer_master;
             timer_master.start();
@@ -91,10 +129,10 @@ int main( int argc, char** argv ) {
             std::cout << "6.------Compare results!------" << std::endl;
             comPareResults( outputsequentialFlow, outputFile );
             timer_master.stop();
-            std::cerr << "Total wall-time = " << timer_master.elapsed() << "s" << std::endl;
+            std::cout << "Total wall-time = " << timer_master.elapsed() << "s" << std::endl;
         }
         else {
-            std::cout << "Parameter error!" << std::endl;
+            std::cout << "Parameters error! You should specify the 'parallel' mode or the 'test' mode." << std::endl;
             return -1;
         }
     }
