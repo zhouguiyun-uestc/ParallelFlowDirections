@@ -170,7 +170,7 @@ bool generateTiles( const char* filePath, int tileHeight, int tileWidth, const c
             if ( returnValue != CE_None ) {
                 throw std::runtime_error( "An error occured while trying to read '" + path + " 'into RAM with GDAL." );
             }
-			std::vector< double > tileGeotransform( geotransform );
+	    std::vector< double > tileGeotransform( geotransform );
             tileGeotransform[ 0 ] = geotransform[ 0 ] + tileWidth * tileCol * geotransform[ 1 ] + tileHeight * tileRow * geotransform[ 2 ];
             tileGeotransform[ 3 ] = geotransform[ 3 ] + tileHeight * tileRow * geotransform[ 5 ] + tileWidth * tileCol * geotransform[ 4 ];
             WriteGeoTIFF( path.data(), tile.getHeight(), tile.getWidth(), &tile, type, &tileGeotransform[ 0 ], nullptr, nullptr, nullptr, nullptr, tile.NoDataValue );
@@ -250,14 +250,14 @@ bool createDiffFile( const char* filePath1, const char* filePath2, const char* d
 
 void processTileGrid( GridInfo& gridInfo, std::vector< TileInfo >& tileInfos, IObjectFactory* pIObjFactory ) {
     Grid< std::shared_ptr< IConsumer2Producer > > gridIConsumer2Producer;
-    gridIConsumer2Producer.init( gridInfo.gridHeight, gridInfo.gridWidth );  //≥ı ºªØ£¨»´≤øŒ™ø’
+    gridIConsumer2Producer.init( gridInfo.gridHeight, gridInfo.gridWidth );  //ÂàùÂßãÂåñÔºåÂÖ®ÈÉ®‰∏∫Á©∫
 
     for ( size_t i = 0; i < tileInfos.size(); i++ )  // tileInfos.size()
     {
         TileInfo& tileInfo = tileInfos[ i ];
         std::shared_ptr< IConsumer2Producer > pIConsumer2Producer = pIObjFactory->createConsumer2Producer();
         std::shared_ptr< IConsumer > pIConsumer = pIObjFactory->createConsumer();
-        std::cout << "th " << i << "is processing£°" << std::endl;
+        std::cout << "th " << i << "is processingÔºÅ" << std::endl;
         if ( tileInfos[ i ].nullTile ) {
             continue;
         }
@@ -671,7 +671,7 @@ void createPerlinNoiseDEM( std::string outputFilePath, int height, int width ) {
         }
     }
     dem.NoDataValue = -9999;
-	//±£¥Ê‘≠ ºDEM.
+	//‰øùÂ≠òÂéüÂßãDEM.
     double min0, max0, mean0, stdDev0;
     calculateStatistics( dem, &min0, &max0, &mean0, &stdDev0 );
     int length = outputFilePath.length();
