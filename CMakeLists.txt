@@ -10,6 +10,8 @@ find_package(GDAL REQUIRED)
 #The output directory of the execution file
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR})
 
+set(CL11_INCLUDE_DIR CLI11/include)
+
 #header file 1
 include_directories(${PROJECT_SOURCE_DIR}/include)
 
@@ -43,6 +45,7 @@ src/flowdir/consumer.cpp)
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 target_include_directories(${PROJECT_NAME} PRIVATE ${GDAL_INCLUDE_DIR})
+target_include_directories(${PROJECT_NAME} PRIVATE ${CL11_INCLUDE_DIR})
 target_link_libraries(${PROJECT_NAME} ${GDAL_LIBRARY} MPI::MPI_CXX)
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_11)
