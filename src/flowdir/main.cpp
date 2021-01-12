@@ -25,6 +25,15 @@
 int main( int argc, char** argv ) {
     if ( argc < 4 ) {
         std::cout << "Too few arguments." << std::endl;
+		std::cout << "This program determines flow directions over flat surfaces using our proposed parallel algorithm. It can also run test cases on randomly generated DEMs." << std::endl;
+		std::cout << "To run test cases on randomly generated DEMs, use the following command: "<<std::endl;
+		std::cout << "mpirun -np <PROCESSES_NUMBER> ParallelFlowDir test <OUTPUT_PATH_OF_DEM> <HEIGHT_OF_THE_DEM > <WIDTH_OF_THE_DEM> <OUTPUT_PATH_OF_SEQUENTIAL_FLOW_DIRECTIONS> <TILE_HEIGHT> <TILE_WIDTH> <DIVIDE_FOLDER> <OUTPUT_FOLDER_OF_PARALLEL_FLOW_DIRECIOTNS>" << std::endl;
+		std::cout << "This command first generates a Perlin noise DEM with given height and width. Then, Calculating the flow directions of the DEM using the sequential Barnes algorithm and our proposed parallel algorithm. Finally, Comparing the flow directions of the two algorithms. " << std::endl;
+		std::cout << "Example usage: mpirun -np 4 ParallelFlowDir test ./test_data/dem.tif 2000 3000 ./test_data/seqFlow/seqFlow.tif 500 800 ./test_data/tileDEM ./test_data/paraFlow " << std::endl;
+		std::cout << "To determine flow directions using our proposed parallel algorithm, use the following command: " << std::endl;
+		std::cout << "mpirun -np <PROCESSES_NUMBER> ParallelFlowDir parallel <INPUT> <OUTPUT>" << std::endl;
+		std::cout << "This command determines flow directions in the given DEM." << std::endl;
+		std::cout << "Example usage: mpirun -np 3 ParallelFlowDir parallel ./test_data/ansai_part.txt ./test_data/ansai_flow" << std::endl;
         return -1;
     }
 
@@ -35,7 +44,7 @@ int main( int argc, char** argv ) {
     int size;
     MPI_Comm_size( MPI_COMM_WORLD, &size );
     if ( size < 2 ) {
-        std::cout << "Specify at least 2 processes." << std::endl;
+        std::cout << "Specify at least 2 processes, e.g. 'mpirun -np 2 ./ParallelFlowDir'" << std::endl;
         return -1;
     }
     if ( rank == 0 ) {
