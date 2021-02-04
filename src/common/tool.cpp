@@ -985,7 +985,7 @@ bool comPareResults( std::string seqTif, std::string paraTif ) {
     Raster< int > seqFlowdirections;
     Raster< int > paraFlowdirections;
     readflowTIFF( seqTif.c_str(), GDALDataType::GDT_Int32, seqFlowdirections );
-    readflowTIFF( seqTif.c_str(), GDALDataType::GDT_Int32, paraFlowdirections );
+    readflowTIFF( paraTif.c_str(), GDALDataType::GDT_Int32, paraFlowdirections );
 
     int h1 = seqFlowdirections.getHeight();
     int w1 = seqFlowdirections.getWidth();
