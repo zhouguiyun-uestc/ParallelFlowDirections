@@ -31,28 +31,29 @@ cd build
 cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo ..
 make
 ```
-The result is a program called  `ParallelFlowDir`.
+The result is two programs called  `ParallelFlowDir` and `test`.
 
 # Program arguments
 
-The program can be run using MPI with two modes: `parallel` and `test`. In `parallel` mode, the program derives flow directions. In `test` mode, the program run test cases on randomly generated DEMs.
+ `ParallelFlowDir` program derives flow directions. 
+ `test` program runs test cases on randomly generated DEMs.
 
-In `parallel` mode, the program has the following arguments: 
+ `ParallelFlowDir` program has the following arguments: 
 ```
-mpirun -np <PROCESSES_NUMBER> ParallelFlowDir parallel <INPUT> <OUTPUT>
+mpirun -np <PROCESSES_NUMBER> ParallelFlowDir  <INPUT> <OUTPUT>
 ```
 The `<INPUT>` argument is a text file and contains the paths of the tiles of the DEM.  
 The `<OUTPUT>` argument specifes the output folder.   
 
 An example command is: 
 ```
-mpirun -np 3 ParallelFlowDir parallel ./test_data/ansai_part.txt ./test_data/ansai_flow
+mpirun -np 3 ParallelFlowDir ./test_data/ansai_part.txt ./test_data/ansai_flow
 ```
 `-np 3` indicates that the program is run in parallel over 3 processes, which includes 1 producer process and 2 consumer processes.  
 
-In `test` mode, the program has the following arguments: 
+`test` program has the following arguments: 
 ```
-mpirun -np <PROCESSES_NUMBER> ParallelFlowDir test <OUTPUT_PATH_OF_DEM> <HEIGHT_OF_THE_DEM > <WIDTH_OF_THE_DEM> <OUTPUT_PATH_OF_SEQUENTIAL_FLOW_DIRECTIONS> <TILE_HEIGHT> <TILE_WIDTH> <DIVIDE_FOLDER> <OUTPUT_FOLDER_OF_PARALLEL_FLOW_DIRECIOTNS>   
+mpirun -np <PROCESSES_NUMBER> ParallelFlowDir <OUTPUT_PATH_OF_DEM> <HEIGHT_OF_THE_DEM > <WIDTH_OF_THE_DEM> <OUTPUT_PATH_OF_SEQUENTIAL_FLOW_DIRECTIONS> <TILE_HEIGHT> <TILE_WIDTH> <DIVIDE_FOLDER> <OUTPUT_FOLDER_OF_PARALLEL_FLOW_DIRECIOTNS>   
 ```
 The `<OUTPUT_PATH_OF_DEM>` argument specifes the output path of the randomly generated DEM.  
 The `<HEIGHT_OF_THE_DEM>` argument specifes the height of the DEM.   
@@ -65,7 +66,7 @@ The `<OUTPUT_FOLDER_OF_PARALLEL_FLOW_DIRECTIONS>` argument specifes the output f
 
 An example command is: 
 ```
-mpirun -np 4 ParallelFlowDir test ./test_data/dem.tif 2000 3000 ./test_data/seqFlow/seqFlow.tif 500 800 ./test_data/tileDEM ./test_data/paraFlow 
+mpirun -np 4 ParallelFlowDir ./test_data/dem.tif 2000 3000 ./test_data/seqFlow/seqFlow.tif 500 800 ./test_data/tileDEM ./test_data/paraFlow 
 ```
 `-np 4` indicates that the program is run in parallel over 4 processes, which includes 1 producer process and 3 consumer processes. 
 
