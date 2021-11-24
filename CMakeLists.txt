@@ -41,7 +41,7 @@ src/flowdir/GridCell.cpp
 src/flowdir/consumer_2_producer.cpp 
 src/flowdir/consumer.cpp)
 
-add_executable(test ${SOURCE_FILES_TEST})
+add_executable(Test ${SOURCE_FILES_TEST})
 target_include_directories(Test PRIVATE ${GDAL_INCLUDE_DIR})
 target_include_directories(Test PRIVATE ${CL11_INCLUDE_DIR})
 target_link_libraries(Test ${GDAL_LIBRARY} MPI::MPI_CXX)
